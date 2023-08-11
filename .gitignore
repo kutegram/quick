@@ -1,1 +1,10 @@
 ﻿*.user
+moc
+bld.inf
+*.loc
+*.rss
+*.sis
+*.mmp
+*.pkg
+Makefile
+*.cache
