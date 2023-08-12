@@ -28,14 +28,64 @@ Rectangle {
         anchors.right: parent.right
         width: height
         id: sendButton
+        state: innerEdit.text.length == 0 ? "EMPTY" : "NOT_EMPTY"
 
         Image {
+            id: sendImage
             anchors.centerIn: parent
             width: 20
             height: 20
             smooth: true
             source: "../../img/send.svg"
         }
+
+        Image {
+            id: micImage
+            anchors.centerIn: parent
+            width: 20
+            height: 20
+            smooth: true
+            source: "../../img/microphone.svg"
+        }
+
+        states: [
+            State {
+                name: "EMPTY"
+                PropertyChanges {
+                    target: sendImage
+                    opacity: 0
+                    scale: 0
+                }
+                PropertyChanges {
+                    target: micImage
+                    opacity: 1
+                    scale: 1
+                }
+            },
+            State {
+                name: "NOT_EMPTY"
+                PropertyChanges {
+                    target: sendImage
+                    opacity: 1
+                    scale: 1
+                }
+                PropertyChanges {
+                    target: micImage
+                    opacity: 0
+                    scale: 0
+                }
+            }
+        ]
+
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    properties: "opacity,scale"
+                    easing.type: Easing.InOutQuad
+                    duration: 200
+                }
+            }
+        ]
     }
 
     Flickable {

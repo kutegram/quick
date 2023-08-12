@@ -1,13 +1,13 @@
 import QtQuick 1.0
 
 Rectangle {
-    width: ListView.view.width
+    width: 240
     height: 40
 
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            stack.currentIndex = 1
+
         }
     }
 
@@ -21,16 +21,14 @@ Rectangle {
         height: 30
         radius: 15
         smooth: true
-        color: "#FFA3A3"
+        color: "#54759E"
 
-        Text {
-            anchors.fill: parent
-            text: "JP"
-            color: "#FFFFFF"
-            font.family: "Open Sans SemiBold"
-            font.pixelSize: 12
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
+        Image {
+            anchors.centerIn: parent
+            source: "../../img/file.svg"
+            smooth: true
+            height: 20
+            width: 20
         }
     }
 
@@ -42,33 +40,17 @@ Rectangle {
         Row {
             spacing: 5
             Text {
-                text: "Just Piggy"
+                text: "JbakTaskManTimeless.zip"
                 font.family: "Open Sans SemiBold"
                 font.pixelSize: 12
-            }
-
-            Text {
-                anchors.bottom: parent.bottom
-                text: "09:35"
-                font.family: "Open Sans SemiBold"
-                font.pixelSize: 10
-                color: "#999999"
             }
         }
 
         Text {
-            text: "Hello, world!"
+            text: "1.0 MB"
             font.family: "Open Sans"
             color: "#8D8D8D"
             font.pixelSize: 12
         }
-    }
-
-    Rectangle {
-        height: 1
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        color: "#EEEEEE"
     }
 }

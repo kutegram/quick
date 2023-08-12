@@ -1,8 +1,8 @@
 import QtQuick 1.0
 
 Image {
-    width: 120
     height: ListView.view.height
+    width: height
     source: image
     clip: true
     asynchronous: true
@@ -21,7 +21,6 @@ Image {
 
     transitions: [
         Transition {
-            to: "*"
             NumberAnimation {
                 properties: "x,opacity"
                 easing.type: Easing.InOutQuad

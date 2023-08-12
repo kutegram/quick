@@ -29,7 +29,6 @@ Item {
 
     transitions: [
         Transition {
-            to: "*"
             NumberAnimation {
                 properties: "x,opacity"
                 easing.type: Easing.InOutQuad
@@ -133,7 +132,7 @@ Item {
         ListView {
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 120
+            height: 100
             spacing: 5
             orientation: ListView.Horizontal
             snapMode: ListView.SnapOneItem
@@ -143,8 +142,32 @@ Item {
             clip: true
 
             model: ListModel {
+                ListElement {
+                    image: "../../img/test/1.jpg"
+                }
+                ListElement {
+                    image: "../../img/test/2.jpg"
+                }
+                ListElement {
+                    image: "../../img/test/3.jpg"
+                }
+                ListElement {
+                    image: "../../img/test/4.jpg"
+                }
+                ListElement {
+                    image: "../../img/test/5.jpg"
+                }
             }
             delegate: MessageImage {
+                state: currentState
+            }
+        }
+
+        Repeater {
+            model: 3
+            MessageDocument {
+                anchors.left: parent.left
+                anchors.right: parent.right
                 state: currentState
             }
         }

@@ -173,7 +173,6 @@ Rectangle {
 
         transitions: [
             Transition {
-                to: "*"
                 NumberAnimation {
                     properties: "opacity"
                     easing.type: Easing.InOutQuad
@@ -251,7 +250,6 @@ Rectangle {
 
         transitions: [
             Transition {
-                to: "*"
                 NumberAnimation {
                     properties: "opacity,rotation,x"
                     easing.type: Easing.InOutQuad
