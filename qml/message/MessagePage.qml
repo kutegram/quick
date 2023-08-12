@@ -7,7 +7,11 @@ Rectangle {
     property string globalState: "NO_SELECT"
 
     ListView {
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: messageEdit.top
+        spacing: 5
 
         model: ListModel {
             ListElement {
@@ -34,5 +38,12 @@ Rectangle {
         delegate: MessageItem {
             state: globalState
         }
+    }
+
+    MessageEdit {
+        id: messageEdit
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
     }
 }

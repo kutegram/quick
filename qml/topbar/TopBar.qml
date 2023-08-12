@@ -108,6 +108,7 @@ Rectangle {
                 anchors.left: avatarRect.right
                 anchors.verticalCenter: avatarRect.verticalCenter
                 anchors.leftMargin: avatarRect.anchors.leftMargin
+                anchors.right: actionsButton.left
 
                 Row {
                     spacing: 5
@@ -124,6 +125,23 @@ Rectangle {
                     font.family: "Open Sans"
                     color: "#FFFFFF"
                     font.pixelSize: 12
+                }
+            }
+
+            Item {
+                id: actionsButton
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                width: height
+
+                Image {
+                    id: actionsImage
+                    anchors.centerIn: parent
+                    source: "../../img/dots-vertical.svg"
+                    width: 20
+                    height: 20
+                    smooth: true
                 }
             }
         }
@@ -170,8 +188,7 @@ Rectangle {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.bottom: parent.bottom
-        width: parent.height
-        height: parent.height
+        width: height
         color: parent.color
         state: topBarRoot.state
 

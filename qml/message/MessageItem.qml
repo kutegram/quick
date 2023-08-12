@@ -93,9 +93,12 @@ Item {
         anchors.topMargin: 5
         anchors.leftMargin: 5
         anchors.rightMargin: 5
+        spacing: 2
 
         Row {
             spacing: 5
+            anchors.left: parent.left
+            anchors.right: parent.right
 
             Text {
                 id: messageSender
@@ -125,6 +128,25 @@ Item {
             text: "Consectetur et doloribus beatae eius maxime. Error qui placeat et architecto consequatur. Dolorem qui amet necessitatibus. Hic non et sapiente minima nihil veritatis. Repellendus quia id ducimus. Architecto vero temporibus et dolorum."
             font.family: "Open Sans"
             font.pixelSize: 12
+        }
+
+        ListView {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 120
+            spacing: 5
+            orientation: ListView.Horizontal
+            snapMode: ListView.SnapOneItem
+            highlightRangeMode: ListView.StrictlyEnforceRange
+            highlightFollowsCurrentItem: true
+            highlightMoveDuration: 200
+            clip: true
+
+            model: ListModel {
+            }
+            delegate: MessageImage {
+                state: currentState
+            }
         }
     }
 }
