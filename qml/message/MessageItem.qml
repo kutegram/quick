@@ -133,6 +133,8 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             height: 100
+            //TODO: think about this value
+            cacheBuffer: 20000
             spacing: 5
             orientation: ListView.Horizontal
             snapMode: ListView.SnapOneItem

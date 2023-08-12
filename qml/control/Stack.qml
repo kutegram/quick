@@ -3,6 +3,7 @@ import QtQuick 1.0
 Item {
     default property alias content: visualModel.children
     property alias currentIndex: stackView.currentIndex
+    property alias currentItem: stackView.currentItem
 
     ListView {
         id: stackView
@@ -15,10 +16,6 @@ Item {
         highlightMoveDuration: 200
         model: VisualItemModel {
             id: visualModel
-        }
-        onCurrentItemChanged: {
-            topBar.currentState = currentIndex == 0 ? "MENU" : "BACK";
-            messagePage.globalState = "NO_SELECT";
         }
     }
 }

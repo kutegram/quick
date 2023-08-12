@@ -2,7 +2,7 @@ import QtQuick 1.0
 import "../dialog"
 
 Rectangle {
-    property alias currentState: topBarRoot.state
+    property string currentState: "MENU"
 
     id: topBarRoot
     height: 40
@@ -11,16 +11,17 @@ Rectangle {
     anchors.left: parent.left
     anchors.right: parent.right
     color: "#54759E"
-    state: "MENU"
+    state: currentState == "CHAT" ? "BACK" : currentState
 
     Item {
         anchors.fill: parent
         anchors.leftMargin: parent.height
-        state: topBarRoot.state
+        state: currentState
 
         ListView {
             id: folderList
             focus: true
+            clip: true
             boundsBehavior: Flickable.StopAtBounds
             anchors.fill: parent
             orientation: ListView.Horizontal
@@ -80,6 +81,10 @@ Rectangle {
         Item {
             id: peerHeader
             anchors.fill: parent
+
+            MouseArea {
+                anchors.fill: parent
+            }
 
             Rectangle {
                 anchors.left: parent.left
@@ -146,16 +151,37 @@ Rectangle {
             }
         }
 
+        Text {
+            id: appNameText
+            anchors.fill: parent
+            verticalAlignment: Text.AlignVCenter
+            text: "Kutegram"
+            font.family: "Open Sans SemiBold"
+            font.pixelSize: 12
+            color: "#FFFFFF"
+
+            MouseArea {
+                anchors.fill: parent
+            }
+        }
+
         states: [
             State {
-                name: "MENU"
+                name: "CHAT"
                 PropertyChanges {
                     target: folderList
-                    opacity: 1
+                    opacity: 0
+                    anchors.leftMargin: -20
                 }
                 PropertyChanges {
                     target: peerHeader
+                    opacity: 1
+                    anchors.leftMargin: 0
+                }
+                PropertyChanges {
+                    target: appNameText
                     opacity: 0
+                    anchors.leftMargin: -20
                 }
             },
             State {
@@ -163,18 +189,44 @@ Rectangle {
                 PropertyChanges {
                     target: folderList
                     opacity: 0
+                    anchors.leftMargin: -20
                 }
                 PropertyChanges {
                     target: peerHeader
+                    opacity: 0
+                    anchors.leftMargin: -20
+                }
+                PropertyChanges {
+                    target: appNameText
                     opacity: 1
+                    anchors.leftMargin: 0
+                }
+            },
+            State {
+                name: "MENU"
+                PropertyChanges {
+                    target: folderList
+                    opacity: 1
+                    anchors.leftMargin: 0
+                }
+                PropertyChanges {
+                    target: peerHeader
+                    opacity: 0
+                    anchors.leftMargin: -20
+                }
+                PropertyChanges {
+                    target: appNameText
+                    opacity: 0
+                    anchors.leftMargin: -20
                 }
             }
+
         ]
 
         transitions: [
             Transition {
                 NumberAnimation {
-                    properties: "opacity"
+                    properties: "opacity,anchors.leftMargin"
                     easing.type: Easing.InOutQuad
                     duration: 200
                 }
@@ -182,14 +234,13 @@ Rectangle {
         ]
     }
 
-    Rectangle {
+    Item {
         id: menuButton
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         width: height
-        color: parent.color
-        state: topBarRoot.state
+        state: currentState == "CHAT" ? "BACK" : currentState
 
         Image {
             id: menuImage
@@ -214,8 +265,14 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                if (stack.currentIndex == 1)
+                if (currentState == "MENU") {
+                    currentState = "BACK"
+                    drawer.opened = true;
+                } else {
+                    currentState = "MENU"
+                    drawer.opened = false;
                     stack.currentIndex = 0;
+                }
             }
         }
 

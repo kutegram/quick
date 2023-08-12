@@ -1,7 +1,7 @@
 import QtQuick 1.0
 import "dialog"
 import "message"
-import "topbar"
+import "control"
 
 Rectangle {
     width: 320
@@ -16,6 +16,11 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
+        onCurrentItemChanged: {
+            topBar.currentState = currentIndex == 1 ? "CHAT" : "MENU";
+            messagePage.globalState = "NO_SELECT";
+        }
+
         DialogPage {
             id: dialogPage
         }
@@ -23,6 +28,14 @@ Rectangle {
         MessagePage {
             id: messagePage
         }
+    }
+
+    Drawer {
+        id: drawer
+        anchors.top: topBar.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
     }
 
     TopBar {

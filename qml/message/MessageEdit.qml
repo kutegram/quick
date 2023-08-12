@@ -5,12 +5,20 @@ Rectangle {
     width: 240
     color: "#FFFFFF"
 
+    MouseArea {
+        anchors.fill: parent
+    }
+
     Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         width: height
         id: attachButton
+
+        MouseArea {
+            anchors.fill: parent
+        }
 
         Image {
             anchors.centerIn: parent
@@ -29,6 +37,10 @@ Rectangle {
         width: height
         id: sendButton
         state: innerEdit.text.length == 0 ? "EMPTY" : "NOT_EMPTY"
+
+        MouseArea {
+            anchors.fill: parent
+        }
 
         Image {
             id: sendImage
@@ -121,13 +133,43 @@ Rectangle {
         }
 
         Text {
+            id: messageTip
             anchors.top: innerEdit.top
             anchors.left: parent.left
             font.family: "Open Sans"
             font.pixelSize: 12
             color: "#8D8D8D"
-            visible: innerEdit.text.length == 0
             text: "Write a message..."
+            state: innerEdit.text.length == 0 ? "EMPTY" : "NOT_EMPTY"
+
+            states: [
+                State {
+                    name: "EMPTY"
+                    PropertyChanges {
+                        target: messageTip
+                        opacity: 1
+                        anchors.leftMargin: 0
+                    }
+                },
+                State {
+                    name: "NOT_EMPTY"
+                    PropertyChanges {
+                        target: messageTip
+                        opacity: 0
+                        anchors.leftMargin: -10
+                    }
+                }
+            ]
+
+            transitions: [
+                Transition {
+                    NumberAnimation {
+                        properties: "opacity,anchors.leftMargin"
+                        easing.type: Easing.InOutQuad
+                        duration: 200
+                    }
+                }
+            ]
         }
     }
 }

@@ -9,12 +9,13 @@ Item {
         anchors.centerIn: parent
         spacing: 5
 
-//        Image {
-//            source: icon
-//            smooth: true
-//            width: 16
-//            height: 16
-//        }
+        //TODO: only icon, only text, text + icon
+        Image {
+            source: icon
+            smooth: true
+            width: 16
+            height: 16
+        }
 
         Text {
             font.family: "Open Sans SemiBold"
