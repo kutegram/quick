@@ -1,18 +1,20 @@
 import QtQuick 1.0
 
 Item {
-    height: 40
-    width: 80
+    height: ListView.view.height
+    width: tabContent.width+10
 
     Row {
+        id: tabContent
         anchors.centerIn: parent
-        spacing: 4
+        spacing: 5
 
-        Image {
-            source: icon
-            width: 16
-            height: 16
-        }
+//        Image {
+//            source: icon
+//            smooth: true
+//            width: 16
+//            height: 16
+//        }
 
         Text {
             font.family: "Open Sans SemiBold"

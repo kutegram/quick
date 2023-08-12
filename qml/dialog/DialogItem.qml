@@ -1,8 +1,15 @@
 import QtQuick 1.0
 
 Rectangle {
-    width: 240
+    width: ListView.view.width
     height: 40
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            stack.currentIndex = 1
+        }
+    }
 
     Rectangle {
         anchors.left: parent.left
@@ -32,10 +39,21 @@ Rectangle {
         anchors.verticalCenter: avatarRect.verticalCenter
         anchors.leftMargin: avatarRect.anchors.leftMargin
 
-        Text {
-            text: "Just Piggy"
-            font.family: "Open Sans SemiBold"
-            font.pixelSize: 12
+        Row {
+            spacing: 5
+            Text {
+                text: "Just Piggy"
+                font.family: "Open Sans SemiBold"
+                font.pixelSize: 12
+            }
+
+            Text {
+                anchors.bottom: parent.bottom
+                text: "09:35"
+                font.family: "Open Sans SemiBold"
+                font.pixelSize: 10
+                color: "#999999"
+            }
         }
 
         Text {

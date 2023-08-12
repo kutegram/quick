@@ -8,3 +8,5 @@ bld.inf
 *.pkg
 Makefile
 *.cache
+*.mk
+ABLD.BAT
