@@ -1,6 +1,7 @@
 import QtQuick 1.0
 
 Rectangle {
+    //TODO: think about it
     width: ListView.view.width
     height: ListView.view.height
 
