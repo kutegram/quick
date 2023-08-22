@@ -3,10 +3,19 @@ import "dialog"
 import "message"
 import "control"
 import "auth"
+import Kutegram 1.0
 
 Rectangle {
     width: 320
     height: 240
+
+    TgClient {
+        id: telegramClient
+    }
+
+    Component.onCompleted: {
+        telegramClient.start();
+    }
 
     id: root
     state: "AUTH"

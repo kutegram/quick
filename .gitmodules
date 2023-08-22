@@ -1,0 +1,3 @@
+[submodule "libkg"]
+	path = libkg
+	url = https://github.com/kutegram/libkg

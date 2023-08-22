@@ -10,3 +10,4 @@ Makefile
 *.cache
 *.mk
 ABLD.BAT
+*test
