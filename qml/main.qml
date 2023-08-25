@@ -8,18 +8,8 @@ import Kutegram 1.0
 Rectangle {
     width: 320
     height: 240
-
-    TgClient {
-        id: telegramClient
-    }
-
-    Component.onCompleted: {
-        telegramClient.start();
-    }
-
     id: root
     state: "AUTH"
-
     states: [
         State {
             name: "AUTH"
@@ -50,7 +40,102 @@ Rectangle {
     ]
 
     property int currentFolderIndex: 0
+    property bool authProgress: false
 
+    function setAuthProgress(visible) {
+        authProgress = visible;
+    }
+
+    TgClient {
+        id: telegramClient
+
+        onInitialized: {
+            if (hasUserId) {
+                return;
+            }
+
+            setAuthProgress(false);
+            authStack.currentIndex = 1;
+
+            helpGetCountriesList();
+        }
+
+        onDisconnected: {
+            setAuthProgress(false);
+
+            if (!hasUserId) {
+                root.state = "AUTH";
+                authStack.currentIndex = 0;
+            } else {
+                // TODO: show reconnecting
+                telegramClient.start();
+            }
+        }
+
+        onAuthSendCodeResponse: {
+            setAuthProgress(false);
+
+            phonePage.phoneCodeHash = data["phone_code_hash"];
+            switch (data["type"]["_"]) {
+                //TODO: messages
+            }
+
+            authStack.currentIndex = 2;
+        }
+
+        onAuthSignInResponse: {
+            setAuthProgress(false);
+
+            if (data["_"] == 0x44747e9a) {
+                //TODO sign up / registration support
+                codePage.error = "Sign up isn't supported now. Please, use official app for signing up.";
+            }
+        }
+
+        onAuthorized: {
+            setAuthProgress(false);
+            //TODO hide reconnecting
+
+            root.state = "MAIN";
+            // TODO load dialogs
+        }
+
+        onRpcError: {
+            setAuthProgress(false);
+
+            console.log(errorCode + ": " + errorMessage);
+
+            if (errorMessage == "PHONE_NUMBER_FLOOD") {
+                phonePage.error = "Phone is used too many times recently.";
+            }
+            else if (errorMessage == "PHONE_CODE_INVALID") {
+                phonePage.error = "You have entered an invalid code.";
+            }
+            else {
+                //TODO: dialog
+            }
+        }
+
+        onTfaRequired: {
+            setAuthProgress(false);
+
+            //TODO 2fa support
+            codePage.error =  "2FA isn't supported now. You can disable 2FA, log in and enable it afterwards.";
+        }
+
+        onHelpGetCountriesListResponse: {
+            //TODO
+        }
+
+        Component.onCompleted: {
+            if (hasSession()) {
+                root.setAuthProgress(true);
+                telegramClient.start();
+            }
+        }
+    }
+
+    //TODO: remove stack
     Rectangle {
         id: authRect
         anchors.left: parent.left
@@ -63,12 +148,26 @@ Rectangle {
             id: authStack
             anchors.fill: parent
 
-            PhonePage {
+            IntroPage {
+                width: authStack.width
+                height: authStack.height
+            }
 
+            PhonePage {
+                id: phonePage
+                width: authStack.width
+                height: authStack.height
             }
 
             CodePage {
+                id: codePage
+                width: authStack.width
+                height: authStack.height
+            }
 
+            TFAPage {
+                width: authStack.width
+                height: authStack.height
             }
         }
 
@@ -121,6 +220,7 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
+                    setAuthProgress(false);
                     authStack.currentIndex = Math.max(0, authStack.currentIndex - 1)
                 }
             }
@@ -143,6 +243,8 @@ Rectangle {
         }
 
         Spinner {
+            id: authSpinner
+            visible: root.authProgress
             anchors.top: parent.top
             anchors.right: parent.right
         }
@@ -169,10 +271,14 @@ Rectangle {
 
             DialogPage {
                 id: dialogPage
+                width: stack.width
+                height: stack.height
             }
 
             MessagePage {
                 id: messagePage
+                width: stack.width
+                height: stack.height
             }
         }
 

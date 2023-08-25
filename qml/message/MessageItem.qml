@@ -144,21 +144,21 @@ Item {
             clip: true
 
             model: ListModel {
-                ListElement {
-                    image: "../../img/test/1.jpg"
-                }
-                ListElement {
-                    image: "../../img/test/2.jpg"
-                }
-                ListElement {
-                    image: "../../img/test/3.jpg"
-                }
-                ListElement {
-                    image: "../../img/test/4.jpg"
-                }
-                ListElement {
-                    image: "../../img/test/5.jpg"
-                }
+//                ListElement {
+//                    image: "../../img/test/1.jpg"
+//                }
+//                ListElement {
+//                    image: "../../img/test/2.jpg"
+//                }
+//                ListElement {
+//                    image: "../../img/test/3.jpg"
+//                }
+//                ListElement {
+//                    image: "../../img/test/4.jpg"
+//                }
+//                ListElement {
+//                    image: "../../img/test/5.jpg"
+//                }
             }
             delegate: MessageImage {
                 state: currentState

@@ -4,6 +4,8 @@ Item {
     id: buttonRoot
     signal clicked()
 
+    property bool enabled: true
+
     width: 160
     height: 40
 
@@ -25,6 +27,7 @@ Item {
     MouseArea {
         id: innerArea
         anchors.fill: parent
+        enabled: buttonRoot.enabled
     }
 
     Component.onCompleted: {

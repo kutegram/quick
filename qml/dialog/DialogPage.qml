@@ -1,9 +1,6 @@
 import QtQuick 1.0
 
 Rectangle {
-    width: ListView.view.width
-    height: ListView.view.height
-
     ListView {
         id: folderSlide
         focus: true

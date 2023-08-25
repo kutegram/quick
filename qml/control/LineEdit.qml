@@ -4,6 +4,8 @@ Item {
     width: 160
     height: 40
 
+    property alias text: innerInput.text
+
     state: innerInput.activeFocus ? "FOCUSED" : "NOT_FOCUSED"
 
     states: [
