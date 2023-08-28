@@ -10,15 +10,14 @@ Item {
         spacing: 5
 
         //TODO: only icon, only text, text + icon
-        Image {
-            source: icon
-            smooth: true
-            width: 16
-            height: 16
-        }
+//        Image {
+//            source: icon
+//            smooth: true
+//            width: 16
+//            height: 16
+//        }
 
         Text {
-            font.family: "Open Sans SemiBold"
             font.pixelSize: 12
             text: label
             color: "#FFFFFF"

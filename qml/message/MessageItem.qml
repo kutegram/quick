@@ -77,7 +77,7 @@ Item {
             anchors.fill: parent
             text: "JP"
             color: "#FFFFFF"
-            font.family: "Open Sans SemiBold"
+            font.bold: true
             font.pixelSize: 12
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -102,7 +102,7 @@ Item {
             Text {
                 id: messageSender
                 text: "Just Piggy"
-                font.family: "Open Sans SemiBold"
+                font.bold: true
                 font.pixelSize: 12
                 visible: _previousSenderId != _senderId
             }
@@ -111,7 +111,7 @@ Item {
                 id: messageTimestamp
                 anchors.bottom: parent.bottom
                 text: "09:35"
-                font.family: "Open Sans SemiBold"
+                font.bold: true
                 font.pixelSize: 10
                 color: "#999999"
                 visible: _previousSenderId != _senderId
@@ -125,7 +125,6 @@ Item {
             id: messageText
             wrapMode: Text.Wrap
             text: "Consectetur et doloribus beatae eius maxime. Error qui placeat et architecto consequatur. Dolorem qui amet necessitatibus. Hic non et sapiente minima nihil veritatis. Repellendus quia id ducimus. Architecto vero temporibus et dolorum."
-            font.family: "Open Sans"
             font.pixelSize: 12
         }
 

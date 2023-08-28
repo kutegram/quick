@@ -39,43 +39,33 @@ Rectangle {
                     icon: "../../img/forum.svg"
                     label: "All Chats"
                 }
-
-                ListElement {
-                    icon: "../../img/message-badge.svg"
-                    label: "Unread"
-                }
-
-                ListElement {
-                    icon: "../../img/bullhorn.svg"
-                    label: "Channels"
-                }
             }
 
             delegate: FolderItem {
 
             }
 
-            highlight: Item {
-                Rectangle {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-                    height: 2
-                    color: "#FFFFFF"
+//            highlight: Item {
+//                Rectangle {
+//                    anchors.left: parent.left
+//                    anchors.right: parent.right
+//                    anchors.bottom: parent.bottom
+//                    height: 2
+//                    color: "#FFFFFF"
 
-                }
+//                }
 
-                Behavior on x {
-                    NumberAnimation {
-                        easing.type: Easing.InOutQuad
-                    }
-                }
-                Behavior on width {
-                    NumberAnimation {
-                        easing.type: Easing.InOutQuad
-                    }
-                }
-            }
+//                Behavior on x {
+//                    NumberAnimation {
+//                        easing.type: Easing.InOutQuad
+//                    }
+//                }
+//                Behavior on width {
+//                    NumberAnimation {
+//                        easing.type: Easing.InOutQuad
+//                    }
+//                }
+//            }
         }
 
         Item {
@@ -102,7 +92,7 @@ Rectangle {
                     anchors.fill: parent
                     text: "JP"
                     color: "#FFFFFF"
-                    font.family: "Open Sans SemiBold"
+                    font.bold: true
                     font.pixelSize: 12
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -119,7 +109,7 @@ Rectangle {
                     spacing: 5
                     Text {
                         text: "Just Piggy"
-                        font.family: "Open Sans SemiBold"
+                        font.bold: true
                         font.pixelSize: 12
                         color: "#FFFFFF"
                     }
@@ -127,7 +117,6 @@ Rectangle {
 
                 Text {
                     text: "last seen at 09:35"
-                    font.family: "Open Sans"
                     color: "#FFFFFF"
                     font.pixelSize: 12
                 }
@@ -156,7 +145,7 @@ Rectangle {
             anchors.fill: parent
             verticalAlignment: Text.AlignVCenter
             text: "Kutegram"
-            font.family: "Open Sans SemiBold"
+            font.bold: true
             font.pixelSize: 12
             color: "#FFFFFF"
 

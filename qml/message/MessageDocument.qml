@@ -41,14 +41,13 @@ Rectangle {
             spacing: 5
             Text {
                 text: "JbakTaskManTimeless.zip"
-                font.family: "Open Sans SemiBold"
+                font.bold: true
                 font.pixelSize: 12
             }
         }
 
         Text {
             text: "1.0 MB"
-            font.family: "Open Sans"
             color: "#8D8D8D"
             font.pixelSize: 12
         }

@@ -1,4 +1,5 @@
 import QtQuick 1.0
+import Kutegram 1.0
 
 Rectangle {
     ListView {
@@ -19,10 +20,15 @@ Rectangle {
         }
 
         delegate: ListView {
+            id: dialogsView
             width: folderSlide.width
             height: folderSlide.height
             focus: true
-            model: 10
+            model: DialogsModel {
+                id: dialogsModel
+                client: telegramClient
+            }
+
             delegate: DialogItem {
 
             }

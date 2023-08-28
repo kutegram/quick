@@ -3,9 +3,7 @@ folder_01.source = qml
 folder_01.target = .
 folder_02.source = img
 folder_02.target = .
-folder_03.source = fonts
-folder_03.target = .
-DEPLOYMENTFOLDERS = folder_01 folder_02 folder_03
+DEPLOYMENTFOLDERS = folder_01 folder_02
 
 # Additional import path used to resolve QML modules in Creator's code model
 QML_IMPORT_PATH =
@@ -29,7 +27,10 @@ symbian:TARGET.CAPABILITY += NetworkServices
 
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
-    division.c
+    dialogsmodel.cpp
+
+HEADERS += \
+    dialogsmodel.h
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)

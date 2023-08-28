@@ -13,7 +13,7 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             text: "Confirmation Code"
-            font.family: "Open Sans SemiBold"
+            font.bold: true
             font.pixelSize: 12
             wrapMode: Text.Wrap
         }
@@ -22,7 +22,6 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             text: "Please, enter your confirmation code."
-            font.family: "Open Sans"
             font.pixelSize: 12
             wrapMode: Text.Wrap
         }
@@ -32,7 +31,6 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             text: ""
-            font.family: "Open Sans"
             font.pixelSize: 12
             wrapMode: Text.Wrap
             state: "EMPTY"

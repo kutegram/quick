@@ -27,7 +27,6 @@ Item {
         anchors.bottom: parent.bottom
         verticalAlignment: Text.AlignVCenter
         text: "Action Button"
-        font.family: "Open Sans SemiBold"
         font.pixelSize: 12
     }
 }

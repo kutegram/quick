@@ -124,7 +124,6 @@ Rectangle {
         TextEdit {
             id: innerEdit
             anchors.fill: parent
-            font.family: "Open Sans"
             font.pixelSize: 12
             focus: true
             wrapMode: TextEdit.Wrap
@@ -136,7 +135,6 @@ Rectangle {
             id: messageTip
             anchors.top: innerEdit.top
             anchors.left: parent.left
-            font.family: "Open Sans"
             font.pixelSize: 12
             color: "#8D8D8D"
             text: "Write a message..."

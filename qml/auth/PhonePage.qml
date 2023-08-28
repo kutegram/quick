@@ -15,7 +15,7 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             text: "Your Phone Number"
-            font.family: "Open Sans SemiBold"
+            font.bold: true
             font.pixelSize: 12
             wrapMode: Text.Wrap
         }
@@ -24,7 +24,6 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             text: "Please, enter your phone number."
-            font.family: "Open Sans"
             font.pixelSize: 12
             wrapMode: Text.Wrap
         }
@@ -34,7 +33,6 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             text: ""
-            font.family: "Open Sans"
             font.pixelSize: 12
             wrapMode: Text.Wrap
             state: "EMPTY"

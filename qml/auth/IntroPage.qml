@@ -10,7 +10,7 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             text: "Kutegram"
-            font.family: "Open Sans SemiBold"
+            font.bold: true
             font.pixelSize: 12
             wrapMode: Text.Wrap
         }
@@ -19,7 +19,6 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             text: "Just another unofficial Telegram client."
-            font.family: "Open Sans"
             font.pixelSize: 12
             wrapMode: Text.Wrap
         }

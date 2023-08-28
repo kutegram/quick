@@ -12,55 +12,79 @@ Rectangle {
     }
 
     Rectangle {
+        id: avatarRect
+        visible: !avatarLoaded
+
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
         anchors.leftMargin: 5
-        id: avatarRect
 
         width: 30
         height: 30
-        radius: 15
         smooth: true
-        color: "#FFA3A3"
+
+        color: thumbnailColor
 
         Text {
             anchors.fill: parent
-            text: "JP"
+            text: thumbnailText
             color: "#FFFFFF"
-            font.family: "Open Sans SemiBold"
+            font.bold: true
             font.pixelSize: 12
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
     }
 
+    Image {
+        id: avatarImage
+        visible: avatarLoaded
+
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.leftMargin: 5
+
+        width: 30
+        height: 30
+        smooth: true
+
+        asynchronous: true
+        source: avatarLoaded ? avatar : ""
+    }
+
     Column {
         anchors.left: avatarRect.right
+        anchors.right: parent.right
         anchors.verticalCenter: avatarRect.verticalCenter
         anchors.leftMargin: avatarRect.anchors.leftMargin
+        anchors.rightMargin: anchors.leftMargin
 
         Row {
-            spacing: 5
+            anchors.left: parent.left
+            anchors.right: parent.right
+
+            spacing: 4
             Text {
-                text: "Just Piggy"
-                font.family: "Open Sans SemiBold"
+                elide: Text.ElideRight
+                text: title
                 font.pixelSize: 12
             }
 
             Text {
                 anchors.bottom: parent.bottom
-                text: "09:35"
-                font.family: "Open Sans SemiBold"
+                text: messageTime
                 font.pixelSize: 10
                 color: "#999999"
             }
         }
 
         Text {
-            text: "Hello, world!"
-            font.family: "Open Sans"
+            text: messageText
             color: "#8D8D8D"
             font.pixelSize: 12
+            anchors.left: parent.left
+            anchors.right: parent.right
+            elide: Text.ElideRight
         }
     }
 

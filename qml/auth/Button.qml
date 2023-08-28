@@ -12,7 +12,7 @@ Item {
     Text {
         anchors.centerIn: parent
         text: "Next"
-        font.family: "Open Sans SemiBold"
+        font.bold: true
         font.pixelSize: 12
         //color: "#FFFFFF"
     }

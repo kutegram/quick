@@ -46,6 +46,13 @@ Rectangle {
         authProgress = visible;
     }
 
+    Component.onCompleted: {
+        if (telegramClient.hasSession()) {
+            setAuthProgress(true);
+            telegramClient.start();
+        }
+    }
+
     TgClient {
         id: telegramClient
 
@@ -64,6 +71,7 @@ Rectangle {
             setAuthProgress(false);
 
             if (!hasUserId) {
+                firstAuth = true;
                 root.state = "AUTH";
                 authStack.currentIndex = 0;
             } else {
@@ -77,7 +85,28 @@ Rectangle {
 
             phonePage.phoneCodeHash = data["phone_code_hash"];
             switch (data["type"]["_"]) {
-                //TODO: messages
+                //TODO messages
+//            case TLType::AuthSentCodeTypeApp:
+//                codeNumberDescriptionLabel->setText("A code was sent via Telegram to your other\ndevices, if you have any connected.");
+//                break;
+//            case TLType::AuthSentCodeTypeSms:
+//                codeNumberDescriptionLabel->setText("We've sent an activation code to your phone.\nPlease enter it below.");
+//                break;
+//            case TLType::AuthSentCodeTypeCall:
+//                break;
+//            case TLType::AuthSentCodeTypeFlashCall:
+//                break;
+//            case TLType::AuthSentCodeTypeMissedCall:
+//                break;
+//            case TLType::AuthSentCodeTypeEmailCode:
+//                break;
+//            case TLType::AuthSentCodeTypeSetUpEmailRequired:
+//                //TODO: show error or implement it lol
+//                break;
+//            case TLType::AuthSentCodeTypeFragmentSms:
+//                break;
+//            case TLType::AuthSentCodeTypeFirebaseSms:
+//                break;
             }
 
             authStack.currentIndex = 2;
@@ -97,7 +126,6 @@ Rectangle {
             //TODO hide reconnecting
 
             root.state = "MAIN";
-            // TODO load dialogs
         }
 
         onRpcError: {
@@ -127,11 +155,16 @@ Rectangle {
             //TODO
         }
 
-        Component.onCompleted: {
-            if (hasSession()) {
-                root.setAuthProgress(true);
-                telegramClient.start();
-            }
+        onFileDownloadCanceled: {
+            console.log("[INFO] File " + fileId + " download canceled");
+        }
+
+        onFileDownloaded: {
+            console.log("[INFO] File " + fileId + " have been downloaded");
+        }
+
+        onFileDownloading: {
+            console.log("[INFO] File " + fileId + " download progress: " + downloadedLength + " / " + totalLength + " " + downloadProgress + " %");
         }
     }
 
@@ -161,11 +194,6 @@ Rectangle {
 
             CodePage {
                 id: codePage
-                width: authStack.width
-                height: authStack.height
-            }
-
-            TFAPage {
                 width: authStack.width
                 height: authStack.height
             }
@@ -236,7 +264,7 @@ Rectangle {
             Text {
                 id: settingsText
                 anchors.centerIn: parent
-                font.family: "Open Sans SemiBold"
+                font.bold: true
                 font.pixelSize: 12
                 text: "SETTINGS"
             }
