@@ -7,6 +7,7 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: {
+            messagePage.peer = peerBytes;
             stack.currentIndex = 1
         }
     }
@@ -62,8 +63,8 @@ Rectangle {
         Row {
             anchors.left: parent.left
             anchors.right: parent.right
-
             spacing: 4
+
             Text {
                 elide: Text.ElideRight
                 text: title
@@ -79,7 +80,7 @@ Rectangle {
         }
 
         Text {
-            text: messageText
+            text: messageText.length != 0 ? messageText : "*empty text*"
             color: "#8D8D8D"
             font.pixelSize: 12
             anchors.left: parent.left

@@ -1,7 +1,9 @@
 import QtQuick 1.0
+import Kutegram 1.0
 
 Rectangle {
     property string globalState: "NO_SELECT"
+    property alias peer: messagesModel.peer
 
     ListView {
         anchors.top: parent.top
@@ -10,26 +12,15 @@ Rectangle {
         anchors.bottom: messageEdit.top
         spacing: 5
 
-        model: ListModel {
-            ListElement {
-                senderId: 0
-                previousSenderId: -1
+        onMovementEnded: {
+            if (atYBeginning && messagesModel.canFetchMoreUpwards()) {
+                messagesModel.fetchMoreUpwards();
             }
+        }
 
-            ListElement {
-                senderId: 0
-                previousSenderId: 0
-            }
-
-            ListElement {
-                senderId: 1
-                previousSenderId: 0
-            }
-
-            ListElement {
-                senderId: 2
-                previousSenderId: 1
-            }
+        model: MessagesModel {
+            id: messagesModel
+            client: telegramClient
         }
 
         delegate: MessageItem {

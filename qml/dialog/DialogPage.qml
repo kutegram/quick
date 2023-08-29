@@ -25,7 +25,6 @@ Rectangle {
             height: folderSlide.height
             focus: true
             model: DialogsModel {
-                id: dialogsModel
                 client: telegramClient
             }
 

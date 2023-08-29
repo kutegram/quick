@@ -46,10 +46,6 @@ Item {
         }
     }
 
-    //TODO: use peer object
-    property double _senderId: senderId;
-    property double _previousSenderId: previousSenderId;
-
     Image {
         id: checkbox
         source: "../../img/checkbox-blank-circle-outline.svg"
@@ -66,7 +62,7 @@ Item {
         anchors.left: checkbox.right
         anchors.leftMargin: 5
         anchors.topMargin: 5
-        visible: _previousSenderId != _senderId
+        visible: !mergeMessage
         width: 30
         height: 30
         radius: 15
@@ -95,26 +91,23 @@ Item {
         spacing: 2
 
         Row {
-            spacing: 5
             anchors.left: parent.left
             anchors.right: parent.right
+            spacing: 4
 
             Text {
-                id: messageSender
-                text: "Just Piggy"
+                text: senderName
                 font.bold: true
                 font.pixelSize: 12
-                visible: _previousSenderId != _senderId
+                visible: !mergeMessage
             }
 
             Text {
-                id: messageTimestamp
                 anchors.bottom: parent.bottom
-                text: "09:35"
-                font.bold: true
+                text: messageTime
                 font.pixelSize: 10
                 color: "#999999"
-                visible: _previousSenderId != _senderId
+                visible: !mergeMessage
             }
         }
 
@@ -122,55 +115,56 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            id: messageText
             wrapMode: Text.Wrap
-            text: "Consectetur et doloribus beatae eius maxime. Error qui placeat et architecto consequatur. Dolorem qui amet necessitatibus. Hic non et sapiente minima nihil veritatis. Repellendus quia id ducimus. Architecto vero temporibus et dolorum."
+            text: messageText
+            visible: messageText.length != 0
+            color: "#000000"
             font.pixelSize: 12
         }
 
-        ListView {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 100
-            //TODO: think about this value
-            cacheBuffer: 20000
-            spacing: 5
-            orientation: ListView.Horizontal
-            snapMode: ListView.SnapOneItem
-            highlightRangeMode: ListView.StrictlyEnforceRange
-            highlightFollowsCurrentItem: true
-            highlightMoveDuration: 200
-            clip: true
+//        ListView {
+//            anchors.left: parent.left
+//            anchors.right: parent.right
+//            height: 100
+//            //TODO: think about this value
+//            cacheBuffer: 20000
+//            spacing: 5
+//            orientation: ListView.Horizontal
+//            snapMode: ListView.SnapOneItem
+//            highlightRangeMode: ListView.StrictlyEnforceRange
+//            highlightFollowsCurrentItem: true
+//            highlightMoveDuration: 200
+//            clip: true
 
-            model: ListModel {
-//                ListElement {
-//                    image: "../../img/test/1.jpg"
-//                }
-//                ListElement {
-//                    image: "../../img/test/2.jpg"
-//                }
-//                ListElement {
-//                    image: "../../img/test/3.jpg"
-//                }
-//                ListElement {
-//                    image: "../../img/test/4.jpg"
-//                }
-//                ListElement {
-//                    image: "../../img/test/5.jpg"
-//                }
-            }
-            delegate: MessageImage {
-                state: currentState
-            }
-        }
+//            model: ListModel {
+////                ListElement {
+////                    image: "../../img/test/1.jpg"
+////                }
+////                ListElement {
+////                    image: "../../img/test/2.jpg"
+////                }
+////                ListElement {
+////                    image: "../../img/test/3.jpg"
+////                }
+////                ListElement {
+////                    image: "../../img/test/4.jpg"
+////                }
+////                ListElement {
+////                    image: "../../img/test/5.jpg"
+////                }
+//            }
+//            delegate: MessageImage {
+//                state: currentState
+//            }
+//        }
 
-        Repeater {
-            model: 3
-            MessageDocument {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                state: currentState
-            }
-        }
+//        Repeater {
+//            model: 3
+//            MessageDocument {
+//                anchors.left: parent.left
+//                anchors.right: parent.right
+//                state: currentState
+//            }
+//        }
     }
 }

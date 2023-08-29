@@ -30,7 +30,9 @@ private:
         AvatarRole,
         MessageTimeRole,
         MessageTextRole,
-        AvatarLoadedRole
+        AvatarLoadedRole,
+        InputPeerRole,
+        PeerBytesRole
     };
 
 public:

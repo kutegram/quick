@@ -6,6 +6,7 @@
 #include <QtDeclarative>
 #include "tgclient.h"
 #include "dialogsmodel.h"
+#include "messagesmodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,6 +24,7 @@ int main(int argc, char *argv[])
 
     TgClient::registerQML();
     qmlRegisterType<DialogsModel>("Kutegram", 1, 0, "DialogsModel");
+    qmlRegisterType<MessagesModel>("Kutegram", 1, 0, "MessagesModel");
 
     QmlApplicationViewer viewer;
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);

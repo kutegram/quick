@@ -131,8 +131,6 @@ Rectangle {
         onRpcError: {
             setAuthProgress(false);
 
-            console.log(errorCode + ": " + errorMessage);
-
             if (errorMessage == "PHONE_NUMBER_FLOOD") {
                 phonePage.error = "Phone is used too many times recently.";
             }

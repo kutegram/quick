@@ -91,12 +91,12 @@ Item {
                     anchors.top: parent.top
                     anchors.left: parent.left
                     anchors.bottom: parent.bottom
-                    width: parent.width * 2 / 3
+                    width: Math.min(parent.width * 2 / 3, 280)
                     color: "#FFFFFF"
 
                     ListView {
                         anchors.fill: parent
-                        model: 5
+                        //model: 5
                         delegate: DrawerButton {
 
                         }

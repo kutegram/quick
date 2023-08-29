@@ -23,6 +23,8 @@ DialogsModel::DialogsModel(QObject *parent)
     roles[MessageTimeRole] = "messageTime";
     roles[MessageTextRole] = "messageText";
     roles[AvatarLoadedRole] = "avatarLoaded";
+    roles[InputPeerRole] = "inputPeer";
+    roles[PeerBytesRole] = "peerBytes";
     setRoleNames(roles);
 }
 
@@ -98,6 +100,7 @@ void DialogsModel::authorized(TgLongVariant userId)
         resetState();
         _userId = userId;
         fetchMore(QModelIndex());
+        return;
     }
 
     _userId = userId;
@@ -171,7 +174,7 @@ void DialogsModel::messagesGetDialogsResponse(TgObject data, TgLongVariant messa
         dialogsRows.append(createRow(lastDialog, lastPeer, lastMessage));
     }
 
-    beginInsertRows(QModelIndex(), _dialogs.size() + 1, _dialogs.size() + dialogsRows.size());
+    beginInsertRows(QModelIndex(), _dialogs.size(), _dialogs.size() + dialogsRows.size() - 1);
     _dialogs.append(dialogsRows);
     endInsertRows();
 }
@@ -209,7 +212,16 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
 {
     TgObject row;
 
-    row["inputPeer"] = TgClient::toInputPeer(peer);
+    TgObject inputPeer = TgClient::toInputPeer(peer);
+    row["inputPeer"] = inputPeer;
+
+    inputPeer["read_inbox_max_id"] = dialog["read_inbox_max_id"];
+    inputPeer["read_outbox_max_id"] = dialog["read_outbox_max_id"];
+
+    QByteArray array;
+    QDataStream peerStream(&array, QIODevice::WriteOnly);
+    peerStream << inputPeer;
+    row["peerBytes"] = array;
 
     if (TgClient::isUser(peer)) {
         row["title"] = peer["first_name"].toString() + " " + peer["last_name"].toString();
@@ -221,7 +233,7 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
     row["thumbnailText"] = getAvatarText(row["title"].toString());
     row["avatarLoaded"] = false;
 
-    row["messageTime"] = QDateTime::fromTime_t(message["date"].toInt()).toString("hh:mm");
+    row["messageTime"] = QDateTime::fromTime_t(qMax(message["date"].toInt(), message["edit_date"].toInt())).toString("hh:mm");
     row["messageText"] = message["message"].toString().replace('\n', " ");
 
     TgObject photo = peer["photo"].toMap();
