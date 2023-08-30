@@ -4,6 +4,8 @@
 #include <QMutexLocker>
 #include <QColor>
 #include <QDateTime>
+#include <QUrl>
+#include <QDomDocument>
 
 MessagesModel::MessagesModel(QObject *parent)
     : QAbstractListModel(parent)
@@ -11,6 +13,7 @@ MessagesModel::MessagesModel(QObject *parent)
     , _client(0)
     , _userId(0)
     , _peer()
+    , _inputPeer()
     , _upRequestId(0)
     , _downRequestId(0)
     , _upOffset(0)
@@ -34,6 +37,7 @@ void MessagesModel::resetState()
     }
 
     _peer = TgObject();
+    _inputPeer = TgObject();
     _upRequestId = 0;
     _downRequestId = 0;
     _upOffset = 0;
@@ -75,6 +79,7 @@ void MessagesModel::setPeer(QByteArray bytes)
     peerStream >> peer;
 
     _peer = peer;
+    _inputPeer = TgClient::toInputPeer(peer);
 
     _upOffset = _downOffset = qMax(peer["read_inbox_max_id"].toInt(), peer["read_outbox_max_id"].toInt());
     fetchMoreUpwards();
@@ -104,9 +109,19 @@ QVariant MessagesModel::data(const QModelIndex &index, int role) const
         TgObject curr = _history[index.row()];
         TgObject prev = _history[index.row() - 1];
 
-        return (curr["grouped_id"] == prev["grouped_id"]
-                || curr["date"].toInt() - prev["date"].toInt() < 300)
-                && curr["sender"] == prev["sender"];
+        if (!TgClient::peersEqual(curr["sender"].toMap(), prev["sender"].toMap())) {
+            return false;
+        }
+
+        if (curr["grouped_id"].toLongLong() == prev["grouped_id"].toLongLong()) {
+            return true;
+        }
+
+        if (!TgClient::isChannel(_peer) && curr["date"].toInt() - prev["date"].toInt() < 300) {
+            return true;
+        }
+
+        return false;
     }
 
     return _history[index.row()][roleNames()[role]];
@@ -114,26 +129,26 @@ QVariant MessagesModel::data(const QModelIndex &index, int role) const
 
 bool MessagesModel::canFetchMore(const QModelIndex &parent) const
 {
-    return _client && _userId.toLongLong() && TgClient::commonPeerType(_peer) != 0 && !_downRequestId.toLongLong() && _downOffset != -1;
+    return _client && _userId.toLongLong() && TgClient::commonPeerType(_inputPeer) != 0 && !_downRequestId.toLongLong() && _downOffset != -1;
 }
 
 void MessagesModel::fetchMore(const QModelIndex &parent)
 {
     QMutexLocker lock(&mutex);
 
-    _downRequestId = _client->messagesGetHistory(_peer, _downOffset, 0, -20, 20);
+    _downRequestId = _client->messagesGetHistory(_inputPeer, _downOffset, 0, -20, 20);
 }
 
 bool MessagesModel::canFetchMoreUpwards() const
 {
-    return _client && _userId.toLongLong() && TgClient::commonPeerType(_peer) != 0 && !_upRequestId.toLongLong() && _upOffset != -1;
+    return _client && _userId.toLongLong() && TgClient::commonPeerType(_inputPeer) != 0 && !_upRequestId.toLongLong() && _upOffset != -1;
 }
 
 void MessagesModel::fetchMoreUpwards()
 {
     QMutexLocker lock(&mutex);
 
-    _upRequestId = _client->messagesGetHistory(_peer, _upOffset, 0, 0, 20);
+    _upRequestId = _client->messagesGetHistory(_inputPeer, _upOffset, 0, 0, 20);
 }
 
 void MessagesModel::authorized(TgLongVariant userId)
@@ -197,6 +212,9 @@ void MessagesModel::handleHistoryResponse(TgObject data, TgLongVariant messageId
                 break;
             }
         }
+        if (TgClient::commonPeerType(fromId) == 0) {
+            sender = _peer;
+        }
 
         messagesRows.append(createRow(message, sender));
     }
@@ -251,6 +269,11 @@ void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant me
                 break;
             }
         }
+        if (TgClient::commonPeerType(fromId) == 0) {
+            //This means that it is a channel feed or personal messages.
+            //Authorized user is returned by API, so we don't need to put it manually.
+            sender = _peer;
+        }
 
         messagesRows.append(createRow(message, sender));
     }
@@ -277,7 +300,7 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender)
     TgObject row;
 
     if (TgClient::isUser(sender)) {
-        row["senderName"] = sender["first_name"].toString() + " " + sender["last_name"].toString();
+        row["senderName"] = QString(sender["first_name"].toString() + " " + sender["last_name"].toString());
     } else {
         row["senderName"] = sender["title"].toString();
     }
@@ -285,8 +308,43 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender)
     row["date"] = message["date"];
     row["grouped_id"] = message["grouped_id"];
     row["messageTime"] = QDateTime::fromTime_t(qMax(message["date"].toInt(), message["edit_date"].toInt())).toString("hh:mm");
-    row["messageText"] = message["message"];
+    row["messageText"] = message["message"].toString();
     row["sender"] = TgClient::toInputPeer(sender);
 
     return row;
+}
+
+void MessagesModel::linkActivated(QString link, qint32 listIndex)
+{
+    QMutexLocker lock(&mutex);
+
+    QUrl url(link);
+
+    if (url.scheme() == "kutegram") {
+        if (url.host() == "spoiler") {
+            TgObject listItem = _history[listIndex];
+            QDomDocument dom;
+            QString error;
+            int errorLine = 0, errorColumn = 0;
+            dom.setContent(listItem["messageText"].toString(), false, &error, &errorLine, &errorColumn);
+            //TODO remove this
+            kgDebug() << error << errorLine << errorColumn;
+            kgDebug() << listItem["messageText"].toString();
+
+            QDomNodeList list = dom.elementsByTagName("a");
+            for (qint32 i = 0; i < list.count(); ++i) {
+                QDomElement node = list.at(i).toElement();
+                if (node.attribute("href") == link) {
+                    node.removeAttribute("href");
+                    node.removeAttribute("style");
+                    break;
+                }
+            }
+            listItem["messageText"] = dom.toString(-1);
+            _history[listIndex] = listItem;
+
+            emit dataChanged(index(listIndex), index(listIndex));
+        }
+    }
+    // TODO else openUrl(url);
 }

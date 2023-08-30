@@ -20,6 +20,7 @@ private:
     TgLongVariant _userId;
 
     TgObject _peer;
+    TgObject _inputPeer;
 
     TgLongVariant _upRequestId;
     TgLongVariant _downRequestId;
@@ -64,6 +65,8 @@ public slots:
 
     bool canFetchMoreUpwards() const;
     void fetchMoreUpwards();
+
+    void linkActivated(QString link, qint32 index);
 };
 
 #endif // MESSAGESMODEL_H

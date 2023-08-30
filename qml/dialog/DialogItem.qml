@@ -1,6 +1,6 @@
 import QtQuick 1.0
 
-Rectangle {
+Item {
     width: ListView.view.width
     height: 40
 
@@ -8,7 +8,12 @@ Rectangle {
         anchors.fill: parent
         onClicked: {
             messagePage.peer = peerBytes;
-            stack.currentIndex = 1
+            topBar.peerTitle = title;
+            topBar.peerThumbnailColor = thumbnailColor;
+            topBar.peerThumbnailText = thumbnailText;
+            topBar.peerAvatarLoaded = avatarLoaded;
+            topBar.peerAvatar = avatar;
+            stack.currentIndex = 1;
         }
     }
 
@@ -43,7 +48,7 @@ Rectangle {
 
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
-        anchors.leftMargin: 5
+        anchors.leftMargin: avatarRect.anchors.leftMargin
 
         width: 30
         height: 30
@@ -80,7 +85,7 @@ Rectangle {
         }
 
         Text {
-            text: messageText.length != 0 ? messageText : "*empty text*"
+            text: messageText
             color: "#8D8D8D"
             font.pixelSize: 12
             anchors.left: parent.left

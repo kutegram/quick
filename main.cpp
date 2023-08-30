@@ -1,4 +1,4 @@
-#include <QtGui/QApplication>
+#include <QApplication>
 #include "qmlapplicationviewer.h"
 
 #include <QFontDatabase>
@@ -10,6 +10,11 @@
 
 int main(int argc, char *argv[])
 {
+    //TODO OpenGL acceleration
+#if QT_VERSION < 0x050000
+    //QApplication::setGraphicsSystem("opengl");
+#endif
+
     QApplication app(argc, argv);
 
     QApplication::setApplicationVersion("1.0.0");
@@ -18,8 +23,10 @@ int main(int argc, char *argv[])
     QApplication::setOrganizationDomain("kg.crx.moe");
 
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+#if QT_VERSION < 0x050000
     QTextCodec::setCodecForTr(codec);
     QTextCodec::setCodecForCStrings(codec);
+#endif
     QTextCodec::setCodecForLocale(codec);
 
     TgClient::registerQML();

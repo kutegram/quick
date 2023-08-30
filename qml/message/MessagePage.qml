@@ -10,7 +10,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: messageEdit.top
-        spacing: 5
+        spacing: 2
 
         onMovementEnded: {
             if (atYBeginning && messagesModel.canFetchMoreUpwards()) {

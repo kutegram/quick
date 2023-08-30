@@ -4,6 +4,12 @@ import "../dialog"
 Rectangle {
     property string currentState: "MENU"
 
+    property string peerTitle: ""
+    property color peerThumbnailColor: "#00000000"
+    property string peerThumbnailText: ""
+    property bool peerAvatarLoaded: false
+    property string peerAvatar: ""
+
     id: topBarRoot
     height: 40
     width: 240
@@ -77,26 +83,44 @@ Rectangle {
             }
 
             Rectangle {
+                id: avatarRect
+                visible: !peerAvatarLoaded
+
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.leftMargin: (parent.height - width) / 2
-                id: avatarRect
 
                 width: 30
                 height: 30
-                radius: 15
                 smooth: true
-                color: "#FFA3A3"
+
+                color: peerThumbnailColor
 
                 Text {
                     anchors.fill: parent
-                    text: "JP"
+                    text: peerThumbnailText
                     color: "#FFFFFF"
                     font.bold: true
                     font.pixelSize: 12
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
+            }
+
+            Image {
+                id: avatarImage
+                visible: peerAvatarLoaded
+
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.leftMargin: avatarRect.anchors.leftMargin
+
+                width: 30
+                height: 30
+                smooth: true
+
+                asynchronous: true
+                source: peerAvatarLoaded ? peerAvatar : ""
             }
 
             Column {
@@ -106,10 +130,13 @@ Rectangle {
                 anchors.right: actionsButton.left
 
                 Row {
-                    spacing: 5
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    spacing: 4
+
                     Text {
-                        text: "Just Piggy"
-                        font.bold: true
+                        elide: Text.ElideRight
+                        text: peerTitle
                         font.pixelSize: 12
                         color: "#FFFFFF"
                     }
@@ -119,6 +146,9 @@ Rectangle {
                     text: "last seen at 09:35"
                     color: "#FFFFFF"
                     font.pixelSize: 12
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    elide: Text.ElideRight
                 }
             }
 
@@ -128,6 +158,8 @@ Rectangle {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 width: height
+
+                visible: false
 
                 Image {
                     id: actionsImage

@@ -48,7 +48,7 @@ public:
     bool canFetchMore(const QModelIndex &parent) const;
     void fetchMore(const QModelIndex &parent);
 
-    TgObject createRow(TgObject dialog, TgObject peer, TgObject message);
+    TgObject createRow(TgObject dialog, TgObject peer, TgObject message, TgObject messageSender);
 
 signals:
 

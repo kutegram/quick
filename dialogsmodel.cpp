@@ -171,7 +171,25 @@ void DialogsModel::messagesGetDialogsResponse(TgObject data, TgLongVariant messa
             }
         }
 
-        dialogsRows.append(createRow(lastDialog, lastPeer, lastMessage));
+        TgObject fromId = lastMessage["from_id"].toMap();
+        TgObject messageSender;
+
+        if (TgClient::isUser(fromId)) for (qint32 j = 0; j < usersList.size(); ++j) {
+            TgObject peer = usersList[j].toMap();
+            if (TgClient::peersEqual(peer, fromId)) {
+                messageSender = peer;
+                break;
+            }
+        }
+        if (TgClient::isChat(fromId)) for (qint32 j = 0; j < chatsList.size(); ++j) {
+            TgObject peer = chatsList[j].toMap();
+            if (TgClient::peersEqual(peer, fromId)) {
+                messageSender = peer;
+                break;
+            }
+        }
+
+        dialogsRows.append(createRow(lastDialog, lastPeer, lastMessage, messageSender));
     }
 
     beginInsertRows(QModelIndex(), _dialogs.size(), _dialogs.size() + dialogsRows.size() - 1);
@@ -208,11 +226,11 @@ QColor userColor(qint64 id)
    return QColor::fromHsl(id % 360, 160, 160);
 }
 
-TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject message)
+TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject message, TgObject messageSender)
 {
     TgObject row;
 
-    TgObject inputPeer = TgClient::toInputPeer(peer);
+    TgObject inputPeer = peer;
     row["inputPeer"] = inputPeer;
 
     inputPeer["read_inbox_max_id"] = dialog["read_inbox_max_id"];
@@ -224,7 +242,7 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
     row["peerBytes"] = array;
 
     if (TgClient::isUser(peer)) {
-        row["title"] = peer["first_name"].toString() + " " + peer["last_name"].toString();
+        row["title"] = QString(peer["first_name"].toString() + " " + peer["last_name"].toString());
     } else {
         row["title"] = peer["title"].toString();
     }
@@ -234,7 +252,31 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
     row["avatarLoaded"] = false;
 
     row["messageTime"] = QDateTime::fromTime_t(qMax(message["date"].toInt(), message["edit_date"].toInt())).toString("hh:mm");
-    row["messageText"] = message["message"].toString().replace('\n', " ");
+
+    QString messageSenderName;
+
+    if (TgClient::commonPeerType(messageSender) == 0) {
+        //This means that it is a channel feed or personal messages.
+        //Authorized user isn't returned by API, so we have to deal with it.
+        if (message["out"].toBool()) {
+            messageSenderName = "You";
+        }
+        //else messageSender = peer;
+    }
+
+    if (TgClient::isUser(messageSender)) {
+        messageSenderName = messageSender["first_name"].toString();
+    } else {
+        messageSenderName = messageSender["title"].toString();
+    }
+
+    if (!messageSenderName.isEmpty()) {
+        messageSenderName += ": ";
+    }
+
+    messageSenderName += message["message"].toString().replace('\n', " ");
+
+    row["messageText"] = messageSenderName;
 
     TgObject photo = peer["photo"].toMap();
     if (GETID(photo)) {

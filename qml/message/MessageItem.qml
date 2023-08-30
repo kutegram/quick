@@ -5,7 +5,7 @@ Item {
 
     id: messageRoot
     width: ListView.view.width
-    height: textContainer.height
+    height: Math.max(36, textContainer.height)
     state: "NO_SELECT"
 
     states: [
@@ -120,6 +120,10 @@ Item {
             visible: messageText.length != 0
             color: "#000000"
             font.pixelSize: 12
+
+            onLinkActivated: {
+                messagesModel.linkActivated(link, index);
+            }
         }
 
 //        ListView {
