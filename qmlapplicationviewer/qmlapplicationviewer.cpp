@@ -92,8 +92,8 @@ QmlApplicationViewer::~QmlApplicationViewer()
 
 void QmlApplicationViewer::setMainQmlFile(const QString &file)
 {
-    m_d->mainQmlFile = QmlApplicationViewerPrivate::adjustPath(file);
-    setSource(QUrl::fromLocalFile(m_d->mainQmlFile));
+    m_d->mainQmlFile = file;
+    setSource(QUrl(m_d->mainQmlFile));
 }
 
 void QmlApplicationViewer::addImportPath(const QString &path)

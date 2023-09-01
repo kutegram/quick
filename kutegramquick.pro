@@ -1,19 +1,10 @@
 QT += core declarative network xml
 DEFINES += QT_USE_FAST_CONCATENATION QT_USE_FAST_OPERATOR_PLUS
-VERSION = 1.0.0
-CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
-
-# TODO Migrate to QRC
-folder_01.source = qml
-folder_01.target = .
-folder_02.source = img
-folder_02.target = .
-DEPLOYMENTFOLDERS = folder_01 folder_02
+CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT KG_NO_DEBUG KG_NO_INFO
 
 QML_IMPORT_PATH =
 
 symbian:TARGET.UID3 = 0xE607720E
-
 symbian:TARGET.CAPABILITY += NetworkServices ReadUserData WriteUserData
 
 SOURCES += main.cpp \
@@ -32,7 +23,29 @@ OTHER_FILES += \
     qtc_packaging/debian_harmattan/copyright \
     qtc_packaging/debian_harmattan/control \
     qtc_packaging/debian_harmattan/compat \
-    qtc_packaging/debian_harmattan/changelog
+    qtc_packaging/debian_harmattan/changelog \
+    qml/main.qml \
+    qml/auth/Button.qml \
+    qml/auth/CodePage.qml \
+    qml/auth/IntroPage.qml \
+    qml/auth/PhonePage.qml \
+    qml/control/Drawer.qml \
+    qml/control/DrawerButton.qml \
+    qml/control/LineEdit.qml \
+    qml/control/Spinner.qml \
+    qml/control/Stack.qml \
+    qml/control/TopBar.qml \
+    qml/dialog/DialogItem.qml \
+    qml/dialog/DialogPage.qml \
+    qml/dialog/FolderItem.qml \
+    qml/message/MessageDocument.qml \
+    qml/message/MessageEdit.qml \
+    qml/message/MessageImage.qml \
+    qml/message/MessageItem.qml \
+    qml/message/MessagePage.qml
+
+RESOURCES += \
+    resources.qrc
 
 include(libkg/libkg.pri)
 

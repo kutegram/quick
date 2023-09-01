@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
 {
     //TODO OpenGL acceleration
     //Causes some crashes on Windows, Symbian 9.2-9.3?, research it
+    //Requires custom fonts, but they can't be install on iOS
 #if QT_VERSION < 0x050000
     //QApplication::setGraphicsSystem("opengl");
 #endif
@@ -39,7 +40,7 @@ int main(int argc, char *argv[])
     //TODO show status pane without button group on Symbian
     QmlApplicationViewer viewer;
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
-    viewer.setMainQmlFile(QLatin1String("qml/main.qml"));
+    viewer.setMainQmlFile(QLatin1String("qrc:/qml/main.qml"));
     viewer.showExpanded();
 
     return app.exec();

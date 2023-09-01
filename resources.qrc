@@ -1,0 +1,40 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+        <file>img/arrow-left.svg</file>
+        <file>img/arrow-left_black.svg</file>
+        <file>img/attachment.svg</file>
+        <file>img/bullhorn.svg</file>
+        <file>img/checkbox-blank-circle-outline.svg</file>
+        <file>img/checkbox-marked-circle.svg</file>
+        <file>img/delete.svg</file>
+        <file>img/dots-vertical.svg</file>
+        <file>img/file.svg</file>
+        <file>img/forum.svg</file>
+        <file>img/loading.svg</file>
+        <file>img/loading_white.svg</file>
+        <file>img/menu.svg</file>
+        <file>img/message-badge.svg</file>
+        <file>img/microphone.svg</file>
+        <file>img/send.svg</file>
+        <file>img/send_accent.svg</file>
+        <file>qml/control/Drawer.qml</file>
+        <file>qml/control/DrawerButton.qml</file>
+        <file>qml/control/LineEdit.qml</file>
+        <file>qml/control/Spinner.qml</file>
+        <file>qml/control/Stack.qml</file>
+        <file>qml/control/TopBar.qml</file>
+        <file>qml/auth/Button.qml</file>
+        <file>qml/auth/CodePage.qml</file>
+        <file>qml/auth/IntroPage.qml</file>
+        <file>qml/auth/PhonePage.qml</file>
+        <file>qml/dialog/DialogItem.qml</file>
+        <file>qml/dialog/DialogPage.qml</file>
+        <file>qml/dialog/FolderItem.qml</file>
+        <file>qml/message/MessageDocument.qml</file>
+        <file>qml/message/MessageEdit.qml</file>
+        <file>qml/message/MessageImage.qml</file>
+        <file>qml/message/MessageItem.qml</file>
+        <file>qml/message/MessagePage.qml</file>
+    </qresource>
+</RCC>
