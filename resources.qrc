@@ -40,5 +40,6 @@
         <file>img/exit-to-app.png</file>
         <file>img/refresh.png</file>
         <file>img/bookmark.png</file>
+        <file>kutegramquick_big.png</file>
     </qresource>
 </RCC>

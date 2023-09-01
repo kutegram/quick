@@ -9,19 +9,18 @@ Item {
     width: 160
     height: 40
 
+    Rectangle {
+        anchors.fill: parent
+        radius: 5
+        color: "#54759E"
+    }
+
     Text {
         anchors.centerIn: parent
         text: "Next"
         font.bold: true
         font.pixelSize: 12
-        //color: "#FFFFFF"
-    }
-
-    Rectangle {
-        anchors.fill: parent
-        radius: 5
-        color: "#000000"
-        opacity: innerArea.activeFocus ? 0.2 : 0
+        color: "#FFFFFF"
     }
 
     MouseArea {

@@ -179,8 +179,7 @@ Rectangle {
         }
     }
 
-    //TODO: remove stack
-    //TODO: improve interface
+    //TODO: remove stack and rewrite with states
     Rectangle {
         id: authRect
         anchors.left: parent.left
