@@ -8,6 +8,7 @@
 #include "dialogsmodel.h"
 #include "messagesmodel.h"
 #include "messageeditor.h"
+#include "systemname.h"
 
 int main(int argc, char *argv[])
 {
@@ -40,6 +41,8 @@ int main(int argc, char *argv[])
     //TODO show status pane without button group on Symbian
     QmlApplicationViewer viewer;
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
+    viewer.rootContext()->setContextProperty("kutegramVersion", QApplication::applicationVersion());
+    viewer.rootContext()->setContextProperty("kutegramPlatform", systemName());
     viewer.setMainQmlFile(QLatin1String("qrc:/qml/main.qml"));
     viewer.showExpanded();
 

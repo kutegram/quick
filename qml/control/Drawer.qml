@@ -95,10 +95,63 @@ Item {
                     color: "#FFFFFF"
 
                     ListView {
-                        anchors.fill: parent
-                        //model: 5
+                        anchors.top: parent.top
+                        anchors.bottom: drawerBottom.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        model: ListModel {
+                            ListElement {
+                                icon: "../../img/refresh.png"
+                                name: "Refresh dialogs"
+                            }
+//                            ListElement {
+//                                icon: "../../img/bookmark.png"
+//                                name: "Saved messages"
+//                            }
+                            ListElement {
+                                icon: "../../img/exit-to-app.png"
+                                name: "Log out"
+                            }
+                            ListElement {
+                                icon: "../../img/close.png"
+                                name: "Close"
+                            }
+                        }
+
                         delegate: DrawerButton {
 
+                        }
+                    }
+
+                    Rectangle {
+                        id: drawerBottom
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        color: "#FFFFFF"
+                        height: 40
+
+                        Column {
+                            anchors.bottom: parent.bottom
+                            anchors.left: parent.left
+                            anchors.leftMargin: 12
+                            anchors.bottomMargin: 7
+                            spacing: 2
+                            Text {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                font.pixelSize: 12
+                                color: "#999999"
+                                text: "Kutegram for " + kutegramPlatform
+                                font.bold: true
+                            }
+                            Text {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                font.pixelSize: 12
+                                color: "#999999"
+                                text: "Version " + kutegramVersion
+                            }
                         }
                     }
                 }

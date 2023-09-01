@@ -345,3 +345,9 @@ void DialogsModel::fileDownloaded(TgLongVariant fileId, QString filePath)
         }
     }
 }
+
+void DialogsModel::refresh()
+{
+    resetState();
+    fetchMore(QModelIndex());
+}

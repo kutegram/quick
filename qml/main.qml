@@ -71,7 +71,6 @@ Rectangle {
             setAuthProgress(false);
 
             if (!hasUserId) {
-                firstAuth = true;
                 root.state = "AUTH";
                 authStack.currentIndex = 0;
             } else {

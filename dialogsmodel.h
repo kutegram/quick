@@ -54,6 +54,8 @@ public:
 signals:
 
 public slots:
+    void refresh();
+
     void authorized(TgLongVariant userId);
     void messagesGetDialogsResponse(TgObject data, TgLongVariant messageId);
     void fileDownloaded(TgLongVariant fileId, QString filePath);

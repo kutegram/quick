@@ -13,10 +13,27 @@ Item {
 
         Image {
             anchors.centerIn: parent
-            source: "../../img/checkbox-marked-circle.png"
+            source: icon
             smooth: true
             height: 20
             width: 20
+        }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            switch (index) {
+            case 0:
+                dialogPage.refresh();
+                break;
+            case 1:
+                telegramClient.resetSession();
+                break;
+            case 2:
+                Qt.quit();
+                break;
+            }
         }
     }
 
@@ -26,7 +43,7 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         verticalAlignment: Text.AlignVCenter
-        text: "Action Button"
+        text: name
         font.pixelSize: 12
     }
 }

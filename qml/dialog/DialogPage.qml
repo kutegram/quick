@@ -2,7 +2,9 @@ import QtQuick 1.0
 import Kutegram 1.0
 
 Rectangle {
+    id: pageRoot
     property alias foldersModel: foldersModel
+    signal refresh()
 
     ListView {
         id: folderSlide
@@ -34,6 +36,7 @@ Rectangle {
             focus: true
             model: DialogsModel {
                 client: telegramClient
+                Component.onCompleted: pageRoot.refresh.connect(refresh)
             }
 
             delegate: DialogItem {
