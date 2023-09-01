@@ -7,10 +7,16 @@ Rectangle {
     property alias messageEdit: messageEdit
 
     ListView {
+        id: messagesView
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: messageEdit.top
+
+        //TODO remove this hack
+        //I don't know why, but content overlaps MessageEdit at the bottom
+        anchors.bottomMargin: 5
+
         spacing: 2
 
         onMovementEnded: {
@@ -22,6 +28,10 @@ Rectangle {
         model: MessagesModel {
             id: messagesModel
             client: telegramClient
+
+            onScrollTo: {
+                messagesView.positionViewAtIndex(index, ListView.Beginning);
+            }
         }
 
         delegate: MessageItem {
@@ -29,6 +39,7 @@ Rectangle {
         }
     }
 
+    //TODO Hide MessageEdit when user is restricted
     MessageEdit {
         id: messageEdit
         anchors.left: parent.left

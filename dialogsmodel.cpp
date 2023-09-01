@@ -287,6 +287,7 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
         messageSenderName += ": ";
     }
 
+    //TODO markdown / styled entities
     QString messageText = message["message"].toString().replace('\n', " ");
 
     if (GETID(message["media"].toMap()) != 0) {

@@ -60,9 +60,9 @@ Item {
         id: messageAvatar
         anchors.top: parent.top
         anchors.left: checkbox.right
-        anchors.leftMargin: 5
+        anchors.leftMargin: isChannel ? -35 : 5
         anchors.topMargin: 5
-        visible: !mergeMessage
+        visible: !mergeMessage && !isChannel
         width: 30
         height: 30
         radius: 15

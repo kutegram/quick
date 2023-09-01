@@ -33,7 +33,8 @@ private:
         MessageTextRole,
         MergeMessageRole,
         SenderNameRole,
-        MessageTimeRole
+        MessageTimeRole,
+        IsChannelRole
     };
 
 public:
@@ -58,6 +59,7 @@ public:
     void handleHistoryResponseUpwards(TgObject data, TgLongVariant messageId);
 
 signals:
+    void scrollTo(qint32 index);
 
 public slots:
     void authorized(TgLongVariant userId);

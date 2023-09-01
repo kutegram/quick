@@ -25,6 +25,7 @@ MessagesModel::MessagesModel(QObject *parent)
     roles[MergeMessageRole] = "mergeMessage";
     roles[MessageTimeRole] = "messageTime";
     roles[SenderNameRole] = "senderName";
+    roles[IsChannelRole] = "isChannel";
     setRoleNames(roles);
 }
 
@@ -101,6 +102,10 @@ int MessagesModel::rowCount(const QModelIndex &parent) const
 
 QVariant MessagesModel::data(const QModelIndex &index, int role) const
 {
+    if (role == IsChannelRole) {
+        return TgClient::isChannel(_peer);
+    }
+
     if (role == MergeMessageRole) {
         if (index.row() < 1) {
             return false;
@@ -113,7 +118,8 @@ QVariant MessagesModel::data(const QModelIndex &index, int role) const
             return false;
         }
 
-        if (curr["grouped_id"].toLongLong() == prev["grouped_id"].toLongLong()) {
+        if (!curr["grouped_id"].isNull() && !prev["grouped_id"].isNull()
+                && curr["grouped_id"].toLongLong() == prev["grouped_id"].toLongLong()) {
             return true;
         }
 
@@ -232,8 +238,9 @@ void MessagesModel::handleHistoryResponse(TgObject data, TgLongVariant messageId
     _history.append(messagesRows);
     endInsertRows();
 
-    if (oldSize > 0)
+    if (oldSize > 0) {
         emit dataChanged(index(oldSize - 1), index(oldSize - 1));
+    }
 }
 
 void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant messageId)
@@ -291,8 +298,11 @@ void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant me
     _history = messagesRows + _history;
     endInsertRows();
 
-    if (oldSize > 0)
+    if (oldSize > 0) {
         emit dataChanged(index(messagesRows.size()), index(messagesRows.size()));
+
+        emit scrollTo(messagesRows.size());
+    }
 }
 
 TgObject MessagesModel::createRow(TgObject message, TgObject sender)
@@ -308,6 +318,7 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender)
     row["date"] = message["date"];
     row["grouped_id"] = message["grouped_id"];
     row["messageTime"] = QDateTime::fromTime_t(qMax(message["date"].toInt(), message["edit_date"].toInt())).toString("hh:mm");
+    //TODO markdown / styled entities
     row["messageText"] = message["message"].toString();
     row["sender"] = TgClient::toInputPeer(sender);
 

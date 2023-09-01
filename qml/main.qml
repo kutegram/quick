@@ -6,6 +6,7 @@ import "auth"
 import Kutegram 1.0
 
 Rectangle {
+    //TODO: remove dynamically unused pages / components from memory
     width: 320
     height: 240
     id: root
@@ -179,6 +180,7 @@ Rectangle {
     }
 
     //TODO: remove stack
+    //TODO: improve interface
     Rectangle {
         id: authRect
         anchors.left: parent.left
