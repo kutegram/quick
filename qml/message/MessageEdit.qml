@@ -1,10 +1,12 @@
 import QtQuick 1.0
 import Kutegram 1.0
+import "../control"
 
 Rectangle {
     height: 40
     width: 240
     color: "#FFFFFF"
+    id: editRoot
 
     property alias peer: messageEditor.peer
     property alias messageText: innerEdit.text
@@ -16,6 +18,16 @@ Rectangle {
         onDraftChanged: {
             messageText = draft;
         }
+
+        onUploadingProgress: {
+            if (progress != -1 && progress != 100) {
+                attachButton.state = "UPLOADING";
+                uploadBar.width = progress * editRoot.width / 100;
+            } else {
+                attachButton.state = progress != 100 ? "NOT_UPLOADING" : "UPLOADED";
+                uploadBar.width = 0;
+            }
+        }
     }
 
     MouseArea {
@@ -23,17 +35,26 @@ Rectangle {
     }
 
     Item {
+        id: attachButton
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         width: height
-        id: attachButton
+        state: "NOT_UPLOADING"
 
         MouseArea {
             anchors.fill: parent
+            onClicked: {
+                if (attachButton.state == "NOT_UPLOADING") {
+                    messageEditor.uploadFile();
+                } else {
+                    messageEditor.cancelUpload();
+                }
+            }
         }
 
         Image {
+            id: attachmentImage
             anchors.centerIn: parent
             width: 20
             height: 20
@@ -41,6 +62,87 @@ Rectangle {
             source: "../../img/attachment.svg"
             rotation: 135
         }
+
+        Image {
+            id: deleteImage
+            anchors.centerIn: parent
+            width: 20
+            height: 20
+            smooth: true
+            source: "../../img/delete.svg"
+        }
+
+        Spinner {
+            id: uploadSpinner
+            anchors.centerIn: parent
+        }
+
+        states: [
+            State {
+                name: "UPLOADING"
+                PropertyChanges {
+                    target: attachmentImage
+                    opacity: 0
+                    scale: 0
+                }
+                PropertyChanges {
+                    target: deleteImage
+                    opacity: 0
+                    scale: 0
+                }
+                PropertyChanges {
+                    target: uploadSpinner
+                    opacity: 1
+                    scale: 1
+                }
+            },
+            State {
+                name: "NOT_UPLOADING"
+                PropertyChanges {
+                    target: attachmentImage
+                    opacity: 1
+                    scale: 1
+                }
+                PropertyChanges {
+                    target: deleteImage
+                    opacity: 0
+                    scale: 0
+                }
+                PropertyChanges {
+                    target: uploadSpinner
+                    opacity: 0
+                    scale: 0
+                }
+            },
+            State {
+                name: "UPLOADED"
+                PropertyChanges {
+                    target: attachmentImage
+                    opacity: 0
+                    scale: 0
+                }
+                PropertyChanges {
+                    target: deleteImage
+                    opacity: 1
+                    scale: 1
+                }
+                PropertyChanges {
+                    target: uploadSpinner
+                    opacity: 0
+                    scale: 0
+                }
+            }
+        ]
+
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    properties: "opacity,scale"
+                    easing.type: Easing.InOutQuad
+                    duration: 200
+                }
+            }
+        ]
     }
 
     Item {
@@ -49,7 +151,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         width: height
-        state: messageText.length == 0 ? "EMPTY" : "NOT_EMPTY"
+        state: messageText.length == 0 && attachButton.state != "UPLOADED" ? "EMPTY" : "NOT_EMPTY"
 
         MouseArea {
             anchors.fill: parent
@@ -188,6 +290,21 @@ Rectangle {
                     }
                 }
             ]
+        }
+    }
+
+    Rectangle {
+        id: uploadBar
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        height: 2
+        color: "#54759E"
+        width: 0
+
+        Behavior on width {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+            }
         }
     }
 }

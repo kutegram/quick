@@ -12,6 +12,7 @@
 int main(int argc, char *argv[])
 {
     //TODO OpenGL acceleration
+    //Causes some crashes on Windows, Symbian 9.2-9.3?, research it
 #if QT_VERSION < 0x050000
     //QApplication::setGraphicsSystem("opengl");
 #endif
@@ -35,6 +36,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<MessagesModel>("Kutegram", 1, 0, "MessagesModel");
     qmlRegisterType<MessageEditor>("Kutegram", 1, 0, "MessageEditor");
 
+    //TODO show status pane without button group on Symbian
     QmlApplicationViewer viewer;
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     viewer.setMainQmlFile(QLatin1String("qml/main.qml"));

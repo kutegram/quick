@@ -13,8 +13,11 @@ class MessageEditor : public QObject
 
 private:
     TgClient* _client;
+    TgLongVariant _userId;
     TgObject _peer;
     TgObject _inputPeer;
+    TgLongVariant _uploadId;
+    TgObject _media;
 
 public:
     explicit MessageEditor(QObject *parent = 0);
@@ -27,9 +30,17 @@ public:
 
 signals:
     void draftChanged(QString draft);
+    void uploadingProgress(qint32 progress);
 
 public slots:
     void sendMessage(QString message);
+    void uploadFile();
+    void cancelUpload();
+
+    void authorized(TgLongVariant userId);
+    void fileUploading(TgLongVariant fileId, TgLongVariant processedLength, TgLongVariant totalLength, qint32 progressPercentage);
+    void fileUploaded(TgLongVariant fileId, TgObject inputFile);
+    void fileUploadCanceled(TgLongVariant fileId);
 
 };
 

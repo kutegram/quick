@@ -150,9 +150,10 @@ Rectangle {
         }
 
         onHelpGetCountriesListResponse: {
-            //TODO
+            //TODO country selector
         }
 
+        //TODO remove it later / debug only
         onFileDownloadCanceled: {
             console.log("[INFO] File " + fileId + " download canceled");
         }
@@ -162,7 +163,19 @@ Rectangle {
         }
 
         onFileDownloading: {
-            console.log("[INFO] File " + fileId + " download progress: " + downloadedLength + " / " + totalLength + " " + downloadProgress + " %");
+            console.log("[INFO] File " + fileId + " download progress: " + processedLength + " / " + totalLength + " " + progressPercentage + " %");
+        }
+
+        onFileUploadCanceled: {
+            console.log("[INFO] File " + fileId + " upload canceled");
+        }
+
+        onFileUploaded: {
+            console.log("[INFO] File " + fileId + " have been uploaded");
+        }
+
+        onFileUploading: {
+            console.log("[INFO] File " + fileId + " upload progress: " + processedLength + " / " + totalLength + " " + progressPercentage + " %");
         }
     }
 
