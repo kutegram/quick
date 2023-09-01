@@ -11,7 +11,7 @@ Image {
     Image {
         id: checkbox
         //TODO: adaptive color
-        source: "../../img/checkbox-blank-circle-outline.svg"
+        source: "../../img/checkbox-blank-circle-outline.png"
         smooth: true
         height: 20
         width: 20

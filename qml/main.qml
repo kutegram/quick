@@ -250,7 +250,7 @@ Rectangle {
             Image {
                 id: authBackImage
                 anchors.centerIn: parent
-                source: "../img/arrow-left_black.svg"
+                source: "../img/arrow-left_black.png"
                 width: 20
                 height: 20
                 smooth: true

@@ -8,7 +8,7 @@ Rectangle {
 
     Image {
         anchors.centerIn: parent
-        source: white ? "../../img/loading_white.svg" : "../../img/loading.svg"
+        source: white ? "../../img/loading_white.png" : "../../img/loading.png"
         width: 20
         height: 20
         smooth: true

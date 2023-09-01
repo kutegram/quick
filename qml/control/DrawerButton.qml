@@ -13,7 +13,7 @@ Item {
 
         Image {
             anchors.centerIn: parent
-            source: "../../img/checkbox-marked-circle.svg"
+            source: "../../img/checkbox-marked-circle.png"
             smooth: true
             height: 20
             width: 20

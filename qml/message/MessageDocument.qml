@@ -25,7 +25,7 @@ Rectangle {
 
         Image {
             anchors.centerIn: parent
-            source: "../../img/file.svg"
+            source: "../../img/file.png"
             smooth: true
             height: 20
             width: 20

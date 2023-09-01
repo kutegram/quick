@@ -11,7 +11,7 @@ Rectangle {
         model: ListModel {
             id: foldersModel
             ListElement {
-                icon: "../../img/forum.svg"
+                icon: "../../img/forum.png"
                 label: "All Chats"
             }
         }

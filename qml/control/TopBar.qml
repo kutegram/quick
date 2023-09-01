@@ -161,7 +161,7 @@ Rectangle {
                 Image {
                     id: actionsImage
                     anchors.centerIn: parent
-                    source: "../../img/dots-vertical.svg"
+                    source: "../../img/dots-vertical.png"
                     width: 20
                     height: 20
                     smooth: true
@@ -262,7 +262,7 @@ Rectangle {
 
         Image {
             id: menuImage
-            source: "../../img/menu.svg"
+            source: "../../img/menu.png"
             x: 10
             y: 10
             width: 20
@@ -272,7 +272,7 @@ Rectangle {
 
         Image {
             id: backImage
-            source: "../../img/arrow-left.svg"
+            source: "../../img/arrow-left.png"
             x: 10
             y: 10
             width: 20

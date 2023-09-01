@@ -48,7 +48,7 @@ Item {
 
     Image {
         id: checkbox
-        source: "../../img/checkbox-blank-circle-outline.svg"
+        source: "../../img/checkbox-blank-circle-outline.png"
         smooth: true
         height: 20
         width: 20

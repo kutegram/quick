@@ -59,7 +59,7 @@ Rectangle {
             width: 20
             height: 20
             smooth: true
-            source: "../../img/attachment.svg"
+            source: "../../img/attachment.png"
             rotation: 135
         }
 
@@ -69,7 +69,7 @@ Rectangle {
             width: 20
             height: 20
             smooth: true
-            source: "../../img/delete.svg"
+            source: "../../img/delete.png"
         }
 
         Spinner {
@@ -169,7 +169,7 @@ Rectangle {
             width: 20
             height: 20
             smooth: true
-            source: "../../img/send_accent.svg"
+            source: "../../img/send_accent.png"
         }
 
         Image {
@@ -178,8 +178,8 @@ Rectangle {
             width: 20
             height: 20
             smooth: true
-            //source: "../../img/microphone.svg"
-            source: "../../img/send.svg"
+            //source: "../../img/microphone.png"
+            source: "../../img/send.png"
         }
 
         states: [
