@@ -9,6 +9,7 @@ Rectangle {
     property string peerThumbnailText: ""
     property bool peerAvatarLoaded: false
     property string peerAvatar: ""
+    property string peerTooltip: ""
 
     id: topBarRoot
     height: 40
@@ -40,12 +41,7 @@ Rectangle {
                 currentFolderIndex = currentIndex
             }
 
-            model: ListModel {
-                ListElement {
-                    icon: "../../img/forum.svg"
-                    label: "All Chats"
-                }
-            }
+            model: dialogPage.foldersModel
 
             delegate: FolderItem {
 
@@ -138,12 +134,13 @@ Rectangle {
                         elide: Text.ElideRight
                         text: peerTitle
                         font.pixelSize: 12
+                        font.bold: true
                         color: "#FFFFFF"
                     }
                 }
 
                 Text {
-                    text: "last seen at 09:35"
+                    text: peerTooltip
                     color: "#FFFFFF"
                     font.pixelSize: 12
                     anchors.left: parent.left

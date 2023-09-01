@@ -32,7 +32,8 @@ private:
         MessageTextRole,
         AvatarLoadedRole,
         InputPeerRole,
-        PeerBytesRole
+        PeerBytesRole,
+        TooltipRole
     };
 
 public:

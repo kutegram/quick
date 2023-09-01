@@ -37,14 +37,14 @@ Item {
         }
     ]
 
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            if (ListView.view.parent.globalState == "SHOW_SELECT")
-                ListView.view.parent.globalState = "NO_SELECT"
-            else ListView.view.parent.globalState = "SHOW_SELECT"
-        }
-    }
+//    MouseArea {
+//        anchors.fill: parent
+//        onClicked: {
+//            if (ListView.view.parent.globalState == "SHOW_SELECT")
+//                ListView.view.parent.globalState = "NO_SELECT"
+//            else ListView.view.parent.globalState = "SHOW_SELECT"
+//        }
+//    }
 
     Image {
         id: checkbox

@@ -7,12 +7,14 @@ Item {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            messagePage.peer = peerBytes;
+            messagePage.messagesModel.peer = peerBytes;
+            messagePage.messageEdit.peer = peerBytes;
             topBar.peerTitle = title;
             topBar.peerThumbnailColor = thumbnailColor;
             topBar.peerThumbnailText = thumbnailText;
             topBar.peerAvatarLoaded = avatarLoaded;
             topBar.peerAvatar = avatar;
+            topBar.peerTooltip = tooltip;
             stack.currentIndex = 1;
         }
     }

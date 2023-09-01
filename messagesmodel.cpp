@@ -129,7 +129,7 @@ QVariant MessagesModel::data(const QModelIndex &index, int role) const
 
 bool MessagesModel::canFetchMore(const QModelIndex &parent) const
 {
-    return _client && _userId.toLongLong() && TgClient::commonPeerType(_inputPeer) != 0 && !_downRequestId.toLongLong() && _downOffset != -1;
+    return _client && _client->isAuthorized() && TgClient::commonPeerType(_inputPeer) != 0 && !_downRequestId.toLongLong() && _downOffset != -1;
 }
 
 void MessagesModel::fetchMore(const QModelIndex &parent)
@@ -141,7 +141,7 @@ void MessagesModel::fetchMore(const QModelIndex &parent)
 
 bool MessagesModel::canFetchMoreUpwards() const
 {
-    return _client && _userId.toLongLong() && TgClient::commonPeerType(_inputPeer) != 0 && !_upRequestId.toLongLong() && _upOffset != -1;
+    return _client && _client->isAuthorized() && TgClient::commonPeerType(_inputPeer) != 0 && !_upRequestId.toLongLong() && _upOffset != -1;
 }
 
 void MessagesModel::fetchMoreUpwards()

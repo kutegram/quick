@@ -2,11 +2,19 @@ import QtQuick 1.0
 import Kutegram 1.0
 
 Rectangle {
+    property alias foldersModel: foldersModel
+
     ListView {
         id: folderSlide
         focus: true
         anchors.fill: parent
-        model: 3
+        model: ListModel {
+            id: foldersModel
+            ListElement {
+                icon: "../../img/forum.svg"
+                label: "All Chats"
+            }
+        }
         boundsBehavior: Flickable.StopAtBounds
         orientation: ListView.Horizontal
         snapMode: ListView.SnapOneItem

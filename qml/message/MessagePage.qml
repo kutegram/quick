@@ -3,7 +3,8 @@ import Kutegram 1.0
 
 Rectangle {
     property string globalState: "NO_SELECT"
-    property alias peer: messagesModel.peer
+    property alias messagesModel: messagesModel
+    property alias messageEdit: messageEdit
 
     ListView {
         anchors.top: parent.top

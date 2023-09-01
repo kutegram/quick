@@ -25,6 +25,7 @@ DialogsModel::DialogsModel(QObject *parent)
     roles[AvatarLoadedRole] = "avatarLoaded";
     roles[InputPeerRole] = "inputPeer";
     roles[PeerBytesRole] = "peerBytes";
+    roles[TooltipRole] = "tooltip";
     setRoleNames(roles);
 }
 
@@ -82,7 +83,7 @@ QVariant DialogsModel::data(const QModelIndex &index, int role) const
 
 bool DialogsModel::canFetchMore(const QModelIndex &parent) const
 {
-    return _client && _userId.toLongLong() && !_requestId.toLongLong() && !_offsets.isEmpty();
+    return _client && _client->isAuthorized() && !_requestId.toLongLong() && !_offsets.isEmpty();
 }
 
 void DialogsModel::fetchMore(const QModelIndex &parent)
@@ -235,16 +236,28 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
 
     inputPeer["read_inbox_max_id"] = dialog["read_inbox_max_id"];
     inputPeer["read_outbox_max_id"] = dialog["read_outbox_max_id"];
+    inputPeer["draft"] = dialog["draft"];
 
     QByteArray array;
     QDataStream peerStream(&array, QIODevice::WriteOnly);
     peerStream << inputPeer;
     row["peerBytes"] = array;
 
+    //TODO typing status
     if (TgClient::isUser(peer)) {
         row["title"] = QString(peer["first_name"].toString() + " " + peer["last_name"].toString());
+        row["tooltip"] = "user"; //TODO last seen and online
     } else {
         row["title"] = peer["title"].toString();
+
+        QString tooltip = TgClient::isChannel(peer) ? "channel" : "chat";
+        if (!peer["participants_count"].isNull()) {
+            tooltip = peer["participants_count"].toString();
+            //TODO localization support
+            tooltip += TgClient::isChannel(peer) ? " subscribers" : " members";
+        }
+
+        row["tooltip"] = tooltip;
     }
 
     row["thumbnailColor"] = userColor(peer["id"].toLongLong());
@@ -274,7 +287,18 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
         messageSenderName += ": ";
     }
 
-    messageSenderName += message["message"].toString().replace('\n', " ");
+    QString messageText = message["message"].toString().replace('\n', " ");
+
+    if (GETID(message["media"].toMap()) != 0) {
+        if (!messageText.isEmpty()) {
+            messageText += ", ";
+        }
+
+        //TODO attachment type
+        messageText += "Attachment";
+    }
+
+    messageSenderName += messageText;
 
     row["messageText"] = messageSenderName;
 

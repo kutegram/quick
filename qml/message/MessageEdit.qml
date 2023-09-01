@@ -1,9 +1,22 @@
 import QtQuick 1.0
+import Kutegram 1.0
 
 Rectangle {
     height: 40
     width: 240
     color: "#FFFFFF"
+
+    property alias peer: messageEditor.peer
+    property alias messageText: innerEdit.text
+
+    MessageEditor {
+        id: messageEditor
+        client: telegramClient
+
+        onDraftChanged: {
+            messageText = draft;
+        }
+    }
 
     MouseArea {
         anchors.fill: parent
@@ -31,15 +44,21 @@ Rectangle {
     }
 
     Item {
+        id: sendButton
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         width: height
-        id: sendButton
-        state: innerEdit.text.length == 0 ? "EMPTY" : "NOT_EMPTY"
+        state: messageText.length == 0 ? "EMPTY" : "NOT_EMPTY"
 
         MouseArea {
             anchors.fill: parent
+            onClicked: {
+                if (sendButton.state == "NOT_EMPTY") {
+                    messageEditor.sendMessage(messageText);
+                    messageText = "";
+                }
+            }
         }
 
         Image {
@@ -48,7 +67,7 @@ Rectangle {
             width: 20
             height: 20
             smooth: true
-            source: "../../img/send.svg"
+            source: "../../img/send_accent.svg"
         }
 
         Image {
@@ -57,7 +76,8 @@ Rectangle {
             width: 20
             height: 20
             smooth: true
-            source: "../../img/microphone.svg"
+            //source: "../../img/microphone.svg"
+            source: "../../img/send.svg"
         }
 
         states: [
@@ -138,7 +158,7 @@ Rectangle {
             font.pixelSize: 12
             color: "#8D8D8D"
             text: "Write a message..."
-            state: innerEdit.text.length == 0 ? "EMPTY" : "NOT_EMPTY"
+            state: messageText.length == 0 ? "EMPTY" : "NOT_EMPTY"
 
             states: [
                 State {
