@@ -42,7 +42,11 @@ private:
         ThumbnailColorRole,
         ThumbnailTextRole,
         AvatarRole,
-        AvatarLoadedRole
+        AvatarLoadedRole,
+        HasMediaRole,
+        MediaImageRole,
+        MediaTitleRole,
+        MediaTextRole
     };
 
 public:

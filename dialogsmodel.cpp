@@ -255,6 +255,7 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
         row["tooltip"] = tooltip;
     }
 
+    //TODO 12-hour format
     row["messageTime"] = QDateTime::fromTime_t(qMax(message["date"].toInt(), message["edit_date"].toInt())).toString("hh:mm");
 
     QString messageSenderName;

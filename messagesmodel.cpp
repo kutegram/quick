@@ -8,6 +8,8 @@
 #include <QDomDocument>
 #include "avatardownloader.h"
 
+using namespace TLType;
+
 MessagesModel::MessagesModel(QObject *parent)
     : QAbstractListModel(parent)
     , _mutex(QMutex::Recursive)
@@ -32,6 +34,10 @@ MessagesModel::MessagesModel(QObject *parent)
     roles[ThumbnailTextRole] = "thumbnailText";
     roles[AvatarRole] = "avatar";
     roles[AvatarLoadedRole] = "avatarLoaded";
+    roles[HasMediaRole] = "hasMedia";
+    roles[MediaImageRole] = "mediaImage";
+    roles[MediaTitleRole] = "mediaTitle";
+    roles[MediaTextRole] = "mediaText";
     setRoleNames(roles);
 }
 
@@ -361,6 +367,7 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender)
 
     row["date"] = message["date"];
     row["grouped_id"] = message["grouped_id"];
+    //TODO 12-hour format
     row["messageTime"] = QDateTime::fromTime_t(qMax(message["date"].toInt(), message["edit_date"].toInt())).toString("hh:mm");
     //TODO markdown / styled entities
     row["messageText"] = message["message"].toString();
@@ -371,6 +378,119 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender)
     row["avatarLoaded"] = false;
     row["avatar"] = "";
     row["photoId"] = sender["photo"].toMap()["photo_id"];
+
+    TgObject media = message["media"].toMap();
+    row["hasMedia"] = GETID(media) != 0 ? 1 : 0;
+
+    switch (GETID(media)) {
+    //TODO image viewer and preview
+    case MessageMediaPhoto:
+        row["mediaImage"] = "../../img/media/image.png";
+        row["mediaTitle"] = "Image";
+        row["mediaText"] = "no preview";
+        break;
+    case MessageMediaContact:
+    {
+        row["mediaImage"] = "../../img/media/account.png";
+        QString contactName;
+
+        contactName += media["first_name"].toString();
+        contactName += " ";
+        contactName += media["last_name"].toString();
+
+        row["mediaTitle"] = contactName;
+        row["mediaText"] = media["phone_number"].toString();
+        break;
+    }
+    case MessageMediaUnsupported:
+        row["mediaImage"] = "../../img/media/file.png";
+        row["mediaTitle"] = "Unsupported media";
+        row["mediaText"] = "update your app";
+        break;
+    case MessageMediaDocument:
+    {
+        row["mediaImage"] = "../../img/media/download.png";
+
+        TgObject document = media["document"].toMap();
+        QString documentName = "Unknown file";
+
+        TgList attributes = document["attributes"].toList();
+        for (qint32 i = 0; i < attributes.size(); ++i) {
+            TgObject attribute = attributes[i].toMap();
+            if (GETID(attribute) == DocumentAttributeFilename) {
+                documentName = attribute["file_name"].toString();
+                break;
+            }
+        }
+
+        qint64 size = document["size"].toLongLong();
+        QString sizeString;
+
+        if (size > 1073741824) {
+            sizeString = QString::number(size / 1073741824L, 'f', 2);
+            sizeString += " GB";
+        } else if (size > 1048576) {
+            sizeString = QString::number(size / 1048576L, 'f', 2);
+            sizeString += " MB";
+        } else if (size > 1024) {
+            sizeString = QString::number(size / 1024L, 'f', 2);
+            sizeString += " KB";
+        } else {
+            sizeString = QString::number(size, 'f', 2);
+            sizeString += " B";
+        }
+
+        row["mediaTitle"] = documentName;
+        row["mediaText"] = sizeString;
+        break;
+    }
+    case MessageMediaWebPage:
+        row["mediaImage"] = "../../img/media/web.png";
+        row["mediaTitle"] = "Webpage";
+        row["mediaText"] = media["webpage"].toMap()["title"].toString();
+        if (row["mediaText"].toString().isEmpty()) row["mediaText"] = "unknown link";
+        break;
+    case MessageMediaVenue:
+        row["mediaImage"] = "../../img/media/map-marker.png";
+        row["mediaTitle"] = "Venue";
+        row["mediaText"] = media["title"].toString();
+        break;
+    case MessageMediaGame:
+        row["mediaImage"] = "../../img/media/gamepad-square.png";
+        row["mediaTitle"] = "Game";
+        row["mediaText"] = media["game"].toMap()["title"].toString();
+        break;
+    case MessageMediaInvoice:
+        row["mediaImage"] = "../../img/media/receipt-text.png";
+        row["mediaTitle"] = media["title"].toString();
+        row["mediaText"] = media["description"].toString();
+        break;
+    case MessageMediaGeo:
+    case MessageMediaGeoLive:
+    {
+        row["mediaImage"] = "../../img/media/map-marker.png";
+        row["mediaTitle"] = GETID(media) == MessageMediaGeoLive ? "Live geolocation" : "Geolocation";
+
+        TgObject geo = media["geo"].toMap();
+        QString geoText;
+        geoText += geo["long"].toString();
+        geoText += ", ";
+        geoText += geo["lat"].toString();
+
+        row["mediaText"] = geoText;
+        break;
+    }
+    case MessageMediaPoll:
+        row["mediaImage"] = "../../img/media/poll.png";
+        row["mediaTitle"] = "Poll";
+        row["mediaText"] = media["poll"].toMap()["public_voters"].toBool() ? "public" : "anonymous";
+        break;
+    case MessageMediaDice:
+        row["mediaImage"] = "../../img/media/dice-multiple.png";
+        row["mediaTitle"] = "Dice";
+        row["mediaText"] = media["value"].toString();
+        break;
+    }
 
     return row;
 }

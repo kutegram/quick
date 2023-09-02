@@ -181,13 +181,16 @@ Item {
 //            }
 //        }
 
-//        Repeater {
-//            model: 3
-//            MessageDocument {
-//                anchors.left: parent.left
-//                anchors.right: parent.right
-//                state: currentState
-//            }
-//        }
+        Repeater {
+            model: hasMedia
+            MessageDocument {
+                image: mediaImage
+                title: mediaTitle
+                text: mediaText
+                anchors.left: parent.left
+                anchors.right: parent.right
+                state: currentState
+            }
+        }
     }
 }

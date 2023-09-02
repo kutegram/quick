@@ -27,7 +27,6 @@
         <file>img/checkbox-marked-circle.png</file>
         <file>img/delete.png</file>
         <file>img/dots-vertical.png</file>
-        <file>img/file.png</file>
         <file>img/forum.png</file>
         <file>img/loading.png</file>
         <file>img/loading_white.png</file>
@@ -43,5 +42,15 @@
         <file>kutegramquick_big.png</file>
         <file>img/close-circle-outline_inner.png</file>
         <file>qml/control/SnackBar.qml</file>
+        <file>img/media/account.png</file>
+        <file>img/media/dice-multiple.png</file>
+        <file>img/media/download.png</file>
+        <file>img/media/file.png</file>
+        <file>img/media/gamepad-square.png</file>
+        <file>img/media/image.png</file>
+        <file>img/media/map-marker.png</file>
+        <file>img/media/poll.png</file>
+        <file>img/media/receipt-text.png</file>
+        <file>img/media/web.png</file>
     </qresource>
 </RCC>
