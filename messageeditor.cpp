@@ -85,6 +85,13 @@ void MessageEditor::uploadFile()
         ID_PROPERTY(_media) = TLType::InputMediaUploadedPhoto;
     } else {
         ID_PROPERTY(_media) = TLType::InputMediaUploadedDocument;
+
+        TGOBJECT(TLType::DocumentAttributeFilename, fileName);
+        fileName["file_name"] = selected.split('/').last();
+
+        TgList attributes;
+        attributes << fileName;
+        _media["attributes"] = attributes;
     }
 
     _uploadId = _client->uploadFile(selected);
