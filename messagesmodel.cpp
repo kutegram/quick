@@ -431,16 +431,16 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender)
         QString sizeString;
 
         if (size > 1073741824) {
-            sizeString = QString::number(size / 1073741824L, 'f', 2);
+            sizeString = QString::number((long double) size / 1073741824L, 'f', 2);
             sizeString += " GB";
         } else if (size > 1048576) {
-            sizeString = QString::number(size / 1048576L, 'f', 2);
+            sizeString = QString::number((long double) size / 1048576L, 'f', 2);
             sizeString += " MB";
         } else if (size > 1024) {
-            sizeString = QString::number(size / 1024L, 'f', 2);
+            sizeString = QString::number((long double) size / 1024L, 'f', 2);
             sizeString += " KB";
         } else {
-            sizeString = QString::number(size, 'f', 2);
+            sizeString = QString::number((long double) size, 'f', 2);
             sizeString += " B";
         }
 
