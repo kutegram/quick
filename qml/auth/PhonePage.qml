@@ -2,7 +2,6 @@ import QtQuick 1.0
 import "../control"
 
 Rectangle {
-    property alias error: errorText.text
     property string phoneNumber;
     property string phoneCodeHash;
 
@@ -28,54 +27,6 @@ Rectangle {
             wrapMode: Text.Wrap
         }
 
-        Text {
-            id: errorText
-            anchors.left: parent.left
-            anchors.right: parent.right
-            text: ""
-            font.pixelSize: 12
-            wrapMode: Text.Wrap
-            state: "EMPTY"
-            onTextChanged: {
-                state = text.length == 0 ? "EMPTY" : "NOT_EMPTY"
-            }
-
-            states: [
-                State {
-                    name: "EMPTY"
-                    PropertyChanges {
-                        target: errorText
-                        opacity: 0
-                    }
-                },
-                State {
-                    name: "NOT_EMPTY"
-                    PropertyChanges {
-                        target: errorText
-                        opacity: 1
-                    }
-                }
-            ]
-            transitions: [
-                Transition {
-                    NumberAnimation {
-                        properties: "opacity,height"
-                        easing.type: Easing.InOutQuad
-                        duration: 200
-                    }
-                }
-            ]
-
-            Timer {
-                id: hideTimer
-                interval: 10000
-                running: errorText.state == "NOT_EMPTY"
-                onTriggered: {
-                    errorText.state = "EMPTY";
-                }
-            }
-        }
-
         LineEdit {
             id: phoneEdit
             anchors.left: parent.left
@@ -88,11 +39,11 @@ Rectangle {
             enabled: !root.authProgress
             onClicked: {
                 if (phoneEdit.text.length == 0) {
-                    errorText.text = "Invalid phone number. Please try again.";
+                    snackBar.text = "Invalid phone number. Please try again.";
                     return;
                 }
 
-                errorText.state = "EMPTY";
+                snackBar.close();
 
                 phoneNumber = phoneEdit.text;
                 phoneNumber.replace(' ', "");

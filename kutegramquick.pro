@@ -44,7 +44,8 @@ OTHER_FILES += \
     qml/message/MessageEdit.qml \
     qml/message/MessageImage.qml \
     qml/message/MessageItem.qml \
-    qml/message/MessagePage.qml
+    qml/message/MessagePage.qml \
+    qml/control/SnackBar.qml
 
 RESOURCES += \
     resources.qrc

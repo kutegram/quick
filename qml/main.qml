@@ -117,7 +117,7 @@ Rectangle {
 
             if (data["_"] == 0x44747e9a) {
                 //TODO sign up / registration support
-                codePage.error = "Sign up isn't supported now. Please, use official app for signing up.";
+                snackBar.text = "Sign up isn't supported now. Please, use official app for signing up.";
             }
         }
 
@@ -131,14 +131,24 @@ Rectangle {
         onRpcError: {
             setAuthProgress(false);
 
-            if (errorMessage == "PHONE_NUMBER_FLOOD") {
-                phonePage.error = "Phone is used too many times recently.";
+            //TODO think how to improve it
+            if (errorMessage == "PHONE_NUMBER_INVALID") {
+                snackBar.text = "Invalid phone number. Please try again.";
+            }
+            else if (errorMessage == "PHONE_NUMBER_FLOOD") {
+                snackBar.text = "Phone is used too many times recently.";
             }
             else if (errorMessage == "PHONE_CODE_INVALID") {
-                phonePage.error = "You have entered an invalid code.";
+                snackBar.text = "You have entered an invalid code.";
             }
             else {
-                //TODO: dialog
+                snackBar.text = "RPC error occured: " + errorMessage + " (" + errorCode + ")"
+            }
+        }
+
+        onSocketError: {
+            if (!telegramClient.isAuthorized()) {
+                snackBar.text = "Socket error occured: " + errorMessage + " (" + errorCode + ")"
             }
         }
 
@@ -146,37 +156,37 @@ Rectangle {
             setAuthProgress(false);
 
             //TODO 2fa support
-            codePage.error =  "2FA isn't supported now. You can disable 2FA, log in and enable it afterwards.";
+            snackBar.text =  "2FA isn't supported now. You can disable 2FA, log in and enable it afterwards.";
         }
 
         onHelpGetCountriesListResponse: {
             //TODO country selector
         }
 
-        //TODO remove it later / debug only
-        onFileDownloadCanceled: {
-            console.log("[INFO] File " + fileId + " download canceled");
-        }
+        //Debug only
+//        onFileDownloadCanceled: {
+//            console.log("[INFO] File " + fileId + " download canceled");
+//        }
 
-        onFileDownloaded: {
-            console.log("[INFO] File " + fileId + " have been downloaded");
-        }
+//        onFileDownloaded: {
+//            console.log("[INFO] File " + fileId + " have been downloaded");
+//        }
 
-        onFileDownloading: {
-            console.log("[INFO] File " + fileId + " download progress: " + processedLength + " / " + totalLength + " " + progressPercentage + " %");
-        }
+//        onFileDownloading: {
+//            console.log("[INFO] File " + fileId + " download progress: " + processedLength + " / " + totalLength + " " + progressPercentage + " %");
+//        }
 
-        onFileUploadCanceled: {
-            console.log("[INFO] File " + fileId + " upload canceled");
-        }
+//        onFileUploadCanceled: {
+//            console.log("[INFO] File " + fileId + " upload canceled");
+//        }
 
-        onFileUploaded: {
-            console.log("[INFO] File " + fileId + " have been uploaded");
-        }
+//        onFileUploaded: {
+//            console.log("[INFO] File " + fileId + " have been uploaded");
+//        }
 
-        onFileUploading: {
-            console.log("[INFO] File " + fileId + " upload progress: " + processedLength + " / " + totalLength + " " + progressPercentage + " %");
-        }
+//        onFileUploading: {
+//            console.log("[INFO] File " + fileId + " upload progress: " + processedLength + " / " + totalLength + " " + progressPercentage + " %");
+//        }
     }
 
     AvatarDownloader {
@@ -340,5 +350,12 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
         }
+    }
+
+    SnackBar {
+        id: snackBar
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
     }
 }
