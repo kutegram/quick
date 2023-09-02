@@ -75,6 +75,14 @@ Rectangle {
         Spinner {
             id: uploadSpinner
             anchors.centerIn: parent
+
+            Image {
+                anchors.centerIn: parent
+                width: 20
+                height: 20
+                smooth: true
+                source: "../../img/close-circle-outline_inner.png"
+            }
         }
 
         states: [

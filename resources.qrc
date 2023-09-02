@@ -41,5 +41,6 @@
         <file>img/refresh.png</file>
         <file>img/bookmark.png</file>
         <file>kutegramquick_big.png</file>
+        <file>img/close-circle-outline_inner.png</file>
     </qresource>
 </RCC>
