@@ -6,10 +6,11 @@
 #include <QDateTime>
 #include <QUrl>
 #include <QDomDocument>
+#include "avatardownloader.h"
 
 MessagesModel::MessagesModel(QObject *parent)
     : QAbstractListModel(parent)
-    , mutex(QMutex::Recursive)
+    , _mutex(QMutex::Recursive)
     , _client(0)
     , _userId(0)
     , _peer()
@@ -18,6 +19,7 @@ MessagesModel::MessagesModel(QObject *parent)
     , _downRequestId(0)
     , _upOffset(0)
     , _downOffset(0)
+    , _avatarDownloader(0)
 {
     QHash<int, QByteArray> roles;
     roles[PeerNameRole] = "peerName";
@@ -26,6 +28,10 @@ MessagesModel::MessagesModel(QObject *parent)
     roles[MessageTimeRole] = "messageTime";
     roles[SenderNameRole] = "senderName";
     roles[IsChannelRole] = "isChannel";
+    roles[ThumbnailColorRole] = "thumbnailColor";
+    roles[ThumbnailTextRole] = "thumbnailText";
+    roles[AvatarRole] = "avatar";
+    roles[AvatarLoadedRole] = "avatarLoaded";
     setRoleNames(roles);
 }
 
@@ -47,7 +53,7 @@ void MessagesModel::resetState()
 
 void MessagesModel::setClient(QObject *client)
 {
-    QMutexLocker lock(&mutex);
+    QMutexLocker lock(&_mutex);
 
     if (_client) {
         _client->disconnect(this);
@@ -69,9 +75,29 @@ QObject* MessagesModel::client() const
     return _client;
 }
 
+void MessagesModel::setAvatarDownloader(QObject *avatarDownloader)
+{
+    QMutexLocker lock(&_mutex);
+
+    if (_avatarDownloader) {
+        _avatarDownloader->disconnect(this);
+    }
+
+    _avatarDownloader = dynamic_cast<AvatarDownloader*>(avatarDownloader);
+
+    if (!_avatarDownloader) return;
+
+    connect(_avatarDownloader, SIGNAL(avatarDownloaded(TgLongVariant,QString)), this, SLOT(avatarDownloaded(TgLongVariant,QString)));
+}
+
+QObject* MessagesModel::avatarDownloader() const
+{
+    return _avatarDownloader;
+}
+
 void MessagesModel::setPeer(QByteArray bytes)
 {
-    QMutexLocker lock(&mutex);
+    QMutexLocker lock(&_mutex);
 
     resetState();
 
@@ -140,7 +166,7 @@ bool MessagesModel::canFetchMore(const QModelIndex &parent) const
 
 void MessagesModel::fetchMore(const QModelIndex &parent)
 {
-    QMutexLocker lock(&mutex);
+    QMutexLocker lock(&_mutex);
 
     _downRequestId = _client->messagesGetHistory(_inputPeer, _downOffset, 0, -20, 20);
 }
@@ -152,14 +178,14 @@ bool MessagesModel::canFetchMoreUpwards() const
 
 void MessagesModel::fetchMoreUpwards()
 {
-    QMutexLocker lock(&mutex);
+    QMutexLocker lock(&_mutex);
 
     _upRequestId = _client->messagesGetHistory(_inputPeer, _upOffset, 0, 0, 20);
 }
 
 void MessagesModel::authorized(TgLongVariant userId)
 {
-    QMutexLocker lock(&mutex);
+    QMutexLocker lock(&_mutex);
 
     if (_userId != userId) {
         resetState();
@@ -170,7 +196,7 @@ void MessagesModel::authorized(TgLongVariant userId)
 
 void MessagesModel::messagesGetHistoryResponse(TgObject data, TgLongVariant messageId)
 {
-    QMutexLocker lock(&mutex);
+    QMutexLocker lock(&_mutex);
 
     if (messageId == _downRequestId) {
         handleHistoryResponse(data, messageId);
@@ -241,6 +267,15 @@ void MessagesModel::handleHistoryResponse(TgObject data, TgLongVariant messageId
     if (oldSize > 0) {
         emit dataChanged(index(oldSize - 1), index(oldSize - 1));
     }
+
+    if (_avatarDownloader) {
+        for (qint32 i = 0; i < users.size(); ++i) {
+            _avatarDownloader->downloadAvatar(users[i].toMap());
+        }
+        for (qint32 i = 0; i < chats.size(); ++i) {
+            _avatarDownloader->downloadAvatar(chats[i].toMap());
+        }
+    }
 }
 
 void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant messageId)
@@ -303,6 +338,15 @@ void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant me
 
         emit scrollTo(messagesRows.size());
     }
+
+    if (_avatarDownloader) {
+        for (qint32 i = 0; i < users.size(); ++i) {
+            _avatarDownloader->downloadAvatar(users[i].toMap());
+        }
+        for (qint32 i = 0; i < chats.size(); ++i) {
+            _avatarDownloader->downloadAvatar(chats[i].toMap());
+        }
+    }
 }
 
 TgObject MessagesModel::createRow(TgObject message, TgObject sender)
@@ -322,12 +366,18 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender)
     row["messageText"] = message["message"].toString();
     row["sender"] = TgClient::toInputPeer(sender);
 
+    row["thumbnailColor"] = AvatarDownloader::userColor(sender["id"].toLongLong());
+    row["thumbnailText"] = AvatarDownloader::getAvatarText(row["senderName"].toString());
+    row["avatarLoaded"] = false;
+    row["avatar"] = "";
+    row["photoId"] = sender["photo"].toMap()["photo_id"];
+
     return row;
 }
 
 void MessagesModel::linkActivated(QString link, qint32 listIndex)
 {
-    QMutexLocker lock(&mutex);
+    QMutexLocker lock(&_mutex);
 
     QUrl url(link);
 
@@ -358,4 +408,23 @@ void MessagesModel::linkActivated(QString link, qint32 listIndex)
         }
     }
     // TODO else openUrl(url);
+}
+
+void MessagesModel::avatarDownloaded(TgLongVariant photoId, QString filePath)
+{
+    QMutexLocker lock(&_mutex);
+
+    for (qint32 i = 0; i < _history.size(); ++i) {
+        TgObject message = _history[i];
+
+        if (message["photoId"] != photoId) {
+            continue;
+        }
+
+        message["avatarLoaded"] = true;
+        message["avatar"] = filePath;
+        _history[i] = message;
+
+        emit dataChanged(index(i), index(i));
+    }
 }

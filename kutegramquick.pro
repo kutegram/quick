@@ -10,12 +10,14 @@ symbian:TARGET.CAPABILITY += NetworkServices ReadUserData WriteUserData
 SOURCES += main.cpp \
     dialogsmodel.cpp \
     messagesmodel.cpp \
-    messageeditor.cpp
+    messageeditor.cpp \
+    avatardownloader.cpp
 
 HEADERS += \
     dialogsmodel.h \
     messagesmodel.h \
-    messageeditor.h
+    messageeditor.h \
+    avatardownloader.h
 
 OTHER_FILES += \
     qtc_packaging/debian_harmattan/rules \

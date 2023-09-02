@@ -179,6 +179,11 @@ Rectangle {
         }
     }
 
+    AvatarDownloader {
+        id: globalAvatarDownloader
+        client: telegramClient
+    }
+
     //TODO: remove stack and rewrite with states
     Rectangle {
         id: authRect

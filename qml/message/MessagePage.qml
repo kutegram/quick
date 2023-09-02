@@ -28,6 +28,7 @@ Rectangle {
         model: MessagesModel {
             id: messagesModel
             client: telegramClient
+            avatarDownloader: globalAvatarDownloader
 
             onScrollTo: {
                 messagesView.positionViewAtIndex(index, ListView.Beginning);

@@ -58,26 +58,45 @@ Item {
 
     Rectangle {
         id: messageAvatar
+        visible: !mergeMessage && !isChannel && !avatarLoaded
+
         anchors.top: parent.top
+        anchors.topMargin: 5
         anchors.left: checkbox.right
         anchors.leftMargin: isChannel ? -35 : 5
-        anchors.topMargin: 5
-        visible: !mergeMessage && !isChannel
+
         width: 30
         height: 30
-        radius: 15
         smooth: true
-        color: "#FFA3A3"
+
+        color: thumbnailColor
 
         Text {
             anchors.fill: parent
-            text: "JP"
+            text: thumbnailText
             color: "#FFFFFF"
             font.bold: true
             font.pixelSize: 12
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
+    }
+
+    Image {
+        id: avatarImage
+        visible: !mergeMessage && !isChannel && avatarLoaded
+
+        anchors.top: parent.top
+        anchors.topMargin: 5
+        anchors.left: checkbox.right
+        anchors.leftMargin: isChannel ? -35 : 5
+
+        width: 30
+        height: 30
+        smooth: true
+
+        asynchronous: true
+        source: avatarLoaded ? avatar : ""
     }
 
     Column {

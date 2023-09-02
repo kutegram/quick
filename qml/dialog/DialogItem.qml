@@ -23,8 +23,8 @@ Item {
         id: avatarRect
         visible: !avatarLoaded
 
-        anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
+        anchors.left: parent.left
         anchors.leftMargin: 5
 
         width: 30

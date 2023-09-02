@@ -7,13 +7,13 @@
 
 DialogsModel::DialogsModel(QObject *parent)
     : QAbstractListModel(parent)
-    , mutex(QMutex::Recursive)
+    , _mutex(QMutex::Recursive)
     , _dialogs()
     , _client(0)
     , _userId(0)
     , _requestId(0)
     , _offsets()
-    , _loadingAvatars()
+    , _avatarDownloader(0)
 {
     QHash<int, QByteArray> roles;
     roles[TitleRole] = "title";
@@ -40,12 +40,11 @@ void DialogsModel::resetState()
     _requestId = 0;
     _offsets = TgObject();
     _offsets["_start"] = true;
-    _loadingAvatars.clear();
 }
 
 void DialogsModel::setClient(QObject *client)
 {
-    QMutexLocker lock(&mutex);
+    QMutexLocker lock(&_mutex);
 
     if (_client) {
         _client->disconnect(this);
@@ -58,17 +57,33 @@ void DialogsModel::setClient(QObject *client)
 
     if (!_client) return;
 
-    _client->cacheDirectory().mkdir("avatars");
-
     connect(_client, SIGNAL(authorized(TgLongVariant)), this, SLOT(authorized(TgLongVariant)));
     connect(_client, SIGNAL(messagesGetDialogsResponse(TgObject,TgLongVariant)), this, SLOT(messagesGetDialogsResponse(TgObject,TgLongVariant)));
-    connect(_client, SIGNAL(fileDownloaded(TgLongVariant,QString)), this, SLOT(fileDownloaded(TgLongVariant,QString)));
-    connect(_client, SIGNAL(fileDownloadCanceled(TgLongVariant,QString)), this, SLOT(fileDownloadCanceled(TgLongVariant,QString)));
 }
 
 QObject* DialogsModel::client() const
 {
     return _client;
+}
+
+void DialogsModel::setAvatarDownloader(QObject *avatarDownloader)
+{
+    QMutexLocker lock(&_mutex);
+
+    if (_avatarDownloader) {
+        _avatarDownloader->disconnect(this);
+    }
+
+    _avatarDownloader = dynamic_cast<AvatarDownloader*>(avatarDownloader);
+
+    if (!_avatarDownloader) return;
+
+    connect(_avatarDownloader, SIGNAL(avatarDownloaded(TgLongVariant,QString)), this, SLOT(avatarDownloaded(TgLongVariant,QString)));
+}
+
+QObject* DialogsModel::avatarDownloader() const
+{
+    return _avatarDownloader;
 }
 
 int DialogsModel::rowCount(const QModelIndex &parent) const
@@ -88,14 +103,14 @@ bool DialogsModel::canFetchMore(const QModelIndex &parent) const
 
 void DialogsModel::fetchMore(const QModelIndex &parent)
 {
-    QMutexLocker lock(&mutex);
+    QMutexLocker lock(&_mutex);
 
     _requestId = _client->messagesGetDialogsWithOffsets(_offsets, 20);
 }
 
 void DialogsModel::authorized(TgLongVariant userId)
 {
-    QMutexLocker lock(&mutex);
+    QMutexLocker lock(&_mutex);
 
     if (_userId != userId) {
         resetState();
@@ -109,7 +124,7 @@ void DialogsModel::authorized(TgLongVariant userId)
 
 void DialogsModel::messagesGetDialogsResponse(TgObject data, TgLongVariant messageId)
 {
-    QMutexLocker lock(&mutex);
+    QMutexLocker lock(&_mutex);
 
     if (_requestId != messageId) {
         return;
@@ -196,35 +211,15 @@ void DialogsModel::messagesGetDialogsResponse(TgObject data, TgLongVariant messa
     beginInsertRows(QModelIndex(), _dialogs.size(), _dialogs.size() + dialogsRows.size() - 1);
     _dialogs.append(dialogsRows);
     endInsertRows();
-}
 
-QString getAvatarText(QString title)
-{
-    QStringList split = title.split(" ", QString::SkipEmptyParts);
-    QString result;
-
-    for (qint32 i = 0; i < split.size(); ++i) {
-        if (result.size() > 1) break;
-        QString item = split[i];
-        if (item.isEmpty()) continue;
-
-        for (qint32 j = 0; j < item.length(); ++j) {
-            if (item[j].isPrint()) {
-                result += item[j].toUpper();
-                break;
-            }
+    if (_avatarDownloader) {
+        for (qint32 i = 0; i < usersList.size(); ++i) {
+            _avatarDownloader->downloadAvatar(usersList[i].toMap());
+        }
+        for (qint32 i = 0; i < chatsList.size(); ++i) {
+            _avatarDownloader->downloadAvatar(chatsList[i].toMap());
         }
     }
-
-    if (result.isEmpty() && !title.isEmpty())
-        result += title[0].toUpper();
-
-    return result;
-}
-
-QColor userColor(qint64 id)
-{
-   return QColor::fromHsl(id % 360, 160, 160);
 }
 
 TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject message, TgObject messageSender)
@@ -259,10 +254,6 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
 
         row["tooltip"] = tooltip;
     }
-
-    row["thumbnailColor"] = userColor(peer["id"].toLongLong());
-    row["thumbnailText"] = getAvatarText(row["title"].toString());
-    row["avatarLoaded"] = false;
 
     row["messageTime"] = QDateTime::fromTime_t(qMax(message["date"].toInt(), message["edit_date"].toInt())).toString("hh:mm");
 
@@ -303,47 +294,32 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
 
     row["messageText"] = messageSenderName;
 
-    TgObject photo = peer["photo"].toMap();
-    if (GETID(photo)) {
-        qint64 photoId = photo["photo_id"].toLongLong();
-        QString relativePath = "avatars/" + QString::number(photoId) + ".jpg";
-        QString avatarFilePath = _client->cacheDirectory().absoluteFilePath(relativePath);
-        QFile avatarFile(avatarFilePath);
-
-        row["avatar"] = avatarFilePath;
-
-        if (!avatarFile.exists() || avatarFile.size() == 0) {
-            qint64 loadingId = _client->downloadFile(avatarFilePath, peer).toLongLong();
-            _loadingAvatars[loadingId] = row["inputPeer"].toMap();
-        } else {
-            row["avatarLoaded"] = true;
-        }
-    }
+    row["thumbnailColor"] = AvatarDownloader::userColor(peer["id"].toLongLong());
+    row["thumbnailText"] = AvatarDownloader::getAvatarText(row["title"].toString());
+    row["avatarLoaded"] = false;
+    row["avatar"] = "";
+    row["photoId"] = peer["photo"].toMap()["photo_id"];
 
     return row;
 }
 
-void DialogsModel::fileDownloadCanceled(TgLongVariant fileId, QString filePath)
+void DialogsModel::avatarDownloaded(TgLongVariant photoId, QString filePath)
 {
-    QMutexLocker lock(&mutex);
-
-    _loadingAvatars.remove(fileId.toLongLong());
-}
-
-void DialogsModel::fileDownloaded(TgLongVariant fileId, QString filePath)
-{
-    QMutexLocker lock(&mutex);
-
-    TgObject inputPeer = _loadingAvatars.take(fileId.toLongLong());
+    QMutexLocker lock(&_mutex);
 
     for (qint32 i = 0; i < _dialogs.size(); ++i) {
         TgObject dialog = _dialogs[i];
-        if (TgClient::peersEqual(dialog["inputPeer"].toMap(), inputPeer)) {
-            dialog["avatarLoaded"] = true;
-            _dialogs[i] = dialog;
-            emit dataChanged(index(i), index(i));
-            break;
+
+        if (dialog["photoId"] != photoId) {
+            continue;
         }
+
+        dialog["avatarLoaded"] = true;
+        dialog["avatar"] = filePath;
+        _dialogs[i] = dialog;
+
+        emit dataChanged(index(i), index(i));
+        break;
     }
 }
 

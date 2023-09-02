@@ -5,15 +5,17 @@
 #include <QVariant>
 #include <QMutex>
 #include "tgclient.h"
+#include "avatardownloader.h"
 
 class MessagesModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(QObject* client READ client WRITE setClient)
+    Q_PROPERTY(QObject* avatarDownloader READ avatarDownloader WRITE setAvatarDownloader)
     Q_PROPERTY(QByteArray peer READ peer WRITE setPeer)
 
 private:
-    QMutex mutex;
+    QMutex _mutex;
     QList<TgObject> _history;
 
     TgClient* _client;
@@ -28,13 +30,19 @@ private:
     qint32 _upOffset;
     qint32 _downOffset;
 
+    AvatarDownloader* _avatarDownloader;
+
     enum MessageRoles {
         PeerNameRole = Qt::UserRole + 1,
         MessageTextRole,
         MergeMessageRole,
         SenderNameRole,
         MessageTimeRole,
-        IsChannelRole
+        IsChannelRole,
+        ThumbnailColorRole,
+        ThumbnailTextRole,
+        AvatarRole,
+        AvatarLoadedRole
     };
 
 public:
@@ -43,6 +51,9 @@ public:
 
     void setClient(QObject *client);
     QObject* client() const;
+
+    void setAvatarDownloader(QObject *client);
+    QObject* avatarDownloader() const;
 
     void setPeer(QByteArray bytes);
     QByteArray peer() const;
@@ -64,6 +75,7 @@ signals:
 public slots:
     void authorized(TgLongVariant userId);
     void messagesGetHistoryResponse(TgObject data, TgLongVariant messageId);
+    void avatarDownloaded(TgLongVariant photoId, QString filePath);
 
     bool canFetchMoreUpwards() const;
     void fetchMoreUpwards();

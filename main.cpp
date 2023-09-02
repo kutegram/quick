@@ -9,6 +9,7 @@
 #include "messagesmodel.h"
 #include "messageeditor.h"
 #include "systemname.h"
+#include "avatardownloader.h"
 
 int main(int argc, char *argv[])
 {
@@ -37,6 +38,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<DialogsModel>("Kutegram", 1, 0, "DialogsModel");
     qmlRegisterType<MessagesModel>("Kutegram", 1, 0, "MessagesModel");
     qmlRegisterType<MessageEditor>("Kutegram", 1, 0, "MessageEditor");
+    qmlRegisterType<AvatarDownloader>("Kutegram", 1, 0, "AvatarDownloader");
 
     //TODO show status pane without button group on Symbian
     QmlApplicationViewer viewer;

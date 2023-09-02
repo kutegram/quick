@@ -36,6 +36,7 @@ Rectangle {
             focus: true
             model: DialogsModel {
                 client: telegramClient
+                avatarDownloader: globalAvatarDownloader
                 Component.onCompleted: pageRoot.refresh.connect(refresh)
             }
 
