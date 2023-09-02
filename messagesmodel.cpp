@@ -371,6 +371,10 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender)
     row["messageTime"] = QDateTime::fromTime_t(qMax(message["date"].toInt(), message["edit_date"].toInt())).toString("hh:mm");
     //TODO markdown / styled entities
     row["messageText"] = message["message"].toString();
+    if (GETID(message) == MessageService) {
+        //TODO service messages
+        row["messageText"] = "<i>service messages are not supported yet</i>";
+    }
     row["sender"] = TgClient::toInputPeer(sender);
 
     row["thumbnailColor"] = AvatarDownloader::userColor(sender["id"].toLongLong());
