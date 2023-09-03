@@ -132,13 +132,7 @@ QString AvatarDownloader::getAvatarText(QString title)
         for (qint32 j = 0; j < item.length(); ++j) {
             if (item[j].isLetterOrNumber()) {
                 result += item[j].toUpper();
-
-                if (result.size() > 1) {
-                    break;
-                }
-                if (i != split.size() - 1) {
-                    break;
-                }
+                break;
             }
         }
 

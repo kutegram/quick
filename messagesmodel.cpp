@@ -334,6 +334,7 @@ void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant me
         messagesRows.append(createRow(message, sender));
     }
 
+    qint32 oldOffset = _upOffset;
     qint32 newOffset = messages.last().toMap()["id"].toInt();
     if (_upOffset != newOffset) {
         _upOffset = newOffset;
@@ -349,7 +350,12 @@ void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant me
 
     if (oldSize > 0) {
         emit dataChanged(index(messagesRows.size()), index(messagesRows.size()));
+    }
 
+    // aka it is the first time when history is loaded in chat
+    if (qMax(_peer["read_inbox_max_id"].toInt(), _peer["read_outbox_max_id"].toInt()) == oldOffset) {
+        emit scrollTo(messagesRows.size() - 1);
+    } else {
         emit scrollTo(messagesRows.size());
     }
 
@@ -379,6 +385,7 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender)
     //TODO 12-hour format
     row["messageTime"] = QDateTime::fromTime_t(qMax(message["date"].toInt(), message["edit_date"].toInt())).toString("hh:mm");
     //TODO markdown / styled entities
+    //TODO replies support
     row["messageText"] = message["message"].toString();
     if (GETID(message) == MessageService) {
         //TODO service messages
