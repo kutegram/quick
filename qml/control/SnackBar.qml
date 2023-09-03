@@ -7,7 +7,7 @@ Item {
     property alias text: snackText.text
 
     function close() {
-        snackText.text = "";
+        snackText.state = "EMPTY";
     }
 
     Rectangle {
@@ -69,6 +69,21 @@ Item {
                         properties: "anchors.bottomMargin"
                         easing.type: Easing.InOutQuad
                         duration: 200
+                    }
+                },
+                Transition {
+                    to: "EMPTY"
+                    SequentialAnimation {
+                        NumberAnimation {
+                            properties: "anchors.bottomMargin"
+                            easing.type: Easing.InOutQuad
+                            duration: 200
+                        }
+                        PropertyAction {
+                            target: snackText
+                            property: "text"
+                            value: ""
+                        }
                     }
                 }
             ]
