@@ -4,6 +4,10 @@ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT KG_NO_DEBUG KG_NO_I
 
 QML_IMPORT_PATH =
 
+win32:RC_FILE = kutegramquick.rc
+macx:ICON = kutegramquick.icns
+symbian:ICON = kutegramquick.svg
+
 symbian:TARGET.UID3 = 0xE607720E
 symbian:TARGET.CAPABILITY += NetworkServices ReadUserData WriteUserData
 

@@ -45,7 +45,8 @@ int main(int argc, char *argv[])
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     viewer.rootContext()->setContextProperty("kutegramVersion", QApplication::applicationVersion());
     viewer.rootContext()->setContextProperty("kutegramPlatform", systemName());
-    viewer.setMainQmlFile(QLatin1String("qrc:/qml/main.qml"));
+    viewer.setMainQmlFile(QLatin1String("qrc:///qml/main.qml"));
+    viewer.setWindowTitle("Kutegram for " + systemName());
     viewer.showExpanded();
 
     return app.exec();
