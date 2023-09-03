@@ -260,16 +260,9 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
 
     QString messageSenderName;
 
-    if (TgClient::commonPeerType(messageSender) == 0) {
-        //This means that it is a channel feed or personal messages.
-        //Authorized user isn't returned by API, so we have to deal with it.
-        if (message["out"].toBool()) {
-            messageSenderName = "You";
-        }
-        //else messageSender = peer;
-    }
-
-    if (TgClient::isUser(messageSender)) {
+    if (message["out"].toBool()) {
+        messageSenderName = "You";
+    } else if (TgClient::isUser(messageSender)) {
         messageSenderName = messageSender["first_name"].toString();
     } else {
         messageSenderName = messageSender["title"].toString();

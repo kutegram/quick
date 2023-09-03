@@ -2,7 +2,6 @@ import QtQuick 1.0
 import "../dialog"
 
 Rectangle {
-    property string currentState: "MENU"
 
     property string peerTitle: ""
     property color peerThumbnailColor: "#00000000"
@@ -253,6 +252,19 @@ Rectangle {
         ]
     }
 
+    property string currentState: "MENU"
+
+    function menuButtonClicked() {
+        if (currentState == "MENU") {
+            currentState = "BACK"
+            drawer.opened = true;
+        } else {
+            currentState = "MENU"
+            drawer.opened = false;
+            stack.currentIndex = 0;
+        }
+    }
+
     Item {
         id: menuButton
         anchors.top: parent.top
@@ -284,16 +296,10 @@ Rectangle {
         }
 
         MouseArea {
+            id: menuButtonArea
             anchors.fill: parent
             onClicked: {
-                if (currentState == "MENU") {
-                    currentState = "BACK"
-                    drawer.opened = true;
-                } else {
-                    currentState = "MENU"
-                    drawer.opened = false;
-                    stack.currentIndex = 0;
-                }
+                menuButtonClicked();
             }
         }
 

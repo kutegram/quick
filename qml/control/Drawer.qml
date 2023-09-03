@@ -3,7 +3,7 @@ import QtQuick 1.0
 Item {
     property bool opened: false
 
-    id: root
+    id: drawerRoot
     width: 240
     height: 320
 
@@ -30,7 +30,7 @@ Item {
             }
             PropertyChanges {
                 target: drawerSlide
-                anchors.leftMargin: -root.width
+                anchors.leftMargin: -drawerRoot.width
             }
         }
     ]
@@ -54,7 +54,7 @@ Item {
     ListView {
         id: drawerSlide
         anchors.left: parent.left
-        width: root.width
+        width: drawerRoot.width
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         boundsBehavior: Flickable.StopAtBounds
@@ -74,8 +74,8 @@ Item {
         model: VisualItemModel {
             Item {
                 id: drawerContent
-                width: root.width
-                height: root.height
+                width: drawerRoot.width
+                height: drawerRoot.height
 
                 MouseArea {
                     id: dimmMouseArea
@@ -95,10 +95,19 @@ Item {
                     color: "#FFFFFF"
 
                     ListView {
+                        id: drawerListView
                         anchors.top: parent.top
                         anchors.bottom: drawerBottom.top
                         anchors.left: parent.left
                         anchors.right: parent.right
+
+                        highlight: Rectangle {
+                            width: drawerListView.width
+                            height: 40
+                            opacity: 0.1
+                            color: "#000000"
+                        }
+
                         model: ListModel {
                             ListElement {
                                 icon: "../../img/refresh.png"
@@ -158,8 +167,8 @@ Item {
             }
             Item {
                 id: drawerSpace
-                width: root.width
-                height: root.height
+                width: drawerRoot.width
+                height: drawerRoot.height
             }
         }
     }

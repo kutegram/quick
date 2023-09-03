@@ -10,6 +10,7 @@ Rectangle {
         id: folderSlide
         focus: true
         anchors.fill: parent
+
         model: ListModel {
             id: foldersModel
             ListElement {
@@ -17,6 +18,7 @@ Rectangle {
                 label: "All Chats"
             }
         }
+
         boundsBehavior: Flickable.StopAtBounds
         orientation: ListView.Horizontal
         snapMode: ListView.SnapOneItem
@@ -34,6 +36,14 @@ Rectangle {
             width: folderSlide.width
             height: folderSlide.height
             focus: true
+
+            highlight: Rectangle {
+                width: folderSlide.width
+                height: 40
+                opacity: 0.1
+                color: "#000000"
+            }
+
             model: DialogsModel {
                 client: telegramClient
                 avatarDownloader: globalAvatarDownloader

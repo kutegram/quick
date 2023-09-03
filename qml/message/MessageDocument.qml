@@ -15,7 +15,7 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            if (attachButton.state == "NOT_UPLOADING") {
+            if (attachButton.state == "NOT_DOWNLOADING") {
                 messagesModel.downloadFile(rowIndex);
             } else {
                 messagesModel.cancelDownload(rowIndex);
@@ -34,13 +34,13 @@ Rectangle {
 
         switch (state) {
         case 1:
-            attachButton.state = "UPLOADED";
+            attachButton.state = "DOWNLOADED";
             break;
         case 0:
-            attachButton.state = "UPLOADING";
+            attachButton.state = "DOWNLOADING";
             break;
         case -1:
-            attachButton.state = "NOT_UPLOADING";
+            attachButton.state = "NOT_DOWNLOADING";
             break;
         }
     }
@@ -57,7 +57,7 @@ Rectangle {
         smooth: true
         color: "#54759E"
 
-        state: downloadable ? "NOT_UPLOADING" : "UPLOADED"
+        state: downloadable ? "NOT_DOWNLOADING" : "DOWNLOADED"
 
         Image {
             id: downloadImage
@@ -95,7 +95,7 @@ Rectangle {
 
         states: [
             State {
-                name: "UPLOADING"
+                name: "DOWNLOADING"
                 PropertyChanges {
                     target: downloadImage
                     opacity: 0
@@ -113,7 +113,7 @@ Rectangle {
                 }
             },
             State {
-                name: "NOT_UPLOADING"
+                name: "NOT_DOWNLOADING"
                 PropertyChanges {
                     target: downloadImage
                     opacity: 1
@@ -131,7 +131,7 @@ Rectangle {
                 }
             },
             State {
-                name: "UPLOADED"
+                name: "DOWNLOADED"
                 PropertyChanges {
                     target: downloadImage
                     opacity: 0

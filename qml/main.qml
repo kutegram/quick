@@ -7,9 +7,11 @@ import Kutegram 1.0
 
 Rectangle {
     //TODO: remove dynamically unused pages / components from memory
+    //TODO: keypad navigation
+    id: root
+
     width: 320
     height: 240
-    id: root
     state: "AUTH"
     states: [
         State {
@@ -358,5 +360,11 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+    }
+
+    Keys.onPressed: {
+        if (event.key == Qt.Key_Context1 || event.key == Qt.Key_Escape) {
+            topBar.menuButtonClicked();
+        }
     }
 }

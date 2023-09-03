@@ -32,4 +32,12 @@ Item {
     Component.onCompleted: {
         innerArea.clicked.connect(buttonRoot.clicked);
     }
+
+    Rectangle {
+        anchors.fill: parent
+        radius: 5
+        color: "#000000"
+        opacity: 0.1
+        visible: activeFocus
+    }
 }
