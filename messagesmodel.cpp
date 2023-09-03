@@ -7,6 +7,7 @@
 #include <QUrl>
 #include <QDomDocument>
 #include "avatardownloader.h"
+#include <QFileDialog>
 
 using namespace TLType;
 
@@ -22,6 +23,7 @@ MessagesModel::MessagesModel(QObject *parent)
     , _upOffset(0)
     , _downOffset(0)
     , _avatarDownloader(0)
+    , _downloadRequests()
 {
     QHash<int, QByteArray> roles;
     roles[PeerNameRole] = "peerName";
@@ -38,6 +40,8 @@ MessagesModel::MessagesModel(QObject *parent)
     roles[MediaImageRole] = "mediaImage";
     roles[MediaTitleRole] = "mediaTitle";
     roles[MediaTextRole] = "mediaText";
+    roles[MediaDownloadableRole] = "mediaDownloadable";
+    roles[MessageIdRole] = "messageId";
     setRoleNames(roles);
 }
 
@@ -74,6 +78,8 @@ void MessagesModel::setClient(QObject *client)
 
     connect(_client, SIGNAL(authorized(TgLongVariant)), this, SLOT(authorized(TgLongVariant)));
     connect(_client, SIGNAL(messagesGetHistoryResponse(TgObject,TgLongVariant)), this, SLOT(messagesGetHistoryResponse(TgObject,TgLongVariant)));
+    connect(_client, SIGNAL(fileDownloaded(TgLongVariant,QString)), this, SLOT(fileDownloaded(TgLongVariant,QString)));
+    connect(_client, SIGNAL(fileDownloadCanceled(TgLongVariant,QString)), this, SLOT(fileDownloadCanceled(TgLongVariant,QString)));
 }
 
 QObject* MessagesModel::client() const
@@ -106,6 +112,7 @@ void MessagesModel::setPeer(QByteArray bytes)
     QMutexLocker lock(&_mutex);
 
     resetState();
+    _downloadRequests.clear();
 
     TgObject peer;
     QDataStream peerStream(&bytes, QIODevice::ReadOnly);
@@ -195,6 +202,7 @@ void MessagesModel::authorized(TgLongVariant userId)
 
     if (_userId != userId) {
         resetState();
+        _downloadRequests.clear();
     }
 
     _userId = userId;
@@ -358,6 +366,7 @@ void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant me
 TgObject MessagesModel::createRow(TgObject message, TgObject sender)
 {
     TgObject row;
+    row["messageId"] = message["id"];
 
     if (TgClient::isUser(sender)) {
         row["senderName"] = QString(sender["first_name"].toString() + " " + sender["last_name"].toString());
@@ -385,6 +394,7 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender)
 
     TgObject media = message["media"].toMap();
     row["hasMedia"] = GETID(media) != 0 ? 1 : 0;
+    row["mediaDownloadable"] = false;
 
     switch (GETID(media)) {
     //TODO image viewer and preview
@@ -413,7 +423,9 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender)
         break;
     case MessageMediaDocument:
     {
-        row["mediaImage"] = "../../img/media/download.png";
+        row["mediaImage"] = "../../img/media/file.png";
+        row["mediaDownloadable"] = true;
+        row["mediaDownload"] = media;
 
         TgObject document = media["document"].toMap();
         QString documentName = "Unknown file";
@@ -445,6 +457,7 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender)
         }
 
         row["mediaTitle"] = documentName;
+        row["mediaFileName"] = documentName;
         row["mediaText"] = sizeString;
         break;
     }
@@ -552,3 +565,67 @@ void MessagesModel::avatarDownloaded(TgLongVariant photoId, QString filePath)
         emit dataChanged(index(i), index(i));
     }
 }
+
+void MessagesModel::downloadFile(qint32 index)
+{
+    QMutexLocker lock(&_mutex);
+
+    if (!_client || !_client->isAuthorized() || TgClient::commonPeerType(_peer) == 0 || index == -1) {
+        return;
+    }
+
+    cancelDownload(index);
+
+    QString selected = QFileDialog::getSaveFileName(0, QString(), _history[index]["mediaFileName"].toString());
+
+    if (selected.isEmpty()) {
+        return;
+    }
+
+    qint32 messageId = _history[index]["messageId"].toInt();
+    qint64 requestId = _client->downloadFile(selected, _history[index]["mediaDownload"].toMap()).toLongLong();
+    _downloadRequests.insert(requestId, messageId);
+    emit downloadUpdated(messageId, 0);
+}
+
+void MessagesModel::cancelDownload(qint32 index)
+{
+    QMutexLocker lock(&_mutex);
+
+    if (!_client) {
+        return;
+    }
+
+    qint32 messageId = _history[index]["messageId"].toInt();
+    qint64 requestId = _downloadRequests.key(messageId);
+    _downloadRequests.remove(requestId);
+    _client->cancelDownload(requestId);
+    emit downloadUpdated(messageId, -1);
+}
+
+void MessagesModel::fileDownloaded(TgLongVariant fileId, QString filePath)
+{
+    QMutexLocker lock(&_mutex);
+
+    TgVariant messageId = _downloadRequests.take(fileId.toLongLong());
+
+    if (messageId.isNull()) {
+        return;
+    }
+
+    emit downloadUpdated(messageId.toInt(), 1);
+}
+
+void MessagesModel::fileDownloadCanceled(TgLongVariant fileId, QString filePath)
+{
+    QMutexLocker lock(&_mutex);
+
+    TgVariant messageId = _downloadRequests.take(fileId.toLongLong());
+
+    if (messageId.isNull()) {
+        return;
+    }
+
+    emit downloadUpdated(messageId.toInt(), -1);
+}
+

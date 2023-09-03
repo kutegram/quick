@@ -32,6 +32,8 @@ private:
 
     AvatarDownloader* _avatarDownloader;
 
+    QHash<qint64, TgVariant> _downloadRequests;
+
     enum MessageRoles {
         PeerNameRole = Qt::UserRole + 1,
         MessageTextRole,
@@ -46,7 +48,9 @@ private:
         HasMediaRole,
         MediaImageRole,
         MediaTitleRole,
-        MediaTextRole
+        MediaTextRole,
+        MediaDownloadableRole,
+        MessageIdRole
     };
 
 public:
@@ -75,16 +79,22 @@ public:
 
 signals:
     void scrollTo(qint32 index);
+    void downloadUpdated(qint32 messageId, qint32 state);
 
 public slots:
     void authorized(TgLongVariant userId);
     void messagesGetHistoryResponse(TgObject data, TgLongVariant messageId);
     void avatarDownloaded(TgLongVariant photoId, QString filePath);
 
+    void fileDownloaded(TgLongVariant fileId, QString filePath);
+    void fileDownloadCanceled(TgLongVariant fileId, QString filePath);
+
     bool canFetchMoreUpwards() const;
     void fetchMoreUpwards();
 
     void linkActivated(QString link, qint32 index);
+    void downloadFile(qint32 index);
+    void cancelDownload(qint32 index);
 };
 
 #endif // MESSAGESMODEL_H

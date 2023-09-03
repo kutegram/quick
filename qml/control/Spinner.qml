@@ -1,6 +1,6 @@
 import QtQuick 1.0
 
-Rectangle {
+Item {
     width: 40
     height: width
 

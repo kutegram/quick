@@ -2,6 +2,7 @@ import QtQuick 1.0
 
 Item {
     property alias currentState: messageRoot.state
+    property int messageIndex: index
 
     id: messageRoot
     width: ListView.view.width
@@ -187,6 +188,9 @@ Item {
                 image: mediaImage
                 title: mediaTitle
                 text: mediaText
+                rowIndex: messageIndex
+                mid: messageId
+                downloadable: mediaDownloadable
                 anchors.left: parent.left
                 anchors.right: parent.right
                 state: currentState
