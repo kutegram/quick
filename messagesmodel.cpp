@@ -174,7 +174,7 @@ void MessagesModel::fetchMore(const QModelIndex &parent)
 {
     QMutexLocker lock(&_mutex);
 
-    _downRequestId = _client->messagesGetHistory(_inputPeer, _downOffset, 0, -20, 20);
+    _downRequestId = _client->messagesGetHistory(_inputPeer, _downOffset, 0, -21, 20);
 }
 
 bool MessagesModel::canFetchMoreUpwards() const
@@ -186,7 +186,7 @@ void MessagesModel::fetchMoreUpwards()
 {
     QMutexLocker lock(&_mutex);
 
-    _upRequestId = _client->messagesGetHistory(_inputPeer, _upOffset, 0, 0, 20);
+    _upRequestId = _client->messagesGetHistory(_inputPeer, _upOffset, 0, -1, 20);
 }
 
 void MessagesModel::authorized(TgLongVariant userId)
