@@ -269,6 +269,7 @@ Rectangle {
                 width: 20
                 height: 20
                 smooth: true
+                asynchronous: true
             }
 
             MouseArea {

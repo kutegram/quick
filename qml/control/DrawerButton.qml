@@ -13,6 +13,7 @@ Item {
 
         Image {
             anchors.centerIn: parent
+            asynchronous: true
             source: icon
             smooth: true
             height: 20

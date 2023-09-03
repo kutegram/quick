@@ -7,6 +7,7 @@ Item {
     property bool white: false
 
     Image {
+        asynchronous: true
         anchors.centerIn: parent
         source: white ? "../../img/loading_white.png" : "../../img/loading.png"
         width: 20

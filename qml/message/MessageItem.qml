@@ -55,6 +55,7 @@ Item {
         width: 20
         x: 5
         y: 5
+        asynchronous: true
     }
 
     Rectangle {

@@ -15,6 +15,7 @@ Item {
 //            smooth: true
 //            width: 20
 //            height: 20
+//            asynchronous: true
 //        }
 
         Text {

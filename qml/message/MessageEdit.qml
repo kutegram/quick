@@ -61,6 +61,7 @@ Rectangle {
             smooth: true
             source: "../../img/attachment.png"
             rotation: 135
+            asynchronous: true
         }
 
         Image {
@@ -70,6 +71,7 @@ Rectangle {
             height: 20
             smooth: true
             source: "../../img/delete.png"
+            asynchronous: true
         }
 
         Spinner {
@@ -82,6 +84,7 @@ Rectangle {
                 height: 20
                 smooth: true
                 source: "../../img/close-circle-outline_inner.png"
+                asynchronous: true
             }
         }
 
@@ -178,6 +181,7 @@ Rectangle {
             height: 20
             smooth: true
             source: "../../img/send_accent.png"
+            asynchronous: true
         }
 
         Image {
@@ -188,6 +192,7 @@ Rectangle {
             smooth: true
             //source: "../../img/microphone.png"
             source: "../../img/send.png"
+            asynchronous: true
         }
 
         states: [

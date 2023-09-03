@@ -165,6 +165,7 @@ Rectangle {
                     width: 20
                     height: 20
                     smooth: true
+                    asynchronous: true
                 }
             }
         }
@@ -268,6 +269,7 @@ Rectangle {
             width: 20
             height: 20
             smooth: true
+            asynchronous: true
         }
 
         Image {
@@ -278,6 +280,7 @@ Rectangle {
             width: 20
             height: 20
             smooth: true
+            asynchronous: true
         }
 
         MouseArea {

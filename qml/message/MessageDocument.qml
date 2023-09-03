@@ -66,6 +66,7 @@ Rectangle {
             height: 20
             smooth: true
             source: "../../img/media/download.png"
+            asynchronous: true
         }
 
         Image {
@@ -74,6 +75,7 @@ Rectangle {
             width: 20
             height: 20
             smooth: true
+            asynchronous: true
         }
 
         Spinner {
@@ -87,6 +89,7 @@ Rectangle {
                 height: 20
                 smooth: true
                 source: "../../img/media/close-circle-outline_inner.png"
+                asynchronous: true
             }
         }
 
