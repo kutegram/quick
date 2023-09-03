@@ -6,7 +6,7 @@ Item {
 
     id: messageRoot
     width: ListView.view.width
-    height: Math.max(36, textContainer.height)
+    height: textContainer.height
     state: "NO_SELECT"
 
     states: [
@@ -128,6 +128,29 @@ Item {
                 font.pixelSize: 10
                 color: "#999999"
                 visible: !mergeMessage
+            }
+        }
+
+        Row {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            spacing: 4
+            visible: forwardedFrom.length != 0
+
+            Image {
+                source: "../../img/share_forwarded.png"
+                smooth: true
+                width: 20
+                height: 20
+                asynchronous: true
+            }
+
+            Text {
+                text: forwardedFrom
+                font.bold: true
+                font.pixelSize: 12
+                color: "#8D8D8D"
+                anchors.verticalCenter: parent.verticalCenter
             }
         }
 

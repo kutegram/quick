@@ -50,7 +50,8 @@ private:
         MediaTitleRole,
         MediaTextRole,
         MediaDownloadableRole,
-        MessageIdRole
+        MessageIdRole,
+        ForwardedFromRole
     };
 
 public:
@@ -72,7 +73,7 @@ public:
     bool canFetchMore(const QModelIndex &parent) const;
     void fetchMore(const QModelIndex &parent);
 
-    TgObject createRow(TgObject message, TgObject sender);
+    TgObject createRow(TgObject message, TgObject sender, TgList users, TgList chats);
 
     void handleHistoryResponse(TgObject data, TgLongVariant messageId);
     void handleHistoryResponseUpwards(TgObject data, TgLongVariant messageId);

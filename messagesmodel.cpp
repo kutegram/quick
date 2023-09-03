@@ -42,6 +42,7 @@ MessagesModel::MessagesModel(QObject *parent)
     roles[MediaTextRole] = "mediaText";
     roles[MediaDownloadableRole] = "mediaDownloadable";
     roles[MessageIdRole] = "messageId";
+    roles[ForwardedFromRole] = "forwardedFrom";
     setRoleNames(roles);
 }
 
@@ -262,7 +263,7 @@ void MessagesModel::handleHistoryResponse(TgObject data, TgLongVariant messageId
             sender = _peer;
         }
 
-        messagesRows.append(createRow(message, sender));
+        messagesRows.append(createRow(message, sender, users, chats));
     }
 
     qint32 newOffset = messages.first().toMap()["id"].toInt();
@@ -331,7 +332,7 @@ void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant me
             sender = _peer;
         }
 
-        messagesRows.append(createRow(message, sender));
+        messagesRows.append(createRow(message, sender, users, chats));
     }
 
     qint32 oldOffset = _upOffset;
@@ -369,7 +370,7 @@ void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant me
     }
 }
 
-TgObject MessagesModel::createRow(TgObject message, TgObject sender)
+TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList users, TgList chats)
 {
     TgObject row;
     row["messageId"] = message["id"];
@@ -392,6 +393,35 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender)
         row["messageText"] = "<i>service messages are not supported yet</i>";
     }
     row["sender"] = TgClient::toInputPeer(sender);
+
+    TgObject fwdFrom = message["fwd_from"].toMap();
+    row["forwardedFrom"] = "";
+    if (EXISTS(fwdFrom)) {
+        QString forwardedFrom = fwdFrom["from_name"].toString();
+
+        if (forwardedFrom.isEmpty()) {
+            TgObject fwdPeer = fwdFrom["from_id"].toMap();
+
+            if (TgClient::isUser(fwdPeer)) for (qint32 i = 0; i < users.size(); ++i) {
+                TgObject realPeer = users[i].toMap();
+                if (TgClient::peersEqual(fwdPeer, realPeer)) {
+                    forwardedFrom = QString(realPeer["first_name"].toString() + " " + realPeer["last_name"].toString());
+                    break;
+                }
+            }
+            if (TgClient::isChat(fwdPeer)) for (qint32 i = 0; i < chats.size(); ++i) {
+                TgObject realPeer = chats[i].toMap();
+                if (TgClient::peersEqual(fwdPeer, realPeer)) {
+                    forwardedFrom = realPeer["title"].toString();
+                    break;
+                }
+            }
+        }
+
+        row["forwardedFrom"] = forwardedFrom;
+    }
+
+    //TODO post author
 
     row["thumbnailColor"] = AvatarDownloader::userColor(sender["id"].toLongLong());
     row["thumbnailText"] = AvatarDownloader::getAvatarText(row["senderName"].toString());

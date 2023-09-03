@@ -53,5 +53,6 @@
         <file>img/media/receipt-text.png</file>
         <file>img/media/web.png</file>
         <file>img/media/close-circle-outline_inner.png</file>
+        <file>img/share_forwarded.png</file>
     </qresource>
 </RCC>
