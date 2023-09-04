@@ -25,7 +25,18 @@ MessagesModel::MessagesModel(QObject *parent)
     , _avatarDownloader(0)
     , _downloadRequests()
 {
-    QHash<int, QByteArray> roles;
+#if QT_VERSION < 0x050000
+    setRoleNames(roleNames());
+#endif
+}
+
+const QHash<int, QByteArray>& MessagesModel::roleNames() const
+{
+    static QHash<int, QByteArray> roles;
+
+    if (!roles.isEmpty())
+        return roles;
+
     roles[PeerNameRole] = "peerName";
     roles[MessageTextRole] = "messageText";
     roles[MergeMessageRole] = "mergeMessage";
@@ -43,7 +54,8 @@ MessagesModel::MessagesModel(QObject *parent)
     roles[MediaDownloadableRole] = "mediaDownloadable";
     roles[MessageIdRole] = "messageId";
     roles[ForwardedFromRole] = "forwardedFrom";
-    setRoleNames(roles);
+
+    return roles;
 }
 
 void MessagesModel::resetState()

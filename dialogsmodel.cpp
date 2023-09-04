@@ -15,18 +15,9 @@ DialogsModel::DialogsModel(QObject *parent)
     , _offsets()
     , _avatarDownloader(0)
 {
-    QHash<int, QByteArray> roles;
-    roles[TitleRole] = "title";
-    roles[ThumbnailColorRole] = "thumbnailColor";
-    roles[ThumbnailTextRole] = "thumbnailText";
-    roles[AvatarRole] = "avatar";
-    roles[MessageTimeRole] = "messageTime";
-    roles[MessageTextRole] = "messageText";
-    roles[AvatarLoadedRole] = "avatarLoaded";
-    roles[InputPeerRole] = "inputPeer";
-    roles[PeerBytesRole] = "peerBytes";
-    roles[TooltipRole] = "tooltip";
-    setRoleNames(roles);
+#if QT_VERSION < 0x050000
+    setRoleNames(roleNames());
+#endif
 }
 
 void DialogsModel::resetState()
@@ -40,6 +31,27 @@ void DialogsModel::resetState()
     _requestId = 0;
     _offsets = TgObject();
     _offsets["_start"] = true;
+}
+
+const QHash<int, QByteArray>& DialogsModel::roleNames() const
+{
+    static QHash<int, QByteArray> roles;
+
+    if (!roles.isEmpty())
+        return roles;
+
+    roles[TitleRole] = "title";
+    roles[ThumbnailColorRole] = "thumbnailColor";
+    roles[ThumbnailTextRole] = "thumbnailText";
+    roles[AvatarRole] = "avatar";
+    roles[MessageTimeRole] = "messageTime";
+    roles[MessageTextRole] = "messageText";
+    roles[AvatarLoadedRole] = "avatarLoaded";
+    roles[InputPeerRole] = "inputPeer";
+    roles[PeerBytesRole] = "peerBytes";
+    roles[TooltipRole] = "tooltip";
+
+    return roles;
 }
 
 void DialogsModel::setClient(QObject *client)
