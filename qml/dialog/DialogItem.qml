@@ -21,7 +21,7 @@ Item {
 
     Rectangle {
         id: avatarRect
-        visible: !avatarLoaded
+        visible: !avatarLoaded || avatarImage.status != Image.Ready
 
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left

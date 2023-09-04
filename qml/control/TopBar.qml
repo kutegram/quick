@@ -79,7 +79,7 @@ Rectangle {
 
             Rectangle {
                 id: avatarRect
-                visible: !peerAvatarLoaded
+                visible: !peerAvatarLoaded || avatarImage.status != Image.Ready
 
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter

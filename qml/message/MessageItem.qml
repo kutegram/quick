@@ -60,7 +60,7 @@ Item {
 
     Rectangle {
         id: messageAvatar
-        visible: !mergeMessage && !isChannel && !avatarLoaded
+        visible: (!mergeMessage && !isChannel && !avatarLoaded) || avatarImage.status != Image.Ready
 
         anchors.top: parent.top
         anchors.topMargin: 5
