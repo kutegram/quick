@@ -30,7 +30,7 @@ MessagesModel::MessagesModel(QObject *parent)
 #endif
 }
 
-const QHash<int, QByteArray>& MessagesModel::roleNames() const
+QHash<int, QByteArray> MessagesModel::roleNames() const
 {
     static QHash<int, QByteArray> roles;
 

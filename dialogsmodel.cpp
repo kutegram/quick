@@ -33,7 +33,7 @@ void DialogsModel::resetState()
     _offsets["_start"] = true;
 }
 
-const QHash<int, QByteArray>& DialogsModel::roleNames() const
+QHash<int, QByteArray> DialogsModel::roleNames() const
 {
     static QHash<int, QByteArray> roles;
 

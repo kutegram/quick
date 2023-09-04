@@ -58,7 +58,7 @@ public:
     explicit MessagesModel(QObject *parent = 0);
     void resetState();
 
-    const QHash<int, QByteArray>& roleNames() const;
+    QHash<int, QByteArray> roleNames() const;
 
     void setClient(QObject *client);
     QObject* client() const;
