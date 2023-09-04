@@ -342,4 +342,12 @@ Rectangle {
             }
         ]
     }
+
+    Rectangle {
+        height: 1
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        color: "#3e5675"
+    }
 }
