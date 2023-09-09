@@ -144,6 +144,8 @@ Item {
                             anchors.bottom: parent.bottom
                             anchors.left: parent.left
                             anchors.leftMargin: 12 * kgScaling
+                            anchors.right: parent.right
+                            anchors.rightMargin: 12 * kgScaling
                             anchors.bottomMargin: 7 * kgScaling
                             spacing: 2 * kgScaling
                             Text {
