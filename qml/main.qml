@@ -149,9 +149,11 @@ Rectangle {
         }
 
         onSocketError: {
-            if (!telegramClient.isAuthorized()) {
+            if (!telegramClient.hasSession()) {
                 setAuthProgress(false);
                 snackBar.text = "Socket error occured: " + errorMessage + " (" + errorCode + ")"
+            } else {
+                snackBar.text = "Reconnecting...";
             }
         }
 
