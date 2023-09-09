@@ -100,6 +100,7 @@ Item {
                         anchors.bottom: drawerBottom.top
                         anchors.left: parent.left
                         anchors.right: parent.right
+                        boundsBehavior: Flickable.StopAtBounds
 
 //                        highlight: Rectangle {
 //                            width: drawerListView.width
