@@ -33,6 +33,10 @@ int main(int argc, char *argv[])
 //    QApplication::setNavigationMode(Qt::NavigationModeCursorAuto);
 #endif
 
+#if QT_VERSION >= 0x050300
+    QApplication::setAttribute(Qt::AA_UseOpenGLES, true);
+#endif
+
     QApplication app(argc, argv);
 
     QFont font = app.font();
