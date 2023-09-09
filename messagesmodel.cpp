@@ -625,14 +625,38 @@ void MessagesModel::downloadFile(qint32 index)
 
     cancelDownload(index);
 
-    QString selected = QFileDialog::getSaveFileName(0, QString(), _history[index]["mediaFileName"].toString());
+    QDir::home().mkdir("Kutegram");
 
-    if (selected.isEmpty()) {
-        return;
+    QString fileName =  _history[index]["mediaFileName"].toString();
+    if (fileName.isEmpty()) fileName = "Unknown file";
+
+    QStringList split = fileName.split('.');
+    QString fileNameBefore;
+    QString fileNameAfter;
+
+    if (split.length() == 1) {
+        fileNameBefore = split.first();
+    } else {
+        fileNameBefore = QStringList(split.mid(0, split.length() - 1)).join(".");
+        fileNameAfter  = split.last();
+    }
+
+    if (!fileNameAfter.isEmpty()) {
+        fileNameAfter = "." + fileNameAfter;
+    }
+
+    QString indexedFileName = fileName;
+    QString indexedFilePath = QDir::home().absoluteFilePath("Kutegram/" + indexedFileName);
+    qint32 fileIndex = 0;
+
+    while (QFile(indexedFilePath).exists()) {
+        ++fileIndex;
+        indexedFileName = fileNameBefore + " (" + QString::number(fileIndex) + ")" + fileNameAfter;
+        indexedFilePath = QDir::home().absoluteFilePath("Kutegram/" + indexedFileName);
     }
 
     qint32 messageId = _history[index]["messageId"].toInt();
-    qint64 requestId = _client->downloadFile(selected, _history[index]["mediaDownload"].toMap()).toLongLong();
+    qint64 requestId = _client->downloadFile(indexedFilePath, _history[index]["mediaDownload"].toMap()).toLongLong();
     _downloadRequests.insert(requestId, messageId);
     emit downloadUpdated(messageId, 0);
 }
