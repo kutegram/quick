@@ -38,12 +38,12 @@ Rectangle {
             cacheBuffer: height * 1.5
             focus: true
 
-            highlight: Rectangle {
-                width: folderSlide.width
-                height: 40 * kgScaling
-                opacity: 0.1
-                color: "#000000"
-            }
+//            highlight: Rectangle {
+//                width: folderSlide.width
+//                height: 40 * kgScaling
+//                opacity: 0.1
+//                color: "#000000"
+//            }
 
             model: DialogsModel {
                 client: telegramClient

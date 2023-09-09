@@ -101,12 +101,12 @@ Item {
                         anchors.left: parent.left
                         anchors.right: parent.right
 
-                        highlight: Rectangle {
-                            width: drawerListView.width
-                            height: 40 * kgScaling
-                            opacity: 0.1
-                            color: "#000000"
-                        }
+//                        highlight: Rectangle {
+//                            width: drawerListView.width
+//                            height: 40 * kgScaling
+//                            opacity: 0.1
+//                            color: "#000000"
+//                        }
 
                         model: ListModel {
                             ListElement {
