@@ -106,8 +106,8 @@ Item {
         anchors.left: messageAvatar.right
         anchors.right: parent.right
         anchors.topMargin: 5 * kgScaling
-        anchors.leftMargin: anchors.topMargin
-        anchors.rightMargin: anchors.topMargin
+        anchors.leftMargin: 5 * kgScaling
+        anchors.rightMargin: 5 * kgScaling
         spacing: 2 * kgScaling
 
         Row {
