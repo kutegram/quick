@@ -6,6 +6,7 @@ import "auth"
 import Kutegram 1.0
 
 Rectangle {
+    //TODO: UI scaling - 1.5x for Nokia N8
     //TODO: remove dynamically unused pages / components from memory
     //TODO: keypad navigation
     id: root
@@ -31,6 +32,14 @@ Rectangle {
             }
         }
     ]
+
+    onStateChanged: {
+        if (state == "MAIN") {
+            mainRect.forceActiveFocus();
+        } else {
+            authRect.forceActiveFocus();
+        }
+    }
 
     transitions: [
         Transition {
@@ -206,6 +215,7 @@ Rectangle {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         width: parent.width
+        focus: true
 
         Stack {
             flickableDirection: Flickable.VerticalFlick
@@ -316,6 +326,7 @@ Rectangle {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         width: parent.width
+        focus: true
 
         Stack {
             id: stack
