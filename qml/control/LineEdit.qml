@@ -56,7 +56,7 @@ Item {
         anchors.bottom: parent.bottom
         width: parent.width - 10 * kgScaling
         height: 2 * kgScaling
-        color: "#EEEEEE"
+        color: "#999999"
     }
 
     Rectangle {
