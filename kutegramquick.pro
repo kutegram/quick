@@ -1,3 +1,12 @@
+TARGET = Kutegram
+APPNAME = Kutegram
+VERSION = 1.0.0
+DEFINES += VERSION=\"\\\"$$VERSION\\\"\"
+#DATE = $$system(date /t)
+#DEFINES += BUILDDATE=\"\\\"$$DATE\\\"\"
+#COMMIT_SHA = $$system(git log --pretty=format:%h -n 1);
+#DEFINES += COMMIT_SHA=\"\\\"$$COMMIT_SHA\\\"\"
+
 QT += core declarative network xml
 DEFINES += QT_USE_FAST_CONCATENATION QT_USE_FAST_OPERATOR_PLUS
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT KG_NO_DEBUG KG_NO_INFO
@@ -6,10 +15,43 @@ QML_IMPORT_PATH =
 
 win32:RC_FILE = kutegramquick.rc
 macx:ICON = kutegramquick.icns
-symbian:ICON = kutegramquick.svg
 
-symbian:TARGET.UID3 = 0xE607720E
-symbian:TARGET.CAPABILITY += NetworkServices ReadUserData WriteUserData
+symbian {
+    ICON = kutegramquick.svg
+    TARGET.UID3 = 0xE0713D51
+    DEFINES += SYMBIAN_UID=$$TARGET.UID3
+
+    TARGET.CAPABILITY += ReadUserData WriteUserData UserEnvironment NetworkServices LocalServices
+    #TARGET.EPOCHEAPSIZE = 0x400000 0x4000000
+    #TARGET.EPOCSTACKSIZE = 0x14000
+
+    supported_platforms = \
+            "[0x1028315F],0,0,0,{\"S60ProductID\"}" \ # Symbian^1
+            "[0x20022E6D],0,0,0,{\"S60ProductID\"}" \ # Symbian^3
+            "[0x102032BE],0,0,0,{\"S60ProductID\"}" \ # Symbian 9.2
+            "[0x102752AE],0,0,0,{\"S60ProductID\"}" \ # Symbian 9.3
+            "[0x2003A678],0,0,0,{\"S60ProductID\"}"   # Symbian Belle
+
+    default_deployment.pkg_prerules -= pkg_platform_dependencies
+    supported_platforms_deployment.pkg_prerules += supported_platforms
+    DEPLOYMENT += supported_platforms_deployment
+
+    vendor_info = \
+        " " \
+        "; Localised Vendor name" \
+        "%{\"curoviyxru\"}" \
+        " " \
+        "; Unique Vendor name" \
+        ":\"curoviyxru\"" \
+        " "
+
+    header = "$${LITERAL_HASH}{\"Kutegram\"},(0xE0713D51),0,2,0,TYPE=SA,RU"
+
+    package.pkg_prerules += vendor_info header
+
+    DEPLOYMENT += package
+    DEPLOYMENT.installer_header = "$${LITERAL_HASH}{\"Kutegram Installer\"},(0xE5E0AFB2),0,2,0"
+}
 
 SOURCES += main.cpp \
     dialogsmodel.cpp \

@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    QApplication::setApplicationVersion("1.0.0");
+    QApplication::setApplicationVersion(VERSION);
     QApplication::setApplicationName("Kutegram");
     QApplication::setOrganizationName("Kutegram");
     QApplication::setOrganizationDomain("kg.crx.moe");
