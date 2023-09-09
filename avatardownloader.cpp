@@ -94,7 +94,7 @@ qint64 AvatarDownloader::downloadAvatar(TgObject peer)
         qint64 loadingId = _client->downloadFile(avatarFilePath, peer).toLongLong();
         _requests[loadingId] = photoId;
     } else {
-        emit avatarDownloaded(photoId, avatarFilePath);
+        emit avatarDownloaded(photoId, "file://" + avatarFilePath);
     }
 
     return photoId;
@@ -112,7 +112,7 @@ void AvatarDownloader::fileDownloaded(TgLongVariant fileId, QString filePath)
 
     _downloadedAvatars.append(photoId);
     saveDatabase();
-    emit avatarDownloaded(photoId, filePath);
+    emit avatarDownloaded(photoId, "file://" + filePath);
 }
 
 void AvatarDownloader::fileDownloadCanceled(TgLongVariant fileId, QString filePath)
