@@ -13,6 +13,8 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: messageEdit.top
 
+        cacheBuffer: height * 1.5
+
         //TODO remove this hack
         //I don't know why, but content overlaps MessageEdit at the bottom
         anchors.bottomMargin: 5 * kgScaling
