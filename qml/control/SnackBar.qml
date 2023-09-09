@@ -38,7 +38,6 @@ Item {
             anchors.leftMargin: 8
             anchors.rightMargin: 8
             color: "#FFFFFF"
-            font.pixelSize: 12
             text: ""
 
             wrapMode: Text.Wrap

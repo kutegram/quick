@@ -38,7 +38,6 @@ Item {
             text: thumbnailText
             color: "#FFFFFF"
             font.bold: true
-            font.pixelSize: 12
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
@@ -75,13 +74,11 @@ Item {
             Text {
                 elide: Text.ElideRight
                 text: title
-                font.pixelSize: 12
             }
 
             Text {
                 anchors.bottom: parent.bottom
                 text: messageTime
-                font.pixelSize: 10
                 color: "#999999"
             }
         }
@@ -89,7 +86,6 @@ Item {
         Text {
             text: messageText
             color: "#8D8D8D"
-            font.pixelSize: 12
             anchors.left: parent.left
             anchors.right: parent.right
             elide: Text.ElideRight

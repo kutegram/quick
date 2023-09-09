@@ -49,7 +49,6 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         anchors.leftMargin: 5
         anchors.rightMargin: 5
-        font.pixelSize: 12
     }
 
     Rectangle {

@@ -19,7 +19,6 @@ Item {
 //        }
 
         Text {
-            font.pixelSize: 12
             text: label
             color: "#FFFFFF"
         }

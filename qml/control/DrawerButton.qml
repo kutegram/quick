@@ -45,6 +45,5 @@ Item {
         anchors.bottom: parent.bottom
         verticalAlignment: Text.AlignVCenter
         text: name
-        font.pixelSize: 12
     }
 }

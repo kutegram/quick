@@ -307,7 +307,6 @@ Rectangle {
                 id: settingsText
                 anchors.centerIn: parent
                 font.bold: true
-                font.pixelSize: 12
                 text: "SETTINGS"
             }
         }

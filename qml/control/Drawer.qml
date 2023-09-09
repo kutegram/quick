@@ -149,7 +149,6 @@ Item {
                             Text {
                                 anchors.left: parent.left
                                 anchors.right: parent.right
-                                font.pixelSize: 12
                                 color: "#999999"
                                 text: "Kutegram for " + kutegramPlatform
                                 font.bold: true
@@ -157,7 +156,6 @@ Item {
                             Text {
                                 anchors.left: parent.left
                                 anchors.right: parent.right
-                                font.pixelSize: 12
                                 color: "#999999"
                                 text: "Version " + kutegramVersion
                             }

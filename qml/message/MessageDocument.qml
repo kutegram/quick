@@ -171,14 +171,12 @@ Rectangle {
             Text {
                 id: documentTitle
                 font.bold: true
-                font.pixelSize: 12
             }
         }
 
         Text {
             id: documentText
             color: "#8D8D8D"
-            font.pixelSize: 12
         }
     }
 }

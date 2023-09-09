@@ -19,7 +19,6 @@ Item {
         anchors.centerIn: parent
         text: "Next"
         font.bold: true
-        font.pixelSize: 12
         color: "#FFFFFF"
     }
 

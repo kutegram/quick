@@ -96,7 +96,6 @@ Rectangle {
                     text: peerThumbnailText
                     color: "#FFFFFF"
                     font.bold: true
-                    font.pixelSize: 12
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -132,7 +131,6 @@ Rectangle {
                     Text {
                         elide: Text.ElideRight
                         text: peerTitle
-                        font.pixelSize: 12
                         font.bold: true
                         color: "#FFFFFF"
                     }
@@ -141,7 +139,6 @@ Rectangle {
                 Text {
                     text: peerTooltip
                     color: "#FFFFFF"
-                    font.pixelSize: 12
                     anchors.left: parent.left
                     anchors.right: parent.right
                     elide: Text.ElideRight
@@ -175,7 +172,6 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             text: "Kutegram"
             font.bold: true
-            font.pixelSize: 12
             color: "#FFFFFF"
 
             MouseArea {

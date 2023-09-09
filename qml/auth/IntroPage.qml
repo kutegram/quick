@@ -20,7 +20,6 @@ Rectangle {
             anchors.right: parent.right
             text: "Kutegram"
             font.bold: true
-            font.pixelSize: 12
             wrapMode: Text.Wrap
             horizontalAlignment: Text.AlignHCenter
         }
@@ -29,7 +28,6 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             text: "Just another unofficial Telegram client."
-            font.pixelSize: 12
             wrapMode: Text.Wrap
             horizontalAlignment: Text.AlignHCenter
         }

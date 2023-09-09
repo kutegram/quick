@@ -15,7 +15,6 @@ Rectangle {
             anchors.right: parent.right
             text: "Your Phone Number"
             font.bold: true
-            font.pixelSize: 12
             wrapMode: Text.Wrap
         }
 
@@ -23,7 +22,6 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             text: "Please, enter your phone number."
-            font.pixelSize: 12
             wrapMode: Text.Wrap
         }
 
