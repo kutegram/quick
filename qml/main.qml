@@ -158,7 +158,7 @@ Rectangle {
         }
 
         onSocketError: {
-            if (!telegramClient.hasSession()) {
+            if (state == "AUTH") {
                 setAuthProgress(false);
                 snackBar.text = "Socket error occured: " + errorMessage + " (" + errorCode + ")"
             } else {
