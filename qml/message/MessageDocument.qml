@@ -49,7 +49,7 @@ Rectangle {
     Rectangle {
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
-        anchors.leftMargin: 5
+        anchors.leftMargin: 5 * kgScaling
         id: attachButton
 
         width: 30 * kgScaling
