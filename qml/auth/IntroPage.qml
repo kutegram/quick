@@ -8,7 +8,7 @@ Rectangle {
 
         Image {
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width / 2
+            width: parent.width * 2 / 3
             height: width
             asynchronous: true
             smooth: true
