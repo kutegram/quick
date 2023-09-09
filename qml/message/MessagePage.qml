@@ -13,6 +13,8 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: messageEdit.top
 
+        anchors.topMargin: Math.max(0, parent.height - messageEdit.height - childrenRect.height)
+
         cacheBuffer: height * 1.2
 
         //TODO remove this hack
