@@ -10,6 +10,7 @@
 #include "messageeditor.h"
 #include "systemname.h"
 #include "avatardownloader.h"
+#include <QFont>
 
 #if QT_VERSION >= 0x040702
 #include <QNetworkConfigurationManager>
@@ -31,7 +32,12 @@ int main(int argc, char *argv[])
 //    QApplication::setNavigationMode(Qt::NavigationModeCursorAuto);
 #endif
 
+    //TODO UI scaling
     QApplication app(argc, argv);
+
+    QFont font = app.font();
+    font.setPixelSize(12);
+    app.setFont(font);
 
     QApplication::setApplicationVersion(VERSION);
     QApplication::setApplicationName("Kutegram");
