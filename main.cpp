@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     //TODO: keypad UI navigation
 #ifdef Q_OS_SYMBIAN
     QApplication::setAttribute(Qt::AA_S60DisablePartialScreenInputMode, false);
-    QApplication::setNavigationMode(Qt::NavigationModeCursorAuto);
+//    QApplication::setNavigationMode(Qt::NavigationModeCursorAuto);
 #endif
 
     QApplication app(argc, argv);
