@@ -3,7 +3,7 @@ import QtQuick 1.0
 Rectangle {
     Column {
         anchors.centerIn: parent
-        width: Math.min(320, parent.width * 2 / 3)
+        width: parent.width * 2 / 3
         spacing: 5
 
         Image {

@@ -91,7 +91,7 @@ Item {
                     anchors.top: parent.top
                     anchors.left: parent.left
                     anchors.bottom: parent.bottom
-                    width: Math.min(parent.width * 2 / 3, 320)
+                    width: parent.width * 2 / 3
                     color: "#FFFFFF"
 
                     ListView {
