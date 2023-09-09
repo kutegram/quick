@@ -11,6 +11,11 @@
 #include "systemname.h"
 #include "avatardownloader.h"
 
+#if QT_VERSION >= 0x040702
+#include <QNetworkConfigurationManager>
+#include <QNetworkSession>
+#endif
+
 int main(int argc, char *argv[])
 {
     //TODO OpenGL acceleration
@@ -54,6 +59,16 @@ int main(int argc, char *argv[])
     viewer.setMainQmlFile(QLatin1String("qrc:///qml/main.qml"));
     viewer.setWindowTitle("Kutegram for " + systemName());
     viewer.showExpanded();
+
+#if QT_VERSION >= 0x040702
+    QNetworkConfigurationManager manager;
+    if (manager.capabilities() & QNetworkConfigurationManager::NetworkSessionRequired) {
+        //TODO save network selection
+        QNetworkConfiguration config = manager.defaultConfiguration();
+        QNetworkSession* networkSession = new QNetworkSession(config);
+        networkSession->open(); //TODO reset network selection
+    }
+#endif
 
     return app.exec();
 }
