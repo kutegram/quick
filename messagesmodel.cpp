@@ -9,6 +9,10 @@
 #include "avatardownloader.h"
 #include <QFileDialog>
 
+#if QT_VERSION >= 0x050000
+#include <QStandardPaths>
+#endif
+
 using namespace TLType;
 
 MessagesModel::MessagesModel(QObject *parent)
@@ -645,14 +649,20 @@ void MessagesModel::downloadFile(qint32 index)
         fileNameAfter = "." + fileNameAfter;
     }
 
+#if QT_VERSION < 0x050000
+    QDir dir = QDir::home();
+#else
+    QDir dir(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation));
+#endif
+
     QString indexedFileName = fileName;
-    QString indexedFilePath = QDir::home().absoluteFilePath("Kutegram/" + indexedFileName);
+    QString indexedFilePath = dir.absoluteFilePath("Kutegram/" + indexedFileName);
     qint32 fileIndex = 0;
 
     while (QFile(indexedFilePath).exists()) {
         ++fileIndex;
         indexedFileName = fileNameBefore + " (" + QString::number(fileIndex) + ")" + fileNameAfter;
-        indexedFilePath = QDir::home().absoluteFilePath("Kutegram/" + indexedFileName);
+        indexedFilePath = dir.absoluteFilePath("Kutegram/" + indexedFileName);
     }
 
     qint32 messageId = _history[index]["messageId"].toInt();
