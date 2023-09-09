@@ -11,8 +11,8 @@ Rectangle {
     property string peerTooltip: ""
 
     id: topBarRoot
-    height: 40
-    width: 240
+    height: 40 * kgScaling
+    width: 240 * kgScaling
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: parent.right
@@ -51,7 +51,7 @@ Rectangle {
 //                    anchors.left: parent.left
 //                    anchors.right: parent.right
 //                    anchors.bottom: parent.bottom
-//                    height: 2
+//                    height: 2 * kgScaling
 //                    color: "#FFFFFF"
 
 //                }
@@ -85,8 +85,8 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.leftMargin: (parent.height - width) / 2
 
-                width: 30
-                height: 30
+                width: 30 * kgScaling
+                height: width
                 smooth: true
 
                 color: peerThumbnailColor
@@ -109,8 +109,8 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.leftMargin: avatarRect.anchors.leftMargin
 
-                width: 30
-                height: 30
+                width: 30 * kgScaling
+                height: width
                 smooth: true
 
                 asynchronous: true
@@ -126,7 +126,7 @@ Rectangle {
                 Row {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    spacing: 4
+                    spacing: 4 * kgScaling
 
                     Text {
                         elide: Text.ElideRight
@@ -158,8 +158,8 @@ Rectangle {
                     id: actionsImage
                     anchors.centerIn: parent
                     source: "../../img/dots-vertical.png"
-                    width: 20
-                    height: 20
+                    width: 20 * kgScaling
+                    height: height
                     smooth: true
                     asynchronous: true
                 }
@@ -185,7 +185,7 @@ Rectangle {
                 PropertyChanges {
                     target: folderList
                     opacity: 0
-                    anchors.leftMargin: -20
+                    anchors.leftMargin: -20 * kgScaling
                 }
                 PropertyChanges {
                     target: peerHeader
@@ -195,7 +195,7 @@ Rectangle {
                 PropertyChanges {
                     target: appNameText
                     opacity: 0
-                    anchors.leftMargin: -20
+                    anchors.leftMargin: -20 * kgScaling
                 }
             },
             State {
@@ -203,12 +203,12 @@ Rectangle {
                 PropertyChanges {
                     target: folderList
                     opacity: 0
-                    anchors.leftMargin: -20
+                    anchors.leftMargin: -20 * kgScaling
                 }
                 PropertyChanges {
                     target: peerHeader
                     opacity: 0
-                    anchors.leftMargin: -20
+                    anchors.leftMargin: -20 * kgScaling
                 }
                 PropertyChanges {
                     target: appNameText
@@ -226,12 +226,12 @@ Rectangle {
                 PropertyChanges {
                     target: peerHeader
                     opacity: 0
-                    anchors.leftMargin: -20
+                    anchors.leftMargin: -20 * kgScaling
                 }
                 PropertyChanges {
                     target: appNameText
                     opacity: 0
-                    anchors.leftMargin: -20
+                    anchors.leftMargin: -20 * kgScaling
                 }
             }
 
@@ -272,10 +272,10 @@ Rectangle {
         Image {
             id: menuImage
             source: "../../img/menu.png"
-            x: 10
-            y: 10
-            width: 20
-            height: 20
+            x: 10 * kgScaling
+            y: 10 * kgScaling
+            width: 20 * kgScaling
+            height: width
             smooth: true
             asynchronous: true
         }
@@ -283,10 +283,10 @@ Rectangle {
         Image {
             id: backImage
             source: "../../img/arrow-left.png"
-            x: 10
-            y: 10
-            width: 20
-            height: 20
+            x: 10 * kgScaling
+            y: 10 * kgScaling
+            width: 20 * kgScaling
+            height: width
             smooth: true
             asynchronous: true
         }
@@ -305,7 +305,7 @@ Rectangle {
                 PropertyChanges {
                     target: menuImage
                     opacity: 1
-                    x: 10
+                    x: 10 * kgScaling
                 }
                 PropertyChanges {
                     target: backImage
@@ -340,7 +340,7 @@ Rectangle {
     }
 
     Rectangle {
-        height: 1
+        height: 1 * kgScaling
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom

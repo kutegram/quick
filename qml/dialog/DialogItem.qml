@@ -2,7 +2,7 @@ import QtQuick 1.0
 
 Item {
     width: ListView.view.width
-    height: 40
+    height: 40 * kgScaling
 
     MouseArea {
         anchors.fill: parent
@@ -25,10 +25,10 @@ Item {
 
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
-        anchors.leftMargin: 5
+        anchors.leftMargin: 5 * kgScaling
 
-        width: 30
-        height: 30
+        width: 30 * kgScaling
+        height: width
         smooth: true
 
         color: thumbnailColor
@@ -51,8 +51,8 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         anchors.leftMargin: avatarRect.anchors.leftMargin
 
-        width: 30
-        height: 30
+        width: 30 * kgScaling
+        height: width
         smooth: true
 
         asynchronous: true
@@ -69,7 +69,7 @@ Item {
         Row {
             anchors.left: parent.left
             anchors.right: parent.right
-            spacing: 4
+            spacing: 4 * kgScaling
 
             Text {
                 elide: Text.ElideRight

@@ -3,8 +3,8 @@ import Kutegram 1.0
 import "../control"
 
 Rectangle {
-    height: 40
-    width: 240
+    height: 40 * kgScaling
+    width: 240 * kgScaling
     color: "#FFFFFF"
     id: editRoot
 
@@ -56,8 +56,8 @@ Rectangle {
         Image {
             id: attachmentImage
             anchors.centerIn: parent
-            width: 20
-            height: 20
+            width: 20 * kgScaling
+            height: width
             smooth: true
             source: "../../img/attachment.png"
             rotation: 135
@@ -67,8 +67,8 @@ Rectangle {
         Image {
             id: deleteImage
             anchors.centerIn: parent
-            width: 20
-            height: 20
+            width: 20 * kgScaling
+            height: width
             smooth: true
             source: "../../img/delete.png"
             asynchronous: true
@@ -80,8 +80,8 @@ Rectangle {
 
             Image {
                 anchors.centerIn: parent
-                width: 20
-                height: 20
+                width: 20 * kgScaling
+                height: width
                 smooth: true
                 source: "../../img/close-circle-outline_inner.png"
                 asynchronous: true
@@ -177,8 +177,8 @@ Rectangle {
         Image {
             id: sendImage
             anchors.centerIn: parent
-            width: 20
-            height: 20
+            width: 20 * kgScaling
+            height: width
             smooth: true
             source: "../../img/send_accent.png"
             asynchronous: true
@@ -187,8 +187,8 @@ Rectangle {
         Image {
             id: micImage
             anchors.centerIn: parent
-            width: 20
-            height: 20
+            width: 20 * kgScaling
+            height: width
             smooth: true
             //source: "../../img/microphone.png"
             source: "../../img/send.png"
@@ -240,7 +240,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.left: attachButton.right
         anchors.right: sendButton.left
-        anchors.margins: 2
+        anchors.margins: 2 * kgScaling
         clip: true
         id: innerFlick
 
@@ -287,7 +287,7 @@ Rectangle {
                     PropertyChanges {
                         target: messageTip
                         opacity: 0
-                        anchors.leftMargin: -10
+                        anchors.leftMargin: -10 * kgScaling
                     }
                 }
             ]
@@ -308,7 +308,7 @@ Rectangle {
         id: uploadBar
         anchors.bottom: parent.bottom
         anchors.left: parent.left
-        height: 2
+        height: 2 * kgScaling
         color: "#54759E"
         width: 0
 
@@ -320,7 +320,7 @@ Rectangle {
     }
 
     Rectangle {
-        height: 1
+        height: 1 * kgScaling
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top

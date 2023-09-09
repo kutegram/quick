@@ -6,8 +6,8 @@ Item {
 
     property bool enabled: true
 
-    width: 160
-    height: 40
+    width: buttonText.width + 40 * kgScaling
+    height: 40 * kgScaling
 
     Rectangle {
         anchors.fill: parent
@@ -16,6 +16,7 @@ Item {
     }
 
     Text {
+        id: buttonText
         anchors.centerIn: parent
         text: "Next"
         font.bold: true
@@ -34,7 +35,7 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        radius: 5
+        radius: 5 * kgScaling
         color: "#000000"
         opacity: 0.1
         visible: activeFocus

@@ -39,7 +39,7 @@ Rectangle {
 
             highlight: Rectangle {
                 width: folderSlide.width
-                height: 40
+                height: 40 * kgScaling
                 opacity: 0.1
                 color: "#000000"
             }

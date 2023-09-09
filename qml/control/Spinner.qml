@@ -1,7 +1,7 @@
 import QtQuick 1.0
 
 Item {
-    width: 40
+    width: 40 * kgScaling
     height: width
 
     property bool white: false
@@ -10,8 +10,8 @@ Item {
         asynchronous: true
         anchors.centerIn: parent
         source: white ? "../../img/loading_white.png" : "../../img/loading.png"
-        width: 20
-        height: 20
+        width: 20 * kgScaling
+        height: width
         smooth: true
 
         SequentialAnimation on rotation {

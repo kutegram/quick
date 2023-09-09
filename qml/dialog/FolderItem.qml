@@ -7,14 +7,14 @@ Item {
     Row {
         id: tabContent
         anchors.centerIn: parent
-        spacing: 5
+        spacing: 5 * kgScaling
 
         //TODO: only icon, only text, text + icon
 //        Image {
 //            source: icon
 //            smooth: true
-//            width: 20
-//            height: 20
+//            width: 20 * kgScaling
+//            height: width
 //            asynchronous: true
 //        }
 

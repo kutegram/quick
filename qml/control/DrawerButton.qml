@@ -2,7 +2,7 @@ import QtQuick 1.0
 
 Item {
     width: ListView.view.width
-    height: 40
+    height: 40 * kgScaling
 
     Item {
         id: actionIcon
@@ -16,8 +16,8 @@ Item {
             asynchronous: true
             source: icon
             smooth: true
-            height: 20
-            width: 20
+            width: 20 * kgScaling
+            height: width
         }
     }
 

@@ -6,7 +6,6 @@ import "auth"
 import Kutegram 1.0
 
 Rectangle {
-    //TODO: UI scaling - 1.5x for Nokia N8
     //TODO: remove dynamically unused pages / components from memory
     //TODO: keypad navigation
     id: root
@@ -243,8 +242,8 @@ Rectangle {
         Item {
             anchors.top: parent.top
             anchors.left: parent.left
-            height: 40
-            width: 40
+            width: 40 * kgScaling
+            height: width
             state: authStack.currentIndex == 0 ? "NO_BACK" : "BACK"
             id: authBackRect
 
@@ -281,8 +280,8 @@ Rectangle {
                 id: authBackImage
                 anchors.centerIn: parent
                 source: "../img/arrow-left_black.png"
-                width: 20
-                height: 20
+                width: 20 * kgScaling
+                height: width
                 smooth: true
                 asynchronous: true
             }
@@ -299,8 +298,8 @@ Rectangle {
         Item {
             anchors.top: parent.top
             anchors.right: parent.right
-            width: settingsText.width + 20
-            height: 40
+            width: settingsText.width + 20 * kgScaling
+            height: 40 * kgScaling
             visible: false
 
             Text {

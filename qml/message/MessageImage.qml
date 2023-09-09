@@ -13,10 +13,10 @@ Image {
         //TODO: adaptive color
         source: "../../img/checkbox-blank-circle-outline.png"
         smooth: true
-        height: 20
-        width: 20
-        x: 5
-        y: 5
+        width: 20 * kgScaling
+        height: width
+        x: 5 * kgScaling
+        y: 5 * kgScaling
         asynchronous: true
     }
 
@@ -36,7 +36,7 @@ Image {
             PropertyChanges {
                 target: checkbox
                 opacity: 0
-                x: -15
+                x: -15 * kgScaling
             }
         },
         State {
@@ -44,7 +44,7 @@ Image {
             PropertyChanges {
                 target: checkbox
                 opacity: 1
-                x: 5
+                x: 5 * kgScaling
             }
         }
     ]

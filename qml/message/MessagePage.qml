@@ -15,9 +15,9 @@ Rectangle {
 
         //TODO remove this hack
         //I don't know why, but content overlaps MessageEdit at the bottom
-        anchors.bottomMargin: 5
+        anchors.bottomMargin: 5 * kgScaling
 
-        spacing: 4
+        spacing: 4 * kgScaling
 
         onMovementEnded: {
             if (atYBeginning && messagesModel.canFetchMoreUpwards()) {

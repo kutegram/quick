@@ -15,7 +15,7 @@ Item {
             PropertyChanges {
                 target: checkbox
                 opacity: 0
-                x: -15
+                x: -15 * kgScaling
             }
         },
         State {
@@ -23,7 +23,7 @@ Item {
             PropertyChanges {
                 target: checkbox
                 opacity: 1
-                x: 5
+                x: 5 * kgScaling
             }
         }
     ]
@@ -51,10 +51,10 @@ Item {
         id: checkbox
         source: "../../img/checkbox-blank-circle-outline.png"
         smooth: true
-        height: 20
-        width: 20
-        x: 5
-        y: 5
+        width: 20 * kgScaling
+        height: width
+        x: 5 * kgScaling
+        y: 5 * kgScaling
         asynchronous: true
     }
 
@@ -63,12 +63,12 @@ Item {
         visible: !mergeMessage && !isChannel && (!avatarLoaded || avatarImage.status != Image.Ready)
 
         anchors.top: parent.top
-        anchors.topMargin: 5
+        anchors.topMargin: 5 * kgScaling
         anchors.left: checkbox.right
-        anchors.leftMargin: isChannel ? -35 : 5
+        anchors.leftMargin: (isChannel ? -35 : 5) * kgScaling
 
-        width: 30
-        height: 30
+        width: 30 * kgScaling
+        height: width
         smooth: true
 
         color: thumbnailColor
@@ -88,12 +88,12 @@ Item {
         visible: !mergeMessage && !isChannel && avatarLoaded
 
         anchors.top: parent.top
-        anchors.topMargin: 5
+        anchors.topMargin: 5 * kgScaling
         anchors.left: checkbox.right
-        anchors.leftMargin: isChannel ? -35 : 5
+        anchors.leftMargin: (isChannel ? -35 : 5) * kgScaling
 
-        width: 30
-        height: 30
+        width: 30 * kgScaling
+        height: width
         smooth: true
 
         asynchronous: true
@@ -105,15 +105,15 @@ Item {
         anchors.top: parent.top
         anchors.left: messageAvatar.right
         anchors.right: parent.right
-        anchors.topMargin: 5
-        anchors.leftMargin: 5
-        anchors.rightMargin: 5
-        spacing: 2
+        anchors.topMargin: 5 * kgScaling
+        anchors.leftMargin: anchors.topMargin
+        anchors.rightMargin: anchors.topMargin
+        spacing: 2 * kgScaling
 
         Row {
             anchors.left: parent.left
             anchors.right: parent.right
-            spacing: 4
+            spacing: 4 * kgScaling
 
             Text {
                 text: senderName
@@ -132,14 +132,14 @@ Item {
         Row {
             anchors.left: parent.left
             anchors.right: parent.right
-            spacing: 4
+            spacing: 4 * kgScaling
             visible: forwardedFrom.length != 0
 
             Image {
                 source: "../../img/share_forwarded.png"
                 smooth: true
-                width: 20
-                height: 20
+                width: 20 * kgScaling
+                height: width
                 asynchronous: true
             }
 
@@ -168,7 +168,7 @@ Item {
 //        ListView {
 //            anchors.left: parent.left
 //            anchors.right: parent.right
-//            height: 100
+//            height: 100 * kgScaling
 //            //TODO: think about this value
 //            cacheBuffer: 20000
 //            spacing: 5

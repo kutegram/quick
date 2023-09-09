@@ -2,8 +2,8 @@ import QtQuick 1.0
 import "../control"
 
 Rectangle {
-    width: 240
-    height: 40
+    width: 240 * kgScaling
+    height: 40 * kgScaling
 
     property alias image: documentImage.source
     property alias title: documentTitle.text
@@ -14,6 +14,7 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
+        enabled: downloadable
         onClicked: {
             if (attachButton.state == "NOT_DOWNLOADING") {
                 messagesModel.downloadFile(rowIndex);
@@ -51,9 +52,9 @@ Rectangle {
         anchors.leftMargin: 5
         id: attachButton
 
-        width: 30
-        height: 30
-        radius: 15
+        width: 30 * kgScaling
+        height: width
+        radius: width / 2
         smooth: true
         color: "#54759E"
 
@@ -62,8 +63,8 @@ Rectangle {
         Image {
             id: downloadImage
             anchors.centerIn: parent
-            width: 20
-            height: 20
+            width: 20 * kgScaling
+            height: width
             smooth: true
             source: "../../img/media/download.png"
             asynchronous: true
@@ -72,8 +73,8 @@ Rectangle {
         Image {
             id: documentImage
             anchors.centerIn: parent
-            width: 20
-            height: 20
+            width: 20 * kgScaling
+            height: width
             smooth: true
             asynchronous: true
         }
@@ -85,8 +86,8 @@ Rectangle {
 
             Image {
                 anchors.centerIn: parent
-                width: 20
-                height: 20
+                width: 20 * kgScaling
+                height: width
                 smooth: true
                 source: "../../img/media/close-circle-outline_inner.png"
                 asynchronous: true
@@ -167,7 +168,7 @@ Rectangle {
         anchors.leftMargin: attachButton.anchors.leftMargin
 
         Row {
-            spacing: 5
+            spacing: 5 * kgScaling
             Text {
                 id: documentTitle
                 font.bold: true

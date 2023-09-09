@@ -1,8 +1,8 @@
 import QtQuick 1.0
 
 Item {
-    width: 200
-    height: 40
+    width: 200 * kgScaling
+    height: 40 * kgScaling
 
     property alias text: snackText.text
 
@@ -16,10 +16,10 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: 4
+        anchors.margins: 4 * kgScaling
 
-        height: 32
-        radius: 4
+        height: 32 * kgScaling
+        radius: 4 * kgScaling
         color: "#323232"
 
         MouseArea {
@@ -35,8 +35,8 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
-            anchors.leftMargin: 8
-            anchors.rightMargin: 8
+            anchors.leftMargin: 8 * kgScaling
+            anchors.rightMargin: 8 * kgScaling
             color: "#FFFFFF"
             text: ""
 
@@ -51,14 +51,14 @@ Item {
                     name: "EMPTY"
                     PropertyChanges {
                         target: snackRect
-                        anchors.bottomMargin: -40
+                        anchors.bottomMargin: -40 * kgScaling
                     }
                 },
                 State {
                     name: "NOT_EMPTY"
                     PropertyChanges {
                         target: snackRect
-                        anchors.bottomMargin: 4
+                        anchors.bottomMargin: 4 * kgScaling
                     }
                 }
             ]

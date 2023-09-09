@@ -91,7 +91,7 @@ Item {
                     anchors.top: parent.top
                     anchors.left: parent.left
                     anchors.bottom: parent.bottom
-                    width: Math.min(parent.width * 2 / 3, 280)
+                    width: Math.min(parent.width * 2 / 3, 320)
                     color: "#FFFFFF"
 
                     ListView {
@@ -103,7 +103,7 @@ Item {
 
                         highlight: Rectangle {
                             width: drawerListView.width
-                            height: 40
+                            height: 40 * kgScaling
                             opacity: 0.1
                             color: "#000000"
                         }
@@ -138,26 +138,28 @@ Item {
                         anchors.left: parent.left
                         anchors.right: parent.right
                         color: "#FFFFFF"
-                        height: 40
+                        height: 40 * kgScaling
 
                         Column {
                             anchors.bottom: parent.bottom
                             anchors.left: parent.left
-                            anchors.leftMargin: 12
-                            anchors.bottomMargin: 7
-                            spacing: 2
+                            anchors.leftMargin: 12 * kgScaling
+                            anchors.bottomMargin: 7 * kgScaling
+                            spacing: 2 * kgScaling
                             Text {
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 color: "#999999"
                                 text: "Kutegram for " + kutegramPlatform
                                 font.bold: true
+                                elide: Text.ElideRight
                             }
                             Text {
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 color: "#999999"
                                 text: "Version " + kutegramVersion
+                                elide: Text.ElideRight
                             }
                         }
                     }
