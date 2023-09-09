@@ -273,7 +273,7 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
     QString messageSenderName;
 
     if (message["out"].toBool()) {
-        messageSenderName = "You";
+        //messageSenderName = "You";
     } else if (TgClient::isUser(messageSender)) {
         messageSenderName = messageSender["first_name"].toString();
     } else {
