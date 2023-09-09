@@ -20,6 +20,8 @@ int main(int argc, char *argv[])
     //QApplication::setGraphicsSystem("opengl");
 #endif
 
+    QApplication::setAttribute(Qt::AA_S60DisablePartialScreenInputMode, false);
+
     QApplication app(argc, argv);
 
     QApplication::setApplicationVersion("1.0.0");
