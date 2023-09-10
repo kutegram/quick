@@ -44,6 +44,7 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         verticalAlignment: Text.AlignVCenter
+        elide: Text.ElideRight
         text: name
     }
 }

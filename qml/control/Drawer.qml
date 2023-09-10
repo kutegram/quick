@@ -30,7 +30,7 @@ Item {
             }
             PropertyChanges {
                 target: drawerSlide
-                anchors.leftMargin: -drawerRoot.width
+                anchors.leftMargin: -1 * Math.max(240, drawerRoot.width)
             }
         }
     ]
@@ -91,7 +91,7 @@ Item {
                     anchors.top: parent.top
                     anchors.left: parent.left
                     anchors.bottom: parent.bottom
-                    width: parent.width * 2 / 3
+                    width: Math.min(Math.max(240, parent.width * 2 / 3), 280 * kgScaling)
                     color: "#FFFFFF"
 
                     ListView {
