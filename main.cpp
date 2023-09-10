@@ -41,6 +41,14 @@ int main(int argc, char *argv[])
 
     QFont font = app.font();
 
+#if defined(Q_OS_SYMBIAN)
+    font.setPixelSize((int) ((float) font.pixelSize()) / 1.5f);
+#elif defined(Q_OS_WINDOWS)
+    font.setPixelSize((int) ((float) font.pixelSize()) * 1.5f);
+#endif
+
+    app.setFont(font);
+
     QApplication::setApplicationVersion(VERSION);
     QApplication::setApplicationName("Kutegram");
     QApplication::setOrganizationName("Kutegram");
@@ -64,7 +72,7 @@ int main(int argc, char *argv[])
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     viewer.rootContext()->setContextProperty("kutegramVersion", QApplication::applicationVersion());
     viewer.rootContext()->setContextProperty("kutegramPlatform", systemName());
-    viewer.rootContext()->setContextProperty("kgScaling", ((float) QFontMetrics(font).height()) / 15.0f);
+    viewer.rootContext()->setContextProperty("kgScaling", ((float) QFontMetrics(font).height()) / 13.0f);
     viewer.setMainQmlFile(QLatin1String("qrc:///qml/main.qml"));
     viewer.setWindowTitle("Kutegram for " + systemName());
     viewer.showExpanded();
