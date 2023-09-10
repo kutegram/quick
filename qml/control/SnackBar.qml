@@ -1,8 +1,9 @@
 import QtQuick 1.0
 
 Item {
+    id: snackRoot
     width: 200 * kgScaling
-    height: 40 * kgScaling
+    height: snackText.height + 24 * kgScaling
 
     property alias text: snackText.text
 
@@ -18,7 +19,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.margins: 4 * kgScaling
 
-        height: 32 * kgScaling
+        height: snackText.height + 16 * kgScaling
         radius: 4 * kgScaling
         color: "#323232"
 
@@ -51,7 +52,7 @@ Item {
                     name: "EMPTY"
                     PropertyChanges {
                         target: snackRect
-                        anchors.bottomMargin: -40 * kgScaling
+                        anchors.bottomMargin: -snackRoot.height
                     }
                 },
                 State {

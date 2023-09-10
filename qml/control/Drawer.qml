@@ -30,7 +30,7 @@ Item {
             }
             PropertyChanges {
                 target: drawerSlide
-                anchors.leftMargin: -1 * Math.max(240, drawerRoot.width)
+                anchors.leftMargin: -Math.max(240, drawerRoot.width)
             }
         }
     ]
