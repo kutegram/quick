@@ -21,7 +21,7 @@ symbian {
     TARGET.UID3 = 0xE0713D51
     DEFINES += SYMBIAN_UID=$$TARGET.UID3
 
-    TARGET.CAPABILITY += ReadUserData WriteUserData UserEnvironment NetworkServices LocalServices
+    TARGET.CAPABILITY += ReadUserData WriteUserData UserEnvironment NetworkServices LocalServices SwEvent
     #TARGET.EPOCHEAPSIZE = 0x400000 0x4000000
     #TARGET.EPOCSTACKSIZE = 0x14000
 
