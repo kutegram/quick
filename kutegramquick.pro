@@ -1,6 +1,7 @@
 TARGET = Kutegram
 APPNAME = Kutegram
 VERSION = 1.0.1
+PKG_VERSION = 1,0,1
 DEFINES += VERSION=\"\\\"$$VERSION\\\"\"
 #DATE = $$system(date /t)
 #DEFINES += BUILDDATE=\"\\\"$$DATE\\\"\"
@@ -46,11 +47,11 @@ symbian {
         " "
     package.pkg_prerules += vendor_info
 
-#    header = "$${LITERAL_HASH}{\"Kutegram\"},(0xE0713D51),0,2,0,TYPE=SA,RU"
-#    package.pkg_prerules += header
+    header = "$${LITERAL_HASH}{\"Kutegram\"},(0xE0713D51),$$PKG_VERSION,TYPE=SA,RU"
+    package.pkg_prerules += header
 
     DEPLOYMENT += package
-#    DEPLOYMENT.installer_header = "$${LITERAL_HASH}{\"Kutegram Installer\"},(0xE5E0AFB2),0,2,0"
+    DEPLOYMENT.installer_header = "$${LITERAL_HASH}{\"Kutegram Installer\"},(0xE5E0AFB2),$$PKG_VERSION"
 }
 
 SOURCES += main.cpp \
