@@ -42,9 +42,9 @@ int main(int argc, char *argv[])
     QFont font = app.font();
 
 #if defined(Q_OS_SYMBIAN)
-    font.setPixelSize((int) ((float) font.pixelSize()) / 1.5f);
+    font.setPixelSize(qFloor(((float) font.pointSize()) * 3.0f));
 #elif defined(Q_OS_WINDOWS)
-    font.setPixelSize((int) ((float) font.pixelSize()) * 1.5f);
+    font.setPixelSize(qFloor(((float) font.pixelSize()) * 1.5f));
 #endif
 
     app.setFont(font);
