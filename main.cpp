@@ -27,6 +27,8 @@ int main(int argc, char *argv[])
     //QApplication::setGraphicsSystem("opengl");
 #endif
 
+    QApplication app(argc, argv);
+
     //TODO: keypad UI navigation
 #ifdef Q_OS_SYMBIAN
     QApplication::setAttribute(Qt::AA_S60DisablePartialScreenInputMode, false);
@@ -36,8 +38,6 @@ int main(int argc, char *argv[])
 #if QT_VERSION >= 0x050300
     QApplication::setAttribute(Qt::AA_UseOpenGLES, true);
 #endif
-
-    QApplication app(argc, argv);
 
     QFont font = app.font();
 
