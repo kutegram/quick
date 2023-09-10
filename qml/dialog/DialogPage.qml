@@ -35,7 +35,7 @@ Rectangle {
             id: dialogsView
             width: folderSlide.width
             height: folderSlide.height
-            cacheBuffer: height * 1.2
+            cacheBuffer: pageRoot.height
             focus: true
 
 //            highlight: Rectangle {
