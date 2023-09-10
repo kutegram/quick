@@ -44,13 +44,13 @@ symbian {
         "; Unique Vendor name" \
         ":\"curoviyxru\"" \
         " "
+    package.pkg_prerules += vendor_info
 
-    header = "$${LITERAL_HASH}{\"Kutegram\"},(0xE0713D51),0,2,0,TYPE=SA,RU"
-
-    package.pkg_prerules += vendor_info header
+#    header = "$${LITERAL_HASH}{\"Kutegram\"},(0xE0713D51),0,2,0,TYPE=SA,RU"
+#    package.pkg_prerules += header
 
     DEPLOYMENT += package
-    DEPLOYMENT.installer_header = "$${LITERAL_HASH}{\"Kutegram Installer\"},(0xE5E0AFB2),0,2,0"
+#    DEPLOYMENT.installer_header = "$${LITERAL_HASH}{\"Kutegram Installer\"},(0xE5E0AFB2),0,2,0"
 }
 
 SOURCES += main.cpp \
