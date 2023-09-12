@@ -19,6 +19,14 @@ Rectangle {
     color: "#54759E"
     state: currentState == "CHAT" ? "BACK" : currentState
 
+    Rectangle {
+        height: 1 * kgScaling
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        color: "#3e5675"
+    }
+
     Item {
         anchors.fill: parent
         anchors.leftMargin: parent.height
@@ -46,27 +54,26 @@ Rectangle {
 
             }
 
-//            highlight: Item {
-//                Rectangle {
-//                    anchors.left: parent.left
-//                    anchors.right: parent.right
-//                    anchors.bottom: parent.bottom
-//                    height: 2 * kgScaling
-//                    color: "#FFFFFF"
+            highlight: Item {
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    height: 2 * kgScaling
+                    color: "#FFFFFF"
+                }
 
-//                }
-
-//                Behavior on x {
-//                    NumberAnimation {
-//                        easing.type: Easing.InOutQuad
-//                    }
-//                }
-//                Behavior on width {
-//                    NumberAnimation {
-//                        easing.type: Easing.InOutQuad
-//                    }
-//                }
-//            }
+                Behavior on x {
+                    NumberAnimation {
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+                Behavior on width {
+                    NumberAnimation {
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+            }
         }
 
         Item {
@@ -337,13 +344,5 @@ Rectangle {
                 }
             }
         ]
-    }
-
-    Rectangle {
-        height: 1 * kgScaling
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        color: "#3e5675"
     }
 }

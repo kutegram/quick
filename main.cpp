@@ -4,14 +4,15 @@
 #include <QFontDatabase>
 #include <QTextCodec>
 #include <QtDeclarative>
+#include <QFont>
+#include <QFontMetrics>
 #include "tgclient.h"
 #include "dialogsmodel.h"
 #include "messagesmodel.h"
 #include "messageeditor.h"
 #include "systemname.h"
 #include "avatardownloader.h"
-#include <QFont>
-#include <QFontMetrics>
+#include "foldersmodel.h"
 
 #if QT_VERSION >= 0x040702
 #include <QNetworkConfigurationManager>
@@ -66,6 +67,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<MessagesModel>("Kutegram", 1, 0, "MessagesModel");
     qmlRegisterType<MessageEditor>("Kutegram", 1, 0, "MessageEditor");
     qmlRegisterType<AvatarDownloader>("Kutegram", 1, 0, "AvatarDownloader");
+    qmlRegisterType<FoldersModel>("Kutegram", 1, 0, "FoldersModel");
 
     //TODO show status pane without button group on Symbian
     QmlApplicationViewer viewer;

@@ -47,9 +47,8 @@ QHash<int, QByteArray> DialogsModel::roleNames() const
     roles[MessageTimeRole] = "messageTime";
     roles[MessageTextRole] = "messageText";
     roles[AvatarLoadedRole] = "avatarLoaded";
-    roles[InputPeerRole] = "inputPeer";
-    roles[PeerBytesRole] = "peerBytes";
     roles[TooltipRole] = "tooltip";
+    roles[PeerBytesRole] = "peerBytes";
 
     return roles;
 }
@@ -108,16 +107,16 @@ QVariant DialogsModel::data(const QModelIndex &index, int role) const
     return _dialogs[index.row()][roleNames()[role]];
 }
 
-bool DialogsModel::canFetchMore(const QModelIndex &parent) const
+bool DialogsModel::canFetchMoreDownwards() const
 {
     return _client && _client->isAuthorized() && !_requestId.toLongLong() && !_offsets.isEmpty();
 }
 
-void DialogsModel::fetchMore(const QModelIndex &parent)
+void DialogsModel::fetchMoreDownwards()
 {
     QMutexLocker lock(&_mutex);
 
-    _requestId = _client->messagesGetDialogsWithOffsets(_offsets, 20);
+    _requestId = _client->messagesGetDialogsWithOffsets(_offsets, 50);
 }
 
 void DialogsModel::authorized(TgLongVariant userId)
@@ -127,7 +126,7 @@ void DialogsModel::authorized(TgLongVariant userId)
     if (_userId != userId) {
         resetState();
         _userId = userId;
-        fetchMore(QModelIndex());
+        fetchMoreDownwards();
         return;
     }
 
@@ -232,6 +231,9 @@ void DialogsModel::messagesGetDialogsResponse(TgObject data, TgLongVariant messa
             _avatarDownloader->downloadAvatar(chatsList[i].toMap());
         }
     }
+
+    if (canFetchMoreDownwards())
+        fetchMoreDownwards();
 }
 
 TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject message, TgObject messageSender)
@@ -239,16 +241,9 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
     TgObject row;
 
     TgObject inputPeer = peer;
-    row["inputPeer"] = inputPeer;
-
-    inputPeer["read_inbox_max_id"] = dialog["read_inbox_max_id"];
-    inputPeer["read_outbox_max_id"] = dialog["read_outbox_max_id"];
-    inputPeer["draft"] = dialog["draft"];
-
-    QByteArray array;
-    QDataStream peerStream(&array, QIODevice::WriteOnly);
-    peerStream << inputPeer;
-    row["peerBytes"] = array;
+    inputPeer.unite(dialog);
+    ID_PROPERTY(inputPeer) = ID_PROPERTY(peer);
+    row["peerBytes"] = qSerialize(inputPeer);
 
     //TODO typing status
     if (TgClient::isUser(peer)) {
@@ -332,5 +327,5 @@ void DialogsModel::avatarDownloaded(TgLongVariant photoId, QString filePath)
 void DialogsModel::refresh()
 {
     resetState();
-    fetchMore(QModelIndex());
+    fetchMoreDownwards();
 }

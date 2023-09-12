@@ -41,24 +41,16 @@ QObject* MessageEditor::client() const
 
 void MessageEditor::setPeer(QByteArray bytes)
 {
-    TgObject peer;
-    QDataStream peerStream(&bytes, QIODevice::ReadOnly);
-    peerStream >> peer;
-
-    _peer = peer;
-    _inputPeer = TgClient::toInputPeer(peer);
+    _peer = qDeserialize(bytes).toMap();
+    _inputPeer = TgClient::toInputPeer(_peer);
     cancelUpload();
 
-    emit draftChanged(peer["draft"].toMap()["message"].toString());
+    emit draftChanged(_peer["draft"].toMap()["message"].toString());
 }
 
 QByteArray MessageEditor::peer() const
 {
-    QByteArray array;
-    QDataStream peerStream(&array, QIODevice::WriteOnly);
-    peerStream << _peer;
-
-    return array;
+    return qSerialize(_peer);
 }
 
 void MessageEditor::sendMessage(QString message)

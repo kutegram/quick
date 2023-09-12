@@ -22,23 +22,18 @@
         <file>img/arrow-left.png</file>
         <file>img/arrow-left_black.png</file>
         <file>img/attachment.png</file>
-        <file>img/bullhorn.png</file>
         <file>img/checkbox-blank-circle-outline.png</file>
         <file>img/checkbox-marked-circle.png</file>
         <file>img/delete.png</file>
         <file>img/dots-vertical.png</file>
-        <file>img/forum.png</file>
         <file>img/loading.png</file>
         <file>img/loading_white.png</file>
         <file>img/menu.png</file>
-        <file>img/message-badge.png</file>
-        <file>img/microphone.png</file>
         <file>img/send.png</file>
         <file>img/send_accent.png</file>
         <file>img/close.png</file>
         <file>img/exit-to-app.png</file>
         <file>img/refresh.png</file>
-        <file>img/bookmark.png</file>
         <file>kutegramquick_big.png</file>
         <file>img/close-circle-outline_inner.png</file>
         <file>qml/control/SnackBar.qml</file>
@@ -54,5 +49,35 @@
         <file>img/media/web.png</file>
         <file>img/media/close-circle-outline_inner.png</file>
         <file>img/share_forwarded.png</file>
+        <file>img/filters/airplane.png</file>
+        <file>img/filters/all.png</file>
+        <file>img/filters/book.png</file>
+        <file>img/filters/bots.png</file>
+        <file>img/filters/cat.png</file>
+        <file>img/filters/channels.png</file>
+        <file>img/filters/crown.png</file>
+        <file>img/filters/custom.png</file>
+        <file>img/filters/edit.png</file>
+        <file>img/filters/favorite.png</file>
+        <file>img/filters/flower.png</file>
+        <file>img/filters/game.png</file>
+        <file>img/filters/groups.png</file>
+        <file>img/filters/home.png</file>
+        <file>img/filters/like.png</file>
+        <file>img/filters/love.png</file>
+        <file>img/filters/mask.png</file>
+        <file>img/filters/money.png</file>
+        <file>img/filters/note.png</file>
+        <file>img/filters/palette.png</file>
+        <file>img/filters/party.png</file>
+        <file>img/filters/private.png</file>
+        <file>img/filters/sport.png</file>
+        <file>img/filters/study.png</file>
+        <file>img/filters/trade.png</file>
+        <file>img/filters/travel.png</file>
+        <file>img/filters/unmuted.png</file>
+        <file>img/filters/unread.png</file>
+        <file>img/filters/work.png</file>
+        <file>img/filters/light.png</file>
     </qresource>
 </RCC>

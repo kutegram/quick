@@ -6,18 +6,25 @@ Rectangle {
     property alias foldersModel: foldersModel
     signal refresh()
 
+    DialogsModel {
+        id: dialogsModel
+        client: telegramClient
+        avatarDownloader: globalAvatarDownloader
+        Component.onCompleted: pageRoot.refresh.connect(refresh)
+    }
+
+    FoldersModel {
+        id: foldersModel
+        client: telegramClient
+        Component.onCompleted: pageRoot.refresh.connect(refresh)
+    }
+
     ListView {
         id: folderSlide
         focus: true
         anchors.fill: parent
 
-        model: ListModel {
-            id: foldersModel
-            ListElement {
-                icon: "../../img/forum.png"
-                label: "All Chats"
-            }
-        }
+        model: foldersModel
 
         boundsBehavior: Flickable.StopAtBounds
         orientation: ListView.Horizontal
@@ -35,7 +42,7 @@ Rectangle {
             id: dialogsView
             width: folderSlide.width
             height: folderSlide.height
-            cacheBuffer: pageRoot.height
+            cacheBuffer: pageRoot.height / 6
             focus: true
 
 //            highlight: Rectangle {
@@ -45,14 +52,17 @@ Rectangle {
 //                color: "#000000"
 //            }
 
-            model: DialogsModel {
-                client: telegramClient
-                avatarDownloader: globalAvatarDownloader
-                Component.onCompleted: pageRoot.refresh.connect(refresh)
-            }
+            model: dialogsModel
 
-            delegate: DialogItem {
+            delegate: Repeater {
+                id: dialogRepeater
+                model: foldersModel.matches(folderIndex, peerBytes)
+                height: count != 0 ? 40 * kgScaling : 0
 
+                DialogItem {
+                    y: dialogRepeater.y
+                    width: dialogsView.width
+                }
             }
         }
     }

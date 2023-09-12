@@ -10,16 +10,19 @@ Item {
         spacing: 5 * kgScaling
 
         //TODO: only icon, only text, text + icon
-//        Image {
-//            source: icon
-//            smooth: true
-//            width: 20 * kgScaling
-//            height: width
-//            asynchronous: true
-//        }
+        Image {
+            source: icon
+            smooth: true
+            width: folderText.font.pixelSize * 1.5
+            height: width
+            asynchronous: true
+            visible: icon.length != 0
+        }
 
         Text {
-            text: label
+            id: folderText
+            text: title
+            visible: title.length != 0
             color: "#FFFFFF"
         }
     }

@@ -15,7 +15,7 @@ Rectangle {
         //TODO fix Binding loop message
         height: Math.min(parent.height - messageEdit.height, childrenRect.height)
 
-        cacheBuffer: parent.height
+        cacheBuffer: parent.height / 6
 
         //TODO remove this hack
         //I don't know why, but content overlaps MessageEdit at the bottom

@@ -114,10 +114,6 @@ Item {
                                 icon: "../../img/refresh.png"
                                 name: "Refresh dialogs"
                             }
-//                            ListElement {
-//                                icon: "../../img/bookmark.png"
-//                                name: "Saved messages"
-//                            }
                             ListElement {
                                 icon: "../../img/exit-to-app.png"
                                 name: "Log out"

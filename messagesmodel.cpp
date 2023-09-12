@@ -131,24 +131,17 @@ void MessagesModel::setPeer(QByteArray bytes)
     resetState();
     _downloadRequests.clear();
 
-    TgObject peer;
-    QDataStream peerStream(&bytes, QIODevice::ReadOnly);
-    peerStream >> peer;
+    _peer = qDeserialize(bytes).toMap();
+    _inputPeer = TgClient::toInputPeer(_peer);
 
-    _peer = peer;
-    _inputPeer = TgClient::toInputPeer(peer);
-
-    _upOffset = _downOffset = qMax(peer["read_inbox_max_id"].toInt(), peer["read_outbox_max_id"].toInt());
+    _upOffset = _downOffset = qMax(_peer["read_inbox_max_id"].toInt(), _peer["read_outbox_max_id"].toInt());
     fetchMoreUpwards();
-    fetchMore(QModelIndex());
+    fetchMoreDownwards();
 }
 
 QByteArray MessagesModel::peer() const
 {
-    QByteArray array;
-    QDataStream peerStream(&array, QIODevice::WriteOnly);
-    peerStream << _peer;
-    return array;
+    return qSerialize(_peer);
 }
 
 int MessagesModel::rowCount(const QModelIndex &parent) const
@@ -189,12 +182,12 @@ QVariant MessagesModel::data(const QModelIndex &index, int role) const
     return _history[index.row()][roleNames()[role]];
 }
 
-bool MessagesModel::canFetchMore(const QModelIndex &parent) const
+bool MessagesModel::canFetchMoreDownwards() const
 {
     return _client && _client->isAuthorized() && TgClient::commonPeerType(_inputPeer) != 0 && !_downRequestId.toLongLong() && _downOffset != -1;
 }
 
-void MessagesModel::fetchMore(const QModelIndex &parent)
+void MessagesModel::fetchMoreDownwards()
 {
     QMutexLocker lock(&_mutex);
 

@@ -33,9 +33,8 @@ private:
         MessageTimeRole,
         MessageTextRole,
         AvatarLoadedRole,
-        InputPeerRole,
-        PeerBytesRole,
-        TooltipRole
+        TooltipRole,
+        PeerBytesRole
     };
 
 public:
@@ -53,9 +52,6 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
-    bool canFetchMore(const QModelIndex &parent) const;
-    void fetchMore(const QModelIndex &parent);
-
     TgObject createRow(TgObject dialog, TgObject peer, TgObject message, TgObject messageSender);
 
 signals:
@@ -66,6 +62,9 @@ public slots:
     void avatarDownloaded(TgLongVariant photoId, QString filePath);
 
     void refresh();
+
+    bool canFetchMoreDownwards() const;
+    void fetchMoreDownwards();
 
 };
 

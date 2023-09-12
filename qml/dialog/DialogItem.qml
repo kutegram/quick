@@ -1,7 +1,7 @@
 import QtQuick 1.0
 
 Item {
-    width: ListView.view.width
+    width: 240
     height: 40 * kgScaling
 
     MouseArea {

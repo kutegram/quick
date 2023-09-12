@@ -86,6 +86,7 @@ Rectangle {
                 authStack.currentIndex = 0;
             } else {
                 // TODO: show reconnecting
+                // TODO: timer!
                 telegramClient.start();
             }
         }

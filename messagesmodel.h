@@ -72,9 +72,6 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
-    bool canFetchMore(const QModelIndex &parent) const;
-    void fetchMore(const QModelIndex &parent);
-
     TgObject createRow(TgObject message, TgObject sender, TgList users, TgList chats);
 
     void handleHistoryResponse(TgObject data, TgLongVariant messageId);
@@ -91,6 +88,9 @@ public slots:
 
     void fileDownloaded(TgLongVariant fileId, QString filePath);
     void fileDownloadCanceled(TgLongVariant fileId, QString filePath);
+
+    bool canFetchMoreDownwards() const;
+    void fetchMoreDownwards();
 
     bool canFetchMoreUpwards() const;
     void fetchMoreUpwards();
