@@ -99,10 +99,7 @@ void FoldersModel::authorized(TgLongVariant userId)
         resetState();
         _userId = userId;
         fetchMoreDownwards();
-        return;
     }
-
-    _userId = userId;
 }
 
 void FoldersModel::messagesGetDialogFiltersResponse(TgVector data, TgLongVariant messageId)
@@ -273,11 +270,11 @@ bool FoldersModel::matches(qint32 index, QByteArray peerBytes)
         return false;
     }
 
-    if (filter["contacts"].toBool() && peer["contact"].toBool()) {
+    if (filter["contacts"].toBool() && TgClient::isUser(peer) && peer["contact"].toBool()) {
         return true;
     }
 
-    if (filter["non_contacts"].toBool() && !peer["contact"].toBool()) {
+    if (filter["non_contacts"].toBool() && TgClient::isUser(peer) && !peer["contact"].toBool()) {
         return true;
     }
 
@@ -289,7 +286,7 @@ bool FoldersModel::matches(qint32 index, QByteArray peerBytes)
         return true;
     }
 
-    if (filter["bots"].toBool() && peer["bot"].toBool()) {
+    if (filter["bots"].toBool() && TgClient::isUser(peer) && peer["bot"].toBool()) {
         return true;
     }
 
