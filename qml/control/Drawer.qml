@@ -179,6 +179,8 @@ Item {
                             anchors.top: avatarImage.bottom
                             anchors.topMargin: avatarRect.anchors.topMargin
                             anchors.leftMargin: avatarRect.anchors.topMargin
+                            anchors.right: parent.right
+                            anchors.rightMargin: avatarRect.anchors.topMargin
                         }
 
                         Text {
@@ -190,6 +192,8 @@ Item {
                             anchors.top: avatarName.bottom
                             anchors.topMargin: 0
                             anchors.leftMargin: avatarRect.anchors.topMargin
+                            anchors.right: parent.right
+                            anchors.rightMargin: avatarRect.anchors.topMargin
                         }
                     }
 

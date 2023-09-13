@@ -4,17 +4,21 @@ Item {
     width: 240
     height: 40 * kgScaling
 
+    function openDialog() {
+        messagePage.messagesModel.peer = peerBytes;
+        messagePage.messageEdit.peer = peerBytes;
+        topBar.peerTitle = title;
+        topBar.peerThumbnailColor = thumbnailColor;
+        topBar.peerThumbnailText = thumbnailText;
+        topBar.peerAvatar = avatar;
+        topBar.peerTooltip = tooltip;
+        stack.currentIndex = 1;
+    }
+
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            messagePage.messagesModel.peer = peerBytes;
-            messagePage.messageEdit.peer = peerBytes;
-            topBar.peerTitle = title;
-            topBar.peerThumbnailColor = thumbnailColor;
-            topBar.peerThumbnailText = thumbnailText;
-            topBar.peerAvatar = avatar;
-            topBar.peerTooltip = tooltip;
-            stack.currentIndex = 1;
+            openDialog();
         }
     }
 
@@ -95,6 +99,10 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             elide: Text.ElideRight
+
+            onLinkActivated: {
+                openDialog();
+            }
         }
     }
 

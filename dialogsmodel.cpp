@@ -4,6 +4,7 @@
 #include <QMutexLocker>
 #include <QColor>
 #include <QDateTime>
+#include "messageutil.h"
 
 DialogsModel::DialogsModel(QObject *parent)
     : QAbstractListModel(parent)
@@ -272,11 +273,10 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
     }
 
     if (!messageSenderName.isEmpty()) {
-        messageSenderName += ": ";
+        messageSenderName = "<span style=\"color: #54759E\">" + messageSenderName + ": </span>";
     }
 
-    //TODO markdown / styled entities
-    QString messageText = message["message"].toString().replace('\n', " ");
+    QString messageText = messageToHtml(message, true);
 
     if (GETID(message["media"].toMap()) != 0) {
         if (!messageText.isEmpty()) {
@@ -289,7 +289,7 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
 
     messageSenderName += messageText;
 
-    row["messageText"] = messageSenderName;
+    row["messageText"] = QString("<html>" + messageSenderName + "</html>");
 
     row["thumbnailColor"] = AvatarDownloader::userColor(peer["id"].toLongLong());
     row["thumbnailText"] = AvatarDownloader::getAvatarText(row["title"].toString());

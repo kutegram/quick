@@ -8,6 +8,7 @@
 #include <QDomDocument>
 #include "avatardownloader.h"
 #include <QFileDialog>
+#include "messageutil.h"
 
 #if QT_VERSION >= 0x050000
 #include <QStandardPaths>
@@ -392,9 +393,8 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
     row["grouped_id"] = message["grouped_id"];
     //TODO 12-hour format
     row["messageTime"] = QDateTime::fromTime_t(qMax(message["date"].toInt(), message["edit_date"].toInt())).toString("hh:mm");
-    //TODO markdown / styled entities
     //TODO replies support
-    row["messageText"] = message["message"].toString();
+    row["messageText"] = QString("<html>" + messageToHtml(message, false) + "</html>");
     if (GETID(message) == MessageService) {
         //TODO service messages
         row["messageText"] = "<i>service messages are not supported yet</i>";
@@ -565,12 +565,10 @@ void MessagesModel::linkActivated(QString link, qint32 listIndex)
         if (url.host() == "spoiler") {
             TgObject listItem = _history[listIndex];
             QDomDocument dom;
-            QString error;
-            int errorLine = 0, errorColumn = 0;
-            dom.setContent(listItem["messageText"].toString(), false, &error, &errorLine, &errorColumn);
-            //TODO remove this
-            kgDebug() << error << errorLine << errorColumn;
-            kgDebug() << listItem["messageText"].toString();
+
+            if (!dom.setContent(listItem["messageText"].toString(), false)) {
+                return;
+            }
 
             QDomNodeList list = dom.elementsByTagName("a");
             for (qint32 i = 0; i < list.count(); ++i) {
@@ -581,6 +579,7 @@ void MessagesModel::linkActivated(QString link, qint32 listIndex)
                     break;
                 }
             }
+
             listItem["messageText"] = dom.toString(-1);
             _history[listIndex] = listItem;
 
