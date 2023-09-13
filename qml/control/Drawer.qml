@@ -14,7 +14,6 @@ Item {
         }
 
         onUserInfoChanged: {
-            peerAvatar = "";
             peerThumbnailText = thumbnailText;
             peerThumbnailColor = thumbnailColor;
             peerName = name;
