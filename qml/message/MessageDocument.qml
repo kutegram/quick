@@ -6,6 +6,7 @@ Rectangle {
     height: 40 * kgScaling
 
     property int rowIndex: -1
+    property string filePath: ""
 
     MouseArea {
         anchors.fill: parent
@@ -18,6 +19,8 @@ Rectangle {
 
             if (attachButton.state == "NOT_DOWNLOADING") {
                 messagesModel.downloadFile(rowIndex);
+            } else if (attachButton.state == "DOWNLOADED" && filePath.length != 0) {
+                messagesModel.openUrl(filePath);
             } else {
                 messagesModel.cancelDownload(rowIndex);
             }
@@ -28,10 +31,12 @@ Rectangle {
         messagesModel.downloadUpdated.connect(handleDownload);
     }
 
-    function handleDownload(mid, state) {
+    function handleDownload(mid, state, path) {
         if (mid != messageId) {
             return;
         }
+
+        filePath = path;
 
         switch (state) {
         case 1:

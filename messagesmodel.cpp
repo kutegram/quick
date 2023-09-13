@@ -671,7 +671,7 @@ void MessagesModel::downloadFile(qint32 index)
     qint32 messageId = _history[index]["messageId"].toInt();
     qint64 requestId = _client->downloadFile(indexedFilePath, _history[index]["mediaDownload"].toMap()).toLongLong();
     _downloadRequests.insert(requestId, messageId);
-    emit downloadUpdated(messageId, 0);
+    emit downloadUpdated(messageId, 0, "");
 }
 
 void MessagesModel::cancelDownload(qint32 index)
@@ -686,7 +686,7 @@ void MessagesModel::cancelDownload(qint32 index)
     qint64 requestId = _downloadRequests.key(messageId);
     _downloadRequests.remove(requestId);
     _client->cancelDownload(requestId);
-    emit downloadUpdated(messageId, -1);
+    emit downloadUpdated(messageId, -1, "");
 }
 
 void MessagesModel::fileDownloaded(TgLongVariant fileId, QString filePath)
@@ -699,7 +699,7 @@ void MessagesModel::fileDownloaded(TgLongVariant fileId, QString filePath)
         return;
     }
 
-    emit downloadUpdated(messageId.toInt(), 1);
+    emit downloadUpdated(messageId.toInt(), 1, "file:///" + filePath);
 }
 
 void MessagesModel::fileDownloadCanceled(TgLongVariant fileId, QString filePath)
@@ -712,6 +712,6 @@ void MessagesModel::fileDownloadCanceled(TgLongVariant fileId, QString filePath)
         return;
     }
 
-    emit downloadUpdated(messageId.toInt(), -1);
+    emit downloadUpdated(messageId.toInt(), -1, "");
 }
 

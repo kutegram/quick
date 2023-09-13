@@ -79,7 +79,7 @@ public:
 
 signals:
     void scrollTo(qint32 index);
-    void downloadUpdated(qint32 messageId, qint32 state);
+    void downloadUpdated(qint32 messageId, qint32 state, QString filePath);
 
 public slots:
     void authorized(TgLongVariant userId);
