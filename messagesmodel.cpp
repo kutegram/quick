@@ -59,6 +59,7 @@ QHash<int, QByteArray> MessagesModel::roleNames() const
     roles[MediaDownloadableRole] = "mediaDownloadable";
     roles[MessageIdRole] = "messageId";
     roles[ForwardedFromRole] = "forwardedFrom";
+    roles[MediaUrlRole] = "mediaUrl";
 
     return roles;
 }
@@ -446,6 +447,7 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
     row["hasMedia"] = GETID(media) != 0 ? 1 : 0;
     row["mediaDownloadable"] = false;
 
+    row["mediaUrl"] = "";
     switch (GETID(media)) {
     //TODO image viewer and preview
     case MessageMediaPhoto:
@@ -516,6 +518,7 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
         row["mediaTitle"] = "Webpage";
         row["mediaText"] = media["webpage"].toMap()["title"].toString();
         if (row["mediaText"].toString().isEmpty()) row["mediaText"] = "unknown link";
+        row["mediaUrl"] = media["webpage"].toMap()["url"].toString();
         break;
     case MessageMediaVenue:
         row["mediaImage"] = "../../img/media/map-marker.png";
@@ -593,7 +596,12 @@ void MessagesModel::linkActivated(QString link, qint32 listIndex)
             emit dataChanged(index(listIndex), index(listIndex));
         }
     }
-    else QDesktopServices::openUrl(url);
+    else openUrl(link);
+}
+
+void MessagesModel::openUrl(QString url)
+{
+    QDesktopServices::openUrl(QUrl(url));
 }
 
 void MessagesModel::avatarDownloaded(TgLongVariant photoId, QString filePath)

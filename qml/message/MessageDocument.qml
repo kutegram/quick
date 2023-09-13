@@ -14,8 +14,13 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
-        enabled: downloadable
+        enabled: downloadable || mediaUrl.length != 0
         onClicked: {
+            if (mediaUrl.length != 0) {
+                messagesModel.openUrl(mediaUrl);
+                return;
+            }
+
             if (attachButton.state == "NOT_DOWNLOADING") {
                 messagesModel.downloadFile(rowIndex);
             } else {

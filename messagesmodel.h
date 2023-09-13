@@ -50,7 +50,8 @@ private:
         MediaTextRole,
         MediaDownloadableRole,
         MessageIdRole,
-        ForwardedFromRole
+        ForwardedFromRole,
+        MediaUrlRole
     };
 
 public:
@@ -97,6 +98,8 @@ public slots:
     void linkActivated(QString link, qint32 index);
     void downloadFile(qint32 index);
     void cancelDownload(qint32 index);
+
+    void openUrl(QString url);
 };
 
 #endif // MESSAGESMODEL_H
