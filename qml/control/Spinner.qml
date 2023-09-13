@@ -14,14 +14,12 @@ Item {
         height: width
         smooth: true
 
-        SequentialAnimation on rotation {
+        PropertyAnimation on rotation {
             loops: Animation.Infinite
-            PropertyAnimation {
-                from: 0
-                to: 360
-                easing.type: Easing.InOutQuad
-                duration: 1400
-            }
+            from: 0
+            to: 360
+            easing.type: Easing.InOutQuad
+            duration: 1400
         }
     }
 }
