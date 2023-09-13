@@ -23,7 +23,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        color: "#3e5675"
+        color: Qt.darker(globalAccent)
     }
 
     Item {
