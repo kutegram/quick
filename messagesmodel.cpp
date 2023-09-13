@@ -405,7 +405,7 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
     row["messageText"] = message["message"].toString().isEmpty() ? "" : QString("<html>" + messageToHtml(message, false) + "</html>");
     if (GETID(message) == MessageService) {
         //TODO service messages
-        row["messageText"] = "<i>service messages are not supported yet</i>";
+        row["messageText"] = "<html><i>service messages are not supported yet</i></html>";
     }
     row["sender"] = TgClient::toInputPeer(sender);
 
