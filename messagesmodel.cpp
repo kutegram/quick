@@ -389,6 +389,12 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
         row["senderName"] = sender["title"].toString();
     }
 
+    row["senderName"] = QString("<html><span style=\"color: "
+            + AvatarDownloader::userColor(sender["id"]).name()
+            + "\">"
+            + row["senderName"].toString()
+            + "</span></html>");
+
     row["date"] = message["date"];
     row["grouped_id"] = message["grouped_id"];
     //TODO 12-hour format

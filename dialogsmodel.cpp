@@ -273,7 +273,11 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
     }
 
     if (!messageSenderName.isEmpty()) {
-        messageSenderName = "<span style=\"color: #54759E\">" + messageSenderName + ": </span>";
+        messageSenderName = "<span style=\"color: "
+                + AvatarDownloader::userColor(messageSender["id"]).name()
+                + "\">"
+                + messageSenderName
+                + ": </span>";
     }
 
     QString messageText = messageToHtml(message, true);
