@@ -127,6 +127,10 @@ Item {
                         height: 90 * kgScaling
                         color: "#54759E"
 
+                        MouseArea {
+                            anchors.fill: parent
+                        }
+
                         Rectangle {
                             id: avatarRect
                             visible: peerAvatar.length == 0 || avatarImage.status != Image.Ready
@@ -239,6 +243,10 @@ Item {
                         anchors.right: parent.right
                         color: "#FFFFFF"
                         height: versionRow.height + 16 * kgScaling
+
+                        MouseArea {
+                            anchors.fill: parent
+                        }
 
                         Row {
                             id: versionRow
