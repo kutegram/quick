@@ -5,16 +5,11 @@ Rectangle {
     width: 240 * kgScaling
     height: 40 * kgScaling
 
-    property alias image: documentImage.source
-    property alias title: documentTitle.text
-    property alias text: documentText.text
-    property bool downloadable: false
     property int rowIndex: -1
-    property int mid: -1
 
     MouseArea {
         anchors.fill: parent
-        enabled: downloadable || mediaUrl.length != 0
+        enabled: mediaDownloadable || mediaUrl.length != 0
         onClicked: {
             if (mediaUrl.length != 0) {
                 messagesModel.openUrl(mediaUrl);
@@ -33,8 +28,8 @@ Rectangle {
         messagesModel.downloadUpdated.connect(handleDownload);
     }
 
-    function handleDownload(messageId, state) {
-        if (messageId != mid) {
+    function handleDownload(mid, state) {
+        if (mid != messageId) {
             return;
         }
 
@@ -63,7 +58,7 @@ Rectangle {
         smooth: true
         color: "#54759E"
 
-        state: downloadable ? "NOT_DOWNLOADING" : "DOWNLOADED"
+        state: mediaDownloadable ? "NOT_DOWNLOADING" : "DOWNLOADED"
 
         Image {
             id: downloadImage
@@ -82,6 +77,7 @@ Rectangle {
             height: width
             smooth: true
             asynchronous: true
+            source: mediaImage
         }
 
         Spinner {
@@ -175,13 +171,13 @@ Rectangle {
         Row {
             spacing: 5 * kgScaling
             Text {
-                id: documentTitle
+                text: mediaTitle
                 font.bold: true
             }
         }
 
         Text {
-            id: documentText
+            text: mediaText
             color: "#8D8D8D"
         }
     }

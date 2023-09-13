@@ -204,12 +204,7 @@ Item {
         Repeater {
             model: hasMedia
             MessageDocument {
-                image: mediaImage
-                title: mediaTitle
-                text: mediaText
                 rowIndex: messageIndex
-                mid: messageId
-                downloadable: mediaDownloadable
                 anchors.left: parent.left
                 anchors.right: parent.right
                 state: currentState
