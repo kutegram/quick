@@ -402,7 +402,7 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
     //TODO 12-hour format
     row["messageTime"] = QDateTime::fromTime_t(qMax(message["date"].toInt(), message["edit_date"].toInt())).toString("hh:mm");
     //TODO replies support
-    row["messageText"] = QString("<html>" + messageToHtml(message, false) + "</html>");
+    row["messageText"] = message["message"].toString().isEmpty() ? "" : QString("<html>" + messageToHtml(message, false) + "</html>");
     if (GETID(message) == MessageService) {
         //TODO service messages
         row["messageText"] = "<i>service messages are not supported yet</i>";
