@@ -156,5 +156,5 @@ QString AvatarDownloader::getAvatarText(QString title)
 
 QColor AvatarDownloader::userColor(TgLongVariant id)
 {
-   return QColor::fromHsl(id.toLongLong() % 360, 160, 160);
+   return QColor::fromHsl(id.toLongLong() % 360, 160, 120);
 }
