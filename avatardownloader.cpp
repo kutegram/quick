@@ -62,9 +62,8 @@ void AvatarDownloader::authorized(TgLongVariant userId)
 
     if (_userId != userId) {
         _requests.clear();
+        _userId = userId;
     }
-
-    _userId = userId;
 }
 
 QObject* AvatarDownloader::client() const

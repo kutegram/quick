@@ -60,7 +60,7 @@ Item {
 
     Rectangle {
         id: messageAvatar
-        visible: !mergeMessage && !isChannel && (!avatarLoaded || avatarImage.status != Image.Ready)
+        visible: !mergeMessage && !isChannel && (avatar.length == 0 || avatarImage.status != Image.Ready)
 
         anchors.top: parent.top
         anchors.topMargin: 5 * kgScaling
@@ -85,7 +85,7 @@ Item {
 
     Image {
         id: avatarImage
-        visible: !mergeMessage && !isChannel && avatarLoaded
+        visible: !mergeMessage && !isChannel && avatar.length != 0
 
         anchors.top: parent.top
         anchors.topMargin: 5 * kgScaling
@@ -97,7 +97,7 @@ Item {
         smooth: true
 
         asynchronous: true
-        source: avatarLoaded ? avatar : ""
+        source: avatar
     }
 
     Column {

@@ -50,7 +50,6 @@ QHash<int, QByteArray> MessagesModel::roleNames() const
     roles[ThumbnailColorRole] = "thumbnailColor";
     roles[ThumbnailTextRole] = "thumbnailText";
     roles[AvatarRole] = "avatar";
-    roles[AvatarLoadedRole] = "avatarLoaded";
     roles[HasMediaRole] = "hasMedia";
     roles[MediaImageRole] = "mediaImage";
     roles[MediaTitleRole] = "mediaTitle";
@@ -213,9 +212,8 @@ void MessagesModel::authorized(TgLongVariant userId)
     if (_userId != userId) {
         resetState();
         _downloadRequests.clear();
+        _userId = userId;
     }
-
-    _userId = userId;
 }
 
 void MessagesModel::messagesGetHistoryResponse(TgObject data, TgLongVariant messageId)
@@ -434,7 +432,6 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
 
     row["thumbnailColor"] = AvatarDownloader::userColor(sender["id"].toLongLong());
     row["thumbnailText"] = AvatarDownloader::getAvatarText(row["senderName"].toString());
-    row["avatarLoaded"] = false;
     row["avatar"] = "";
     row["photoId"] = sender["photo"].toMap()["photo_id"];
 
@@ -604,7 +601,6 @@ void MessagesModel::avatarDownloaded(TgLongVariant photoId, QString filePath)
             continue;
         }
 
-        message["avatarLoaded"] = true;
         message["avatar"] = filePath;
         _history[i] = message;
 

@@ -32,7 +32,6 @@ private:
         AvatarRole,
         MessageTimeRole,
         MessageTextRole,
-        AvatarLoadedRole,
         TooltipRole,
         PeerBytesRole
     };

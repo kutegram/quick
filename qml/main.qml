@@ -352,19 +352,19 @@ Rectangle {
             }
         }
 
-        Drawer {
-            id: drawer
-            anchors.top: topBar.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-        }
-
         TopBar {
             id: topBar
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
+        }
+
+        Drawer {
+            id: drawer
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
         }
     }
 

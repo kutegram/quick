@@ -13,6 +13,7 @@
 #include "systemname.h"
 #include "avatardownloader.h"
 #include "foldersmodel.h"
+#include "currentuserinfo.h"
 
 #if QT_VERSION >= 0x040702
 #include <QNetworkConfigurationManager>
@@ -68,6 +69,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<MessageEditor>("Kutegram", 1, 0, "MessageEditor");
     qmlRegisterType<AvatarDownloader>("Kutegram", 1, 0, "AvatarDownloader");
     qmlRegisterType<FoldersModel>("Kutegram", 1, 0, "FoldersModel");
+    qmlRegisterType<CurrentUserInfo>("Kutegram", 1, 0, "CurrentUserInfo");
 
     //TODO show status pane without button group on Symbian
     QmlApplicationViewer viewer;
@@ -76,7 +78,7 @@ int main(int argc, char *argv[])
     viewer.rootContext()->setContextProperty("kutegramPlatform", systemName());
     viewer.rootContext()->setContextProperty("kgScaling", ((float) QFontMetrics(font).height()) / 13.0f);
     viewer.setMainQmlFile(QLatin1String("qrc:///qml/main.qml"));
-    viewer.setWindowTitle("Kutegram for " + systemName());
+    viewer.setWindowTitle("Kutegram");
     viewer.showExpanded();
 
 #if QT_VERSION >= 0x040702

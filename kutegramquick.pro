@@ -59,14 +59,16 @@ SOURCES += main.cpp \
     messagesmodel.cpp \
     messageeditor.cpp \
     avatardownloader.cpp \
-    foldersmodel.cpp
+    foldersmodel.cpp \
+    currentuserinfo.cpp
 
 HEADERS += \
     dialogsmodel.h \
     messagesmodel.h \
     messageeditor.h \
     avatardownloader.h \
-    foldersmodel.h
+    foldersmodel.h \
+    currentuserinfo.h
 
 OTHER_FILES += \
     qtc_packaging/debian_harmattan/rules \

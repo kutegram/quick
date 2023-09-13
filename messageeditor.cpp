@@ -106,9 +106,8 @@ void MessageEditor::authorized(TgLongVariant userId)
 {
     if (_userId != userId) {
         cancelUpload();
+        _userId = userId;
     }
-
-    _userId = userId;
 }
 
 void MessageEditor::fileUploadCanceled(TgLongVariant fileId)

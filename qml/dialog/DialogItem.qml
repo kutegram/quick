@@ -12,16 +12,22 @@ Item {
             topBar.peerTitle = title;
             topBar.peerThumbnailColor = thumbnailColor;
             topBar.peerThumbnailText = thumbnailText;
-            topBar.peerAvatarLoaded = avatarLoaded;
             topBar.peerAvatar = avatar;
             topBar.peerTooltip = tooltip;
             stack.currentIndex = 1;
         }
     }
 
+    property string avatarWatcher: avatar
+    onAvatarWatcherChanged: {
+        if (messagePage.messagesModel.peer == peerBytes) {
+            topBar.peerAvatar = avatar;
+        }
+    }
+
     Rectangle {
         id: avatarRect
-        visible: !avatarLoaded || avatarImage.status != Image.Ready
+        visible: avatar.length == 0 || avatarImage.status != Image.Ready
 
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
@@ -45,7 +51,7 @@ Item {
 
     Image {
         id: avatarImage
-        visible: avatarLoaded
+        visible: avatar.length != 0
 
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
@@ -56,7 +62,7 @@ Item {
         smooth: true
 
         asynchronous: true
-        source: avatarLoaded ? avatar : ""
+        source: avatar
     }
 
     Column {

@@ -46,7 +46,6 @@ QHash<int, QByteArray> DialogsModel::roleNames() const
     roles[AvatarRole] = "avatar";
     roles[MessageTimeRole] = "messageTime";
     roles[MessageTextRole] = "messageText";
-    roles[AvatarLoadedRole] = "avatarLoaded";
     roles[TooltipRole] = "tooltip";
     roles[PeerBytesRole] = "peerBytes";
 
@@ -127,10 +126,7 @@ void DialogsModel::authorized(TgLongVariant userId)
         resetState();
         _userId = userId;
         fetchMoreDownwards();
-        return;
     }
-
-    _userId = userId;
 }
 
 void DialogsModel::messagesGetDialogsResponse(TgObject data, TgLongVariant messageId)
@@ -297,7 +293,6 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
 
     row["thumbnailColor"] = AvatarDownloader::userColor(peer["id"].toLongLong());
     row["thumbnailText"] = AvatarDownloader::getAvatarText(row["title"].toString());
-    row["avatarLoaded"] = false;
     row["avatar"] = "";
     row["photoId"] = peer["photo"].toMap()["photo_id"];
 
@@ -315,7 +310,6 @@ void DialogsModel::avatarDownloaded(TgLongVariant photoId, QString filePath)
             continue;
         }
 
-        dialog["avatarLoaded"] = true;
         dialog["avatar"] = filePath;
         _dialogs[i] = dialog;
 

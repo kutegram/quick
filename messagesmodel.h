@@ -44,7 +44,6 @@ private:
         ThumbnailColorRole,
         ThumbnailTextRole,
         AvatarRole,
-        AvatarLoadedRole,
         HasMediaRole,
         MediaImageRole,
         MediaTitleRole,

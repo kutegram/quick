@@ -6,7 +6,6 @@ Rectangle {
     property string peerTitle: ""
     property color peerThumbnailColor: "#00000000"
     property string peerThumbnailText: ""
-    property bool peerAvatarLoaded: false
     property string peerAvatar: ""
     property string peerTooltip: ""
 
@@ -86,7 +85,7 @@ Rectangle {
 
             Rectangle {
                 id: avatarRect
-                visible: !peerAvatarLoaded || avatarImage.status != Image.Ready
+                visible: peerAvatar.length == 0 || avatarImage.status != Image.Ready
 
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
@@ -110,7 +109,7 @@ Rectangle {
 
             Image {
                 id: avatarImage
-                visible: peerAvatarLoaded
+                visible: peerAvatar.length != 0
 
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
@@ -121,7 +120,7 @@ Rectangle {
                 smooth: true
 
                 asynchronous: true
-                source: peerAvatarLoaded ? peerAvatar : ""
+                source: peerAvatar
             }
 
             Column {

@@ -1,7 +1,32 @@
 import QtQuick 1.0
+import Kutegram 1.0
 
 Item {
     property bool opened: false
+
+    CurrentUserInfo {
+        id: currentUserInfo
+        client: telegramClient
+        avatarDownloader: globalAvatarDownloader
+
+        onUserAvatarDownloaded: {
+            peerAvatar = avatar;
+        }
+
+        onUserInfoChanged: {
+            peerAvatar = "";
+            peerThumbnailText = thumbnailText;
+            peerThumbnailColor = thumbnailColor;
+            peerName = name;
+            peerUsername = username;
+        }
+    }
+
+    property string peerAvatar: ""
+    property string peerThumbnailText: ""
+    property color peerThumbnailColor: "#00000000"
+    property string peerName: ""
+    property string peerUsername: ""
 
     id: drawerRoot
     width: 240
@@ -94,9 +119,83 @@ Item {
                     width: Math.min(Math.max(240, parent.width * 2 / 3), 280 * kgScaling)
                     color: "#FFFFFF"
 
+                    Rectangle {
+                        id: currentUserRect
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: 90 * kgScaling
+                        color: "#54759E"
+
+                        Rectangle {
+                            id: avatarRect
+                            visible: peerAvatar.length == 0 || avatarImage.status != Image.Ready
+
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            anchors.topMargin: 8 * kgScaling
+                            anchors.leftMargin: anchors.topMargin
+
+                            width: 40 * kgScaling
+                            height: width
+                            smooth: true
+
+                            color: peerThumbnailColor
+
+                            Text {
+                                anchors.fill: parent
+                                text: peerThumbnailText
+                                color: "#FFFFFF"
+                                font.bold: true
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                        }
+
+                        Image {
+                            id: avatarImage
+                            visible: peerAvatar.length != 0
+
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            anchors.topMargin: avatarRect.anchors.topMargin
+                            anchors.leftMargin: avatarRect.anchors.topMargin
+
+                            width: 40 * kgScaling
+                            height: width
+                            smooth: true
+
+                            asynchronous: true
+                            source: peerAvatar
+                        }
+
+                        Text {
+                            id: avatarName
+                            text: peerName
+                            color: "#FFFFFF"
+                            font.bold: true
+
+                            anchors.left: parent.left
+                            anchors.top: avatarImage.bottom
+                            anchors.topMargin: avatarRect.anchors.topMargin
+                            anchors.leftMargin: avatarRect.anchors.topMargin
+                        }
+
+                        Text {
+                            id: avatarUsername
+                            text: peerUsername.length != 0 ? "@" + peerUsername : "no username"
+                            color: "#FFFFFF"
+
+                            anchors.left: parent.left
+                            anchors.top: avatarName.bottom
+                            anchors.topMargin: 0
+                            anchors.leftMargin: avatarRect.anchors.topMargin
+                        }
+                    }
+
                     ListView {
                         id: drawerListView
-                        anchors.top: parent.top
+                        anchors.top: currentUserRect.bottom
                         anchors.bottom: drawerBottom.top
                         anchors.left: parent.left
                         anchors.right: parent.right
@@ -135,29 +234,27 @@ Item {
                         anchors.left: parent.left
                         anchors.right: parent.right
                         color: "#FFFFFF"
-                        height: 40 * kgScaling
+                        height: versionRow.height + 16 * kgScaling
 
-                        Column {
+                        Row {
+                            id: versionRow
                             anchors.bottom: parent.bottom
                             anchors.left: parent.left
                             anchors.leftMargin: 12 * kgScaling
                             anchors.right: parent.right
                             anchors.rightMargin: 12 * kgScaling
-                            anchors.bottomMargin: 7 * kgScaling
-                            spacing: 2 * kgScaling
+                            anchors.bottomMargin: 8 * kgScaling
+                            spacing: 0
                             Text {
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                color: "#999999"
-                                text: "Kutegram for " + kutegramPlatform
-                                font.bold: true
-                                elide: Text.ElideRight
-                            }
-                            Text {
-                                anchors.left: parent.left
-                                anchors.right: parent.right
                                 color: "#999999"
                                 text: "Version " + kutegramVersion
+                                elide: Text.ElideRight
+                                font.bold: true
+                            }
+                            Text {
+                                color: "#999999"
+                                text: " for " + kutegramPlatform
+                                font.bold: true
                                 elide: Text.ElideRight
                             }
                         }
