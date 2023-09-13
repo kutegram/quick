@@ -12,7 +12,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: 5
-        color: "#54759E"
+        color: globalAccent
     }
 
     Text {

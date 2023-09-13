@@ -65,6 +65,6 @@ Item {
         anchors.bottom: parent.bottom
         width: parent.width - 10 * kgScaling
         height: 2 * kgScaling
-        color: "#54759E"
+        color: globalAccent
     }
 }

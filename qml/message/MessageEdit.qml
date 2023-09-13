@@ -309,7 +309,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         height: 2 * kgScaling
-        color: "#54759E"
+        color: globalAccent
         width: 0
 
         Behavior on width {

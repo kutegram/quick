@@ -15,7 +15,7 @@ Rectangle {
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: parent.right
-    color: "#54759E"
+    color: globalAccent
     state: currentState == "CHAT" ? "BACK" : currentState
 
     Rectangle {

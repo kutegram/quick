@@ -10,6 +10,8 @@ Rectangle {
     //TODO: keypad navigation
     id: root
 
+    property color globalAccent: "#54759E"
+
     width: 320
     height: 240
     state: "AUTH"

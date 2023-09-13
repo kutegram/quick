@@ -61,7 +61,7 @@ Rectangle {
         height: width
         radius: width / 2
         smooth: true
-        color: "#54759E"
+        color: globalAccent
 
         state: mediaDownloadable ? "NOT_DOWNLOADING" : "DOWNLOADED"
 

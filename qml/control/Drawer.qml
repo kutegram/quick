@@ -125,7 +125,7 @@ Item {
                         anchors.left: parent.left
                         anchors.right: parent.right
                         height: 90 * kgScaling
-                        color: "#54759E"
+                        color: globalAccent
 
                         MouseArea {
                             anchors.fill: parent
