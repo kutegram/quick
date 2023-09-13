@@ -2,7 +2,7 @@ import QtQuick 1.0
 
 Item {
     height: ListView.view.height
-    width: tabContent.width+10
+    width: tabContent.width + 10 * kgScaling
 
     Row {
         id: tabContent
