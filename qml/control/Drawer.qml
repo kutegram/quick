@@ -248,7 +248,7 @@ Item {
                             anchors.fill: parent
                         }
 
-                        Row {
+                        Text {
                             id: versionRow
                             anchors.bottom: parent.bottom
                             anchors.left: parent.left
@@ -256,19 +256,11 @@ Item {
                             anchors.right: parent.right
                             anchors.rightMargin: 12 * kgScaling
                             anchors.bottomMargin: 8 * kgScaling
-                            spacing: 0
-                            Text {
-                                color: "#999999"
-                                text: "Version " + kutegramVersion
-                                elide: Text.ElideRight
-                                font.bold: true
-                            }
-                            Text {
-                                color: "#999999"
-                                text: " for " + kutegramPlatform
-                                font.bold: true
-                                elide: Text.ElideRight
-                            }
+
+                            color: "#999999"
+                            text: "Version " + kutegramVersion + " for " + kutegramPlatform
+                            elide: Text.ElideRight
+                            font.bold: true
                         }
                     }
                 }
