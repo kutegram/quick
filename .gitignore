@@ -13,3 +13,4 @@ ABLD.BAT
 *test
 rcc/qrc_resources.cpp
 *.pro.user.*
+*.autosave
