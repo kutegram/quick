@@ -224,6 +224,7 @@ TgObject FoldersModel::createRow(TgObject filter)
 bool FoldersModel::matches(qint32 index, QByteArray peerBytes)
 {
     //TODO: cache this?
+    QMutexLocker lock(&_mutex);
 
     if (_folders.isEmpty()) {
         return false;
