@@ -635,7 +635,7 @@ void MessagesModel::downloadFile(qint32 index)
     QDir::home().mkdir("Kutegram");
 
     QString fileName =  _history[index]["mediaFileName"].toString();
-    if (fileName.isEmpty()) fileName = "Unknown file";
+    if (fileName.isEmpty()) fileName = QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch());
 
     QStringList split = fileName.split('.');
     QString fileNameBefore;
