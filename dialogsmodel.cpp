@@ -174,6 +174,9 @@ int DialogsModel::rowCount(const QModelIndex &parent) const
 
 QVariant DialogsModel::data(const QModelIndex &index, int role) const
 {
+    if (index.row() < 0) //TODO why this even is calling
+        return QVariant();
+
     return _dialogs[index.row()][roleNames()[role]];
 }
 
@@ -419,7 +422,7 @@ bool DialogsModel::inFolder(qint32 index, qint32 folderIndex)
 {
     QMutexLocker lock(&_mutex);
 
-    if (!_folders)
+    if (!_folders || index < 0 || folderIndex < 0)
         return true;
 
     return _dialogs[index]["folders"].toList().contains(folderIndex);
