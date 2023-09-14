@@ -16,6 +16,7 @@ DialogsModel::DialogsModel(QObject *parent)
     , _offsets()
     , _avatarDownloader(0)
     , _elideLength(0)
+    , _folders(0)
 {
 #if QT_VERSION < 0x050000
     setRoleNames(roleNames());
@@ -44,6 +45,50 @@ void DialogsModel::setElideLength(qint32 length)
 qint32 DialogsModel::elideLength() const
 {
     return _elideLength;
+}
+
+void DialogsModel::setFolders(QObject *model)
+{
+    QMutexLocker lock(&_mutex);
+
+    if (_folders) {
+        _folders->disconnect(this);
+    }
+
+    _folders = dynamic_cast<FoldersModel*>(model);
+    foldersChanged(_folders ? _folders->folders() : QList<TgObject>());
+
+    if (!_folders) return;
+
+    connect(_folders, SIGNAL(foldersChanged(QList<TgObject>)), this, SLOT(foldersChanged(QList<TgObject>)));
+}
+
+QObject* DialogsModel::folders() const
+{
+    return _folders;
+}
+
+void DialogsModel::foldersChanged(QList<TgObject> folders)
+{
+    QMutexLocker lock(&_mutex);
+
+    for (qint32 i = 0; i < _dialogs.size(); ++i) {
+        TgObject row = _dialogs[i];
+
+        TgList dialogFolders;
+
+        for (qint32 j = 0; j < folders.size(); ++j) {
+            if (FoldersModel::matchesFilter(folders[j], qDeserialize(row["peerBytes"].toByteArray()).toMap())) {
+                dialogFolders << j;
+            }
+        }
+
+        row["folders"] = dialogFolders;
+
+        _dialogs[i] = row;
+
+        emit dataChanged(index(i), index(i));
+    }
 }
 
 void DialogsModel::resetState()
@@ -188,6 +233,10 @@ void DialogsModel::messagesGetDialogsResponse(TgObject data, TgLongVariant messa
     QList<TgObject> dialogsRows;
     dialogsRows.reserve(dialogsList.size());
 
+    QList<TgObject> folders;
+    if (_folders)
+        folders = _folders->folders();
+
     for (qint32 i = 0; i < dialogsList.size(); ++i) {
         TgObject lastDialog = dialogsList[i].toMap();
         TgObject lastDialogPeer = lastDialog["peer"].toMap();
@@ -238,7 +287,7 @@ void DialogsModel::messagesGetDialogsResponse(TgObject data, TgLongVariant messa
             }
         }
 
-        dialogsRows.append(createRow(lastDialog, lastPeer, lastMessage, messageSender));
+        dialogsRows.append(createRow(lastDialog, lastPeer, lastMessage, messageSender, folders));
     }
 
     beginInsertRows(QModelIndex(), _dialogs.size(), _dialogs.size() + dialogsRows.size() - 1);
@@ -258,7 +307,7 @@ void DialogsModel::messagesGetDialogsResponse(TgObject data, TgLongVariant messa
         fetchMoreDownwards();
 }
 
-TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject message, TgObject messageSender)
+TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject message, TgObject messageSender, QList<TgObject> folders)
 {
     TgObject row;
 
@@ -266,6 +315,16 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
     inputPeer.unite(dialog);
     ID_PROPERTY(inputPeer) = ID_PROPERTY(peer);
     row["peerBytes"] = qSerialize(inputPeer);
+
+    TgList dialogFolders;
+
+    for (qint32 j = 0; j < folders.size(); ++j) {
+        if (FoldersModel::matchesFilter(folders[j], inputPeer)) {
+            dialogFolders << j;
+        }
+    }
+
+    row["folders"] = dialogFolders;
 
     //TODO typing status
     if (TgClient::isUser(peer)) {
@@ -354,4 +413,14 @@ void DialogsModel::refresh()
 {
     resetState();
     fetchMoreDownwards();
+}
+
+bool DialogsModel::inFolder(qint32 index, qint32 folderIndex)
+{
+    QMutexLocker lock(&_mutex);
+
+    if (!_folders)
+        return true;
+
+    return _dialogs[index]["folders"].toList().contains(folderIndex);
 }

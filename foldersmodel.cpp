@@ -22,6 +22,7 @@ void FoldersModel::resetState()
         beginRemoveRows(QModelIndex(), 0, _folders.size() - 1);
         _folders.clear();
         endRemoveRows();
+        emit foldersChanged(_folders);
     }
 
     _requestId = 0;
@@ -126,6 +127,7 @@ void FoldersModel::messagesGetDialogFiltersResponse(TgVector data, TgLongVariant
     beginInsertRows(QModelIndex(), _folders.size(), _folders.size() + rows.size() - 1);
     _folders.append(rows);
     endInsertRows();
+    emit foldersChanged(_folders);
 }
 
 #define ICON(key, image) map[key] = image;
@@ -221,22 +223,11 @@ TgObject FoldersModel::createRow(TgObject filter)
     return filter;
 }
 
-bool FoldersModel::matches(qint32 index, QByteArray peerBytes)
+bool FoldersModel::matchesFilter(TgObject filter, TgObject peer)
 {
-    //TODO: cache this?
-    QMutexLocker lock(&_mutex);
-
-    if (_folders.isEmpty()) {
-        return false;
-    }
-
-    TgObject filter = _folders[index];
-
     if (GETID(filter) == TLType::DialogFilterDefault) {
         return true;
     }
-
-    TgObject peer = qDeserialize(peerBytes).toMap();
 
     TgList includePeers = filter["include_peers"].toList();
     for (qint32 i = 0; i < includePeers.size(); ++i) {
@@ -298,4 +289,9 @@ void FoldersModel::refresh()
 {
     resetState();
     fetchMoreDownwards();
+}
+
+QList<TgObject> FoldersModel::folders()
+{
+    return _folders;
 }

@@ -6,17 +6,18 @@ Rectangle {
     property alias foldersModel: foldersModel
     signal refresh()
 
-    DialogsModel {
-        id: dialogsModel
-        elideLength: globalScreenLength
-        client: telegramClient
-        avatarDownloader: globalAvatarDownloader
-        Component.onCompleted: pageRoot.refresh.connect(refresh)
-    }
-
     FoldersModel {
         id: foldersModel
         client: telegramClient
+        Component.onCompleted: pageRoot.refresh.connect(refresh)
+    }
+
+    DialogsModel {
+        id: dialogsModel
+        elideLength: globalScreenLength
+        folders: foldersModel
+        client: telegramClient
+        avatarDownloader: globalAvatarDownloader
         Component.onCompleted: pageRoot.refresh.connect(refresh)
     }
 
@@ -57,7 +58,8 @@ Rectangle {
 
             delegate: Repeater {
                 id: dialogRepeater
-                model: foldersModel.matches(folderIndex, peerBytes)
+
+                model: dialogsModel.inFolder(index, folderIndex)
                 height: count != 0 ? 40 * kgScaling : 0
 
                 DialogItem {

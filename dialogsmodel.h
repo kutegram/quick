@@ -6,6 +6,7 @@
 #include <QMutex>
 #include "tgclient.h"
 #include "avatardownloader.h"
+#include "foldersmodel.h"
 
 class DialogsModel : public QAbstractListModel
 {
@@ -13,6 +14,7 @@ class DialogsModel : public QAbstractListModel
     Q_PROPERTY(QObject* client READ client WRITE setClient)
     Q_PROPERTY(QObject* avatarDownloader READ avatarDownloader WRITE setAvatarDownloader)
     Q_PROPERTY(qint32 elideLength READ elideLength WRITE setElideLength)
+    Q_PROPERTY(QObject* folders READ folders WRITE setFolders)
 
 private:
     QMutex _mutex;
@@ -27,6 +29,8 @@ private:
     AvatarDownloader* _avatarDownloader;
 
     qint32 _elideLength;
+
+    FoldersModel* _folders;
 
     enum DialogRoles {
         TitleRole = Qt::UserRole + 1,
@@ -54,10 +58,13 @@ public:
     void setElideLength(qint32 length);
     qint32 elideLength() const;
 
+    void setFolders(QObject *model);
+    QObject* folders() const;
+
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
-    TgObject createRow(TgObject dialog, TgObject peer, TgObject message, TgObject messageSender);
+    TgObject createRow(TgObject dialog, TgObject peer, TgObject message, TgObject messageSender, QList<TgObject> folders);
 
 signals:
 
@@ -70,6 +77,9 @@ public slots:
 
     bool canFetchMoreDownwards() const;
     void fetchMoreDownwards();
+
+    void foldersChanged(QList<TgObject> folders);
+    bool inFolder(qint32 index, qint32 folderIndex);
 
 };
 

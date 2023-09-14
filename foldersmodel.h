@@ -39,8 +39,10 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
     TgObject createRow(TgObject filter);
+    QList<TgObject> folders();
 
 signals:
+    void foldersChanged(QList<TgObject> folders);
 
 public slots:
     void authorized(TgLongVariant userId);
@@ -51,7 +53,7 @@ public slots:
     bool canFetchMoreDownwards() const;
     void fetchMoreDownwards();
 
-    bool matches(qint32 index, QByteArray peerBytes);
+    static bool matchesFilter(TgObject filter, TgObject peer);
 
 };
 
