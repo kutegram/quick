@@ -27,6 +27,7 @@ Rectangle {
         anchors.fill: parent
 
         model: foldersModel
+        cacheBuffer: width * 5
 
         boundsBehavior: Flickable.StopAtBounds
         orientation: ListView.Horizontal

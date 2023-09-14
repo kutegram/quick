@@ -99,6 +99,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             elide: Text.ElideRight
+            clip: true
 
             onLinkActivated: {
                 openDialog();
