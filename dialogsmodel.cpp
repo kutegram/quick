@@ -174,7 +174,7 @@ int DialogsModel::rowCount(const QModelIndex &parent) const
 
 QVariant DialogsModel::data(const QModelIndex &index, int role) const
 {
-    if (index.row() < 0) //TODO why this even is calling
+    if (index.row() < 0) //TODO why this is even calling
         return QVariant();
 
     return _dialogs[index.row()][roleNames()[role]];
