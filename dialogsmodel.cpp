@@ -15,10 +15,35 @@ DialogsModel::DialogsModel(QObject *parent)
     , _requestId(0)
     , _offsets()
     , _avatarDownloader(0)
+    , _elideLength(0)
 {
 #if QT_VERSION < 0x050000
     setRoleNames(roleNames());
 #endif
+}
+
+void DialogsModel::setElideLength(qint32 length)
+{
+    QMutexLocker lock(&_mutex);
+
+    _elideLength = length;
+
+    for (qint32 i = 0; i < _dialogs.size(); ++i) {
+        TgObject row = _dialogs[i];
+        if (row["_message"].toString().isEmpty())
+            continue;
+
+        QString messageText = messageToHtml(row["_message"].toString(), row["_entities"].toList(), true, _elideLength);
+        row["messageText"] = QString("<html>" + row["messageSenderName"].toString() + messageText + row["afterMessageText"].toString() + "</html>");
+        _dialogs[i] = row;
+
+        emit dataChanged(index(i), index(i));
+    }
+}
+
+qint32 DialogsModel::elideLength() const
+{
+    return _elideLength;
 }
 
 void DialogsModel::resetState()
@@ -280,20 +305,23 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
                 + ": </span>";
     }
 
-    QString messageText = messageToHtml(message, true);
+    row["_message"] = message["message"];
+    row["_entities"] = message["entities"];
+    QString messageText = messageToHtml(row["_message"].toString(), row["_entities"].toList(), true, _elideLength);
 
+    QString afterMessageText;
     if (GETID(message["media"].toMap()) != 0) {
         if (!messageText.isEmpty()) {
-            messageText += ", ";
+            afterMessageText += ", ";
         }
 
         //TODO attachment type
-        messageText += "Attachment";
+        afterMessageText += "Attachment";
     }
 
-    messageSenderName += messageText;
-
-    row["messageText"] = QString("<html>" + messageSenderName + "</html>");
+    row["messageSenderName"] = messageSenderName;
+    row["afterMessageText"] = afterMessageText;
+    row["messageText"] = QString("<html>" + row["messageSenderName"].toString() + messageText + row["afterMessageText"].toString() + "</html>");
 
     row["thumbnailColor"] = AvatarDownloader::userColor(peer["id"].toLongLong());
     row["thumbnailText"] = AvatarDownloader::getAvatarText(row["title"].toString());

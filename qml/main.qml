@@ -10,10 +10,12 @@ Rectangle {
     //TODO: keypad navigation
     id: root
 
-    property color globalAccent: "#54759E"
-
     width: 320
     height: 240
+
+    property int globalScreenLength: Math.max(width, height) / kgCharWidth
+    property color globalAccent: "#54759E"
+
     state: "AUTH"
     states: [
         State {

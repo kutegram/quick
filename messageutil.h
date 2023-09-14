@@ -3,6 +3,6 @@
 
 #include "tgstream.h"
 
-QString messageToHtml(TgObject message, bool inlineBreaks);
+QString messageToHtml(QString text, TgList entities, bool inlineBreaks, qint32 limitWidth);
 
 #endif // MESSAGEUTIL_H

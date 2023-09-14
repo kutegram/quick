@@ -104,10 +104,12 @@ void getTags(TgObject entity, QString textPart, qint32 i, QString &sTag, QString
     }
 }
 
-QString messageToHtml(TgObject message, bool inlineBreaks) {
-    QString text = message["message"].toString();
-    TgList entities = message["entities"].toList();
+QString messageToHtml(QString text, TgList entities, bool inlineBreaks, qint32 limitWidth)
+{
     qSort(entities.begin(), entities.end(), entitiesSorter);
+
+    if (limitWidth > 0)
+        text = text.mid(0, limitWidth);
 
     for (qint32 i = 0; i < text.length(); ++i) {
         QString replace;
@@ -147,6 +149,18 @@ QString messageToHtml(TgObject message, bool inlineBreaks) {
         qint32 offset = entity["offset"].toInt();
         qint32 length = entity["length"].toInt();
 
+        if (limitWidth > 0 && offset >= limitWidth) {
+            continue;
+        }
+
+        if (limitWidth > 0 && offset + length > limitWidth) {
+            length = limitWidth - offset;
+        }
+
+        if (length == 0) {
+            continue;
+        }
+
         QString textPart = text.mid(offset, length);
         QString sTag, eTag;
         getTags(entity, textPart, i, sTag, eTag);
@@ -160,7 +174,7 @@ QString messageToHtml(TgObject message, bool inlineBreaks) {
 
             if (mOffset == offset) {
                 moving["length"] = moving["length"].toInt() + sTag.length() + eTag.length();
-            } else if (mOffset > offset && mOffset < offset + length) {
+            } else if (mOffset > offset && mOffset < offset + entity["length"].toInt()) {
                 moving["offset"] = mOffset + sTag.length();
             } else {
                 moving["offset"] = mOffset + sTag.length() + eTag.length();

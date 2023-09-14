@@ -12,6 +12,7 @@ class DialogsModel : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(QObject* client READ client WRITE setClient)
     Q_PROPERTY(QObject* avatarDownloader READ avatarDownloader WRITE setAvatarDownloader)
+    Q_PROPERTY(qint32 elideLength READ elideLength WRITE setElideLength)
 
 private:
     QMutex _mutex;
@@ -24,6 +25,8 @@ private:
     TgObject _offsets;
 
     AvatarDownloader* _avatarDownloader;
+
+    qint32 _elideLength;
 
     enum DialogRoles {
         TitleRole = Qt::UserRole + 1,
@@ -47,6 +50,9 @@ public:
 
     void setAvatarDownloader(QObject *client);
     QObject* avatarDownloader() const;
+
+    void setElideLength(qint32 length);
+    qint32 elideLength() const;
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;

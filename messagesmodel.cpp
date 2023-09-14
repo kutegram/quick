@@ -20,6 +20,7 @@ using namespace TLType;
 MessagesModel::MessagesModel(QObject *parent)
     : QAbstractListModel(parent)
     , _mutex(QMutex::Recursive)
+    , _history()
     , _client(0)
     , _userId(0)
     , _peer()
@@ -402,7 +403,7 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
     //TODO 12-hour format
     row["messageTime"] = QDateTime::fromTime_t(qMax(message["date"].toInt(), message["edit_date"].toInt())).toString("hh:mm");
     //TODO replies support
-    row["messageText"] = message["message"].toString().isEmpty() ? "" : QString("<html>" + messageToHtml(message, false) + "</html>");
+    row["messageText"] = message["message"].toString().isEmpty() ? "" : QString("<html>" + messageToHtml(message["message"].toString(), message["entities"].toList(), false, 0) + "</html>");
     if (GETID(message) == MessageService) {
         //TODO service messages
         row["messageText"] = "<html><i>service messages are not supported yet</i></html>";

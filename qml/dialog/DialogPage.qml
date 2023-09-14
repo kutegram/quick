@@ -8,6 +8,7 @@ Rectangle {
 
     DialogsModel {
         id: dialogsModel
+        elideLength: globalScreenLength
         client: telegramClient
         avatarDownloader: globalAvatarDownloader
         Component.onCompleted: pageRoot.refresh.connect(refresh)
