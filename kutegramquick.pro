@@ -1,7 +1,7 @@
 TARGET = Kutegram
 APPNAME = Kutegram
-VERSION = 1.1.0
-PKG_VERSION = 1,1,0
+VERSION = 1.1.1
+PKG_VERSION = 1,1,1
 DEFINES += VERSION=\"\\\"$$VERSION\\\"\"
 #DATE = $$system(date /t)
 #DEFINES += BUILDDATE=\"\\\"$$DATE\\\"\"
