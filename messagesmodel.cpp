@@ -401,7 +401,7 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
     row["date"] = message["date"];
     row["grouped_id"] = message["grouped_id"];
     //TODO 12-hour format
-    row["messageTime"] = QDateTime::fromTime_t(qMax(message["date"].toInt(), message["edit_date"].toInt())).toString("hh:mm");
+    row["messageTime"] = QDateTime::fromTime_t(qMax(message["date"].toInt(), message["edit_date"].toInt())).toString("hh:mm dd.MM.yyyy");
     //TODO replies support
     row["messageText"] = message["message"].toString().isEmpty() ? "" : QString("<html>" + messageToHtml(message["message"].toString(), message["entities"].toList(), false, 0) + "</html>");
     if (GETID(message) == MessageService) {
