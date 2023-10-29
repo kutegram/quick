@@ -95,7 +95,7 @@ Rectangle {
             }
         }
 
-        onAuthSendCodeResponse: {
+        onAuthSentCodeResponse: {
             setAuthProgress(false);
 
             phonePage.phoneCodeHash = data["phone_code_hash"];
@@ -127,7 +127,7 @@ Rectangle {
             authStack.currentIndex = 2;
         }
 
-        onAuthSignInResponse: {
+        onAuthAuthorizationResponse: {
             setAuthProgress(false);
 
             if (data["_"] == 0x44747e9a) {
@@ -177,7 +177,7 @@ Rectangle {
             snackBar.text =  "2FA isn't supported now. You can disable 2FA, log in and enable it afterwards.";
         }
 
-        onHelpGetCountriesListResponse: {
+        onHelpCountriesListResponse: {
             //TODO country selector
         }
 

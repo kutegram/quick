@@ -139,7 +139,7 @@ void DialogsModel::setClient(QObject *client)
     if (!_client) return;
 
     connect(_client, SIGNAL(authorized(TgLongVariant)), this, SLOT(authorized(TgLongVariant)));
-    connect(_client, SIGNAL(messagesGetDialogsResponse(TgObject,TgLongVariant)), this, SLOT(messagesGetDialogsResponse(TgObject,TgLongVariant)));
+    connect(_client, SIGNAL(messagesDialogsResponse(TgObject,TgLongVariant)), this, SLOT(messagesGetDialogsResponse(TgObject,TgLongVariant)));
 }
 
 QObject* DialogsModel::client() const

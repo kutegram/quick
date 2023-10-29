@@ -58,7 +58,7 @@ void FoldersModel::setClient(QObject *client)
     if (!_client) return;
 
     connect(_client, SIGNAL(authorized(TgLongVariant)), this, SLOT(authorized(TgLongVariant)));
-    connect(_client, SIGNAL(messagesGetDialogFiltersResponse(TgVector,TgLongVariant)), this, SLOT(messagesGetDialogFiltersResponse(TgVector,TgLongVariant)));
+    connect(_client, SIGNAL(vectorDialogFilterResponse(TgVector,TgLongVariant)), this, SLOT(messagesGetDialogFiltersResponse(TgVector,TgLongVariant)));
 }
 
 QObject* FoldersModel::client() const

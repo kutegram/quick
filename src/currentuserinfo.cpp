@@ -29,7 +29,7 @@ void CurrentUserInfo::setClient(QObject *client)
     if (!_client) return;
 
     connect(_client, SIGNAL(authorized(TgLongVariant)), this, SLOT(authorized(TgLongVariant)));
-    connect(_client, SIGNAL(usersGetUsersResponse(TgVector,TgLongVariant)), this, SLOT(usersGetUsersResponse(TgVector,TgLongVariant)));
+    connect(_client, SIGNAL(vectorUserResponse(TgVector,TgLongVariant)), this, SLOT(usersGetUsersResponse(TgVector,TgLongVariant)));
 }
 
 QObject* CurrentUserInfo::client() const
