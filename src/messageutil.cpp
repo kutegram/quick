@@ -85,9 +85,9 @@ void getTags(TgObject entity, QString textPart, qint32 i, QString &sTag, QString
         sTag = "<s>";
         eTag = "</s>";
         break;
-    case MessageEntityBlockquote:
-        sTag = "<blockquote>";
-        eTag = "</blockquote>";
+    case MessageEntityBlockquote: //blockquote is strange too
+        sTag = "<code>";
+        eTag = "</code>";
         break;
     case MessageEntityBankCard:
         sTag = "<a href=\"kutegram://card/" + textPart + "\">";
