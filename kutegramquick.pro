@@ -54,23 +54,26 @@ symbian {
     DEPLOYMENT.installer_header = "$${LITERAL_HASH}{\"Kutegram Installer\"},(0xE5E0AFB2),$$PKG_VERSION"
 }
 
-SOURCES += main.cpp \
-    dialogsmodel.cpp \
-    messagesmodel.cpp \
-    messageeditor.cpp \
-    avatardownloader.cpp \
-    foldersmodel.cpp \
-    currentuserinfo.cpp \
-    messageutil.cpp
+INCLUDEPATH += src
+
+SOURCES +=  \
+	src/main.cpp \
+    src/dialogsmodel.cpp \
+    src/messagesmodel.cpp \
+    src/messageeditor.cpp \
+    src/avatardownloader.cpp \
+    src/foldersmodel.cpp \
+    src/currentuserinfo.cpp \
+    src/messageutil.cpp
 
 HEADERS += \
-    dialogsmodel.h \
-    messagesmodel.h \
-    messageeditor.h \
-    avatardownloader.h \
-    foldersmodel.h \
-    currentuserinfo.h \
-    messageutil.h
+    src/dialogsmodel.h \
+    src/messagesmodel.h \
+    src/messageeditor.h \
+    src/avatardownloader.h \
+    src/foldersmodel.h \
+    src/currentuserinfo.h \
+    src/messageutil.h
 
 OTHER_FILES += \
     qtc_packaging/debian_harmattan/rules \
