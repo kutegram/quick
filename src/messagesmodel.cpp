@@ -596,8 +596,11 @@ void MessagesModel::linkActivated(QString link, qint32 listIndex)
 
             emit dataChanged(index(listIndex), index(listIndex));
         }
+    } else if (url.scheme().isEmpty()) {
+        openUrl("http://" + link);
+    } else {
+        openUrl(link);
     }
-    else openUrl(link);
 }
 
 void MessagesModel::openUrl(QString url)
