@@ -79,5 +79,9 @@
         <file>img/filters/unread.png</file>
         <file>img/filters/work.png</file>
         <file>img/filters/light.png</file>
+        <file>qml/control/ImageViewer.qml</file>
+        <file>img/magnify-minus-outline.png</file>
+        <file>img/magnify-plus-outline.png</file>
+        <file>img/fullscreen.png</file>
     </qresource>
 </RCC>

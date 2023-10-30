@@ -372,6 +372,11 @@ Rectangle {
         }
     }
 
+    ImageViewer {
+        id: imageViewer
+        anchors.fill: parent
+    }
+
     SnackBar {
         id: snackBar
         anchors.left: parent.left

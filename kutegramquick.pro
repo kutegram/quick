@@ -101,7 +101,8 @@ OTHER_FILES += \
     qml/message/MessageImage.qml \
     qml/message/MessageItem.qml \
     qml/message/MessagePage.qml \
-    qml/control/SnackBar.qml
+    qml/control/SnackBar.qml \
+    qml/control/ImageViewer.qml
 
 RESOURCES += \
     resources.qrc
