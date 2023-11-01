@@ -10,8 +10,10 @@ AvatarDownloader::AvatarDownloader(QObject *parent)
      , _mutex(QMutex::Recursive)
      , _client(0)
      , _userId(0)
-     , _requests()
+     , _requestsAvatars()
+     , _requestsPhotos()
      , _downloadedAvatars()
+     , _downloadedPhotos()
 {
 }
 
@@ -23,6 +25,7 @@ void AvatarDownloader::saveDatabase()
 
     QSettings settings(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), QCoreApplication::applicationName() + "_avatars");
     settings.setValue("DownloadedAvatars", _downloadedAvatars);
+    settings.setValue("DownloadedPhotos", _downloadedPhotos);
 }
 
 void AvatarDownloader::readDatabase()
@@ -33,6 +36,7 @@ void AvatarDownloader::readDatabase()
 
     QSettings settings(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), QCoreApplication::applicationName() + "_avatars");
     _downloadedAvatars = settings.value("DownloadedAvatars").toList();
+    _downloadedPhotos = settings.value("DownloadedPhotos").toList();
 }
 
 void AvatarDownloader::setClient(QObject *client)
@@ -47,12 +51,14 @@ void AvatarDownloader::setClient(QObject *client)
     _client = dynamic_cast<TgClient*>(client);
     _userId = _client->getUserId();
 
-    _requests.clear();
+    _requestsAvatars.clear();
+    _requestsPhotos.clear();
     readDatabase();
 
     if (!_client) return;
 
     _client->sessionDirectory().mkdir("Kutegram_avatars");
+    _client->sessionDirectory().mkdir("Kutegram_photos");
 
     connect(_client, SIGNAL(authorized(TgLongVariant)), this, SLOT(authorized(TgLongVariant)));
     connect(_client, SIGNAL(fileDownloaded(TgLongVariant,QString)), this, SLOT(fileDownloaded(TgLongVariant,QString)));
@@ -64,7 +70,8 @@ void AvatarDownloader::authorized(TgLongVariant userId)
     QMutexLocker lock(&_mutex);
 
     if (_userId != userId) {
-        _requests.clear();
+        _requestsAvatars.clear();
+        _requestsPhotos.clear();
         _userId = userId;
     }
 }
@@ -72,6 +79,33 @@ void AvatarDownloader::authorized(TgLongVariant userId)
 QObject* AvatarDownloader::client() const
 {
     return _client;
+}
+
+qint64 AvatarDownloader::downloadPhoto(TgObject photo)
+{
+    QMutexLocker lock(&_mutex);
+
+    if (!_client || !_client->isAuthorized() || GETID(photo) == 0) {
+        return 0;
+    }
+
+    qint64 photoId = photo["id"].toLongLong();
+
+    QString relativePath = "Kutegram_photos/" + QString::number(photoId) + ".jpg";
+    QString avatarFilePath = _client->sessionDirectory().absoluteFilePath(relativePath);
+
+    if (!_downloadedPhotos.contains(photoId)) {
+        qint64 loadingId = _client->downloadFile(avatarFilePath, photo).toLongLong();
+        _requestsPhotos[loadingId] = photoId;
+    } else {
+#if QT_VERSION >= 0x050000
+        emit photoDownloaded(photoId, "file:///" + avatarFilePath);
+#else
+        emit photoDownloaded(photoId, avatarFilePath);
+#endif
+    }
+
+    return photoId;
 }
 
 qint64 AvatarDownloader::downloadAvatar(TgObject peer)
@@ -94,7 +128,7 @@ qint64 AvatarDownloader::downloadAvatar(TgObject peer)
 
     if (!_downloadedAvatars.contains(photoId)) {
         qint64 loadingId = _client->downloadFile(avatarFilePath, peer).toLongLong();
-        _requests[loadingId] = photoId;
+        _requestsAvatars[loadingId] = photoId;
     } else {
 #if QT_VERSION >= 0x050000
         emit avatarDownloaded(photoId, "file:///" + avatarFilePath + ".png");
@@ -110,44 +144,55 @@ void AvatarDownloader::fileDownloaded(TgLongVariant fileId, QString filePath)
 {
     QMutexLocker lock(&_mutex);
 
-    TgLongVariant photoId = _requests.take(fileId.toLongLong());
+    TgLongVariant photoId = _requestsAvatars.take(fileId.toLongLong());
+    if (!photoId.isNull()) {
+        QFile file(filePath);
+        if (!file.open(QFile::ReadOnly)) {
+            return;
+        }
 
-    if (photoId.isNull()) {
+        QImage roundedImage(160, 160, QImage::Format_ARGB32);
+        roundedImage.fill(Qt::transparent);
+        QPainter painter(&roundedImage);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setBrush(QBrush(QImage::fromData(file.readAll())));
+        painter.setPen(Qt::transparent);
+        file.close();
+        painter.drawRoundedRect(0, 0, 160, 160, 80, 80);
+        filePath += ".png";
+        if (!roundedImage.save(filePath)) {
+            return;
+        }
+
+        _downloadedAvatars.append(photoId);
+        saveDatabase();
+    #if QT_VERSION >= 0x050000
+        emit avatarDownloaded(photoId, "file:///" + filePath);
+    #else
+        emit avatarDownloaded(photoId, filePath);
+    #endif
         return;
     }
 
-    QFile file(filePath);
-    if (!file.open(QFile::ReadOnly)) {
+    photoId = _requestsPhotos.take(fileId.toLongLong());
+    if (!photoId.isNull()) {
+        _downloadedPhotos.append(photoId);
+        saveDatabase();
+    #if QT_VERSION >= 0x050000
+        emit photoDownloaded(photoId, "file:///" + filePath);
+    #else
+        emit photoDownloaded(photoId, filePath);
+    #endif
         return;
     }
-
-    QImage roundedImage(160, 160, QImage::Format_ARGB32);
-    roundedImage.fill(Qt::transparent);
-    QPainter painter(&roundedImage);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setBrush(QBrush(QImage::fromData(file.readAll())));
-    painter.setPen(Qt::transparent);
-    file.close();
-    painter.drawRoundedRect(0, 0, 160, 160, 80, 80);
-    filePath += ".png";
-    if (!roundedImage.save(filePath)) {
-        return;
-    }
-
-    _downloadedAvatars.append(photoId);
-    saveDatabase();
-#if QT_VERSION >= 0x050000
-    emit avatarDownloaded(photoId, "file:///" + filePath);
-#else
-    emit avatarDownloaded(photoId, filePath);
-#endif
 }
 
 void AvatarDownloader::fileDownloadCanceled(TgLongVariant fileId, QString filePath)
 {
     QMutexLocker lock(&_mutex);
 
-    _requests.remove(fileId.toLongLong());
+    _requestsAvatars.remove(fileId.toLongLong());
+    _requestsPhotos.remove(fileId.toLongLong());
 }
 
 QString AvatarDownloader::getAvatarText(QString title)

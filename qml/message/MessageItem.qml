@@ -166,27 +166,11 @@ Item {
             }
         }
 
-        ListView {
-            id: imagesListView
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 100 * kgScaling
-            //TODO: think about this value
-            cacheBuffer: 20000
-            spacing: 5
-            orientation: ListView.Horizontal
-            snapMode: ListView.SnapOneItem
-            highlightRangeMode: ListView.StrictlyEnforceRange
-            highlightFollowsCurrentItem: true
-            highlightMoveDuration: 200
-            clip: true
-
-            property variant images: ["../../img/beautiful_landscape_4k.jpg"]
-
-            model: imagesListView.images.length
-            delegate: MessageImage {
+        Repeater {
+            model: hasPhoto
+            MessageImage {
                 state: currentState
-                image: imagesListView.images[index]
+                image: photoFile
             }
         }
 

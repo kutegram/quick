@@ -61,6 +61,8 @@ QHash<int, QByteArray> MessagesModel::roleNames() const
     roles[MessageIdRole] = "messageId";
     roles[ForwardedFromRole] = "forwardedFrom";
     roles[MediaUrlRole] = "mediaUrl";
+    roles[PhotoFileRole] = "photoFile";
+    roles[HasPhotoRole] = "hasPhoto";
 
     return roles;
 }
@@ -120,6 +122,7 @@ void MessagesModel::setAvatarDownloader(QObject *avatarDownloader)
     if (!_avatarDownloader) return;
 
     connect(_avatarDownloader, SIGNAL(avatarDownloaded(TgLongVariant,QString)), this, SLOT(avatarDownloaded(TgLongVariant,QString)));
+    connect(_avatarDownloader, SIGNAL(photoDownloaded(TgLongVariant,QString)), this, SLOT(photoDownloaded(TgLongVariant,QString)));
 }
 
 QObject* MessagesModel::avatarDownloader() const
@@ -378,6 +381,11 @@ void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant me
         for (qint32 i = 0; i < chats.size(); ++i) {
             _avatarDownloader->downloadAvatar(chats[i].toMap());
         }
+        for (qint32 i = 0; i < messages.size(); ++i) {
+            TgObject photo = messages[i].toMap()["media"].toMap()["photo"].toMap();
+            if (photo["id"].toLongLong() != 0)
+                _avatarDownloader->downloadPhoto(photo);
+        }
     }
 }
 
@@ -445,17 +453,19 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
     row["photoId"] = sender["photo"].toMap()["photo_id"];
 
     TgObject media = message["media"].toMap();
-    row["hasMedia"] = GETID(media) != 0 ? 1 : 0;
+    row["hasMedia"] = GETID(media) != 0;
     row["mediaDownloadable"] = false;
 
     row["mediaUrl"] = "";
     switch (GETID(media)) {
-    //TODO image viewer and preview
     case MessageMediaPhoto:
-        row["mediaImage"] = "../../img/media/image.png";
-        row["mediaTitle"] = "Image";
-        row["mediaText"] = "no preview";
+    {
+        row["hasMedia"] = false;
+        row["photoFile"] = "";
+        row["photoFileId"] = media["photo"].toMap()["id"].toLongLong();
+        row["hasPhoto"] = row["photoFileId"].toLongLong() != 0;
         break;
+    }
     case MessageMediaContact:
     {
         row["mediaImage"] = "../../img/media/account.png";
@@ -620,6 +630,24 @@ void MessagesModel::avatarDownloaded(TgLongVariant photoId, QString filePath)
         }
 
         message["avatar"] = filePath;
+        _history[i] = message;
+
+        emit dataChanged(index(i), index(i));
+    }
+}
+
+void MessagesModel::photoDownloaded(TgLongVariant photoId, QString filePath)
+{
+    QMutexLocker lock(&_mutex);
+
+    for (qint32 i = 0; i < _history.size(); ++i) {
+        TgObject message = _history[i];
+
+        if (message["photoFileId"] != photoId) {
+            continue;
+        }
+
+        message["photoFile"] = filePath;
         _history[i] = message;
 
         emit dataChanged(index(i), index(i));

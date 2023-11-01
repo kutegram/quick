@@ -3,12 +3,15 @@ import QtQuick 1.0
 Image {
     property url image
 
-    height: ListView.view.height
-    width: height
+    //TODO use photo size
+    height: 100 * kgScaling
+    width: 100 * kgScaling
     source: image
     clip: true
     asynchronous: true
-    fillMode: Image.PreserveAspectCrop
+    fillMode: Image.PreserveAspectFit
+
+    //TODO loading spinner
 
     Image {
         id: checkbox
@@ -20,6 +23,14 @@ Image {
         x: 5 * kgScaling
         y: 5 * kgScaling
         asynchronous: true
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            imageViewer.imageSource = image;
+            imageViewer.state = "OPENED";
+        }
     }
 
     transitions: [

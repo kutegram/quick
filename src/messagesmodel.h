@@ -51,7 +51,9 @@ private:
         MediaDownloadableRole,
         MessageIdRole,
         ForwardedFromRole,
-        MediaUrlRole
+        MediaUrlRole,
+        PhotoFileRole,
+        HasPhotoRole
     };
 
 public:
@@ -85,6 +87,7 @@ public slots:
     void authorized(TgLongVariant userId);
     void messagesGetHistoryResponse(TgObject data, TgLongVariant messageId);
     void avatarDownloaded(TgLongVariant photoId, QString filePath);
+    void photoDownloaded(TgLongVariant photoId, QString filePath);
 
     void fileDownloaded(TgLongVariant fileId, QString filePath);
     void fileDownloadCanceled(TgLongVariant fileId, QString filePath);

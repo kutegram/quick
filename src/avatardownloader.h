@@ -17,8 +17,10 @@ private:
     QMutex _mutex;
     TgClient* _client;
     TgLongVariant _userId;
-    QHash<qint64, TgLongVariant> _requests;
+    QHash<qint64, TgLongVariant> _requestsAvatars;
+    QHash<qint64, TgLongVariant> _requestsPhotos;
     TgList _downloadedAvatars;
+    TgList _downloadedPhotos;
 
 public:
     explicit AvatarDownloader(QObject *parent = 0);
@@ -30,6 +32,7 @@ public:
 
 signals:
     void avatarDownloaded(TgLongVariant photoId, QString filePath);
+    void photoDownloaded(TgLongVariant photoId, QString filePath);
 
 public slots:
     void authorized(TgLongVariant userId);
@@ -37,6 +40,7 @@ public slots:
     void fileDownloadCanceled(TgLongVariant fileId, QString filePath);
 
     qint64 downloadAvatar(TgObject peer);
+    qint64 downloadPhoto(TgObject photo);
 
     static QString getAvatarText(QString title);
     static QColor userColor(TgLongVariant id);

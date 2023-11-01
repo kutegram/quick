@@ -6,7 +6,9 @@ Item {
 
     visible: opacity != 0
 
-    state: "OPENED"
+    //TODO loading spinner
+
+    state: "CLOSED"
     states: [
         State {
             name: "OPENED"
