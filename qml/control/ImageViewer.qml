@@ -2,13 +2,17 @@ import QtQuick 1.0
 
 Item {
     id: imageViewer
-    property int scaling: Math.min(100, Math.min(Math.floor(imageViewer.width / innerImage.sourceSize.width * 100), Math.floor(imageViewer.height / innerImage.sourceSize.height * 100)))
 
-    visible: opacity != 0
+    property int scaling: Math.min(100, Math.min(Math.floor(imageViewer.width / innerImage.sourceSize.width * 100), Math.floor(imageViewer.height / innerImage.sourceSize.height * 100)))
+    property url imageSource
+    onImageSourceChanged: {
+        scaling = Math.min(100, Math.min(Math.floor(imageViewer.width / innerImage.sourceSize.width * 100), Math.floor(imageViewer.height / innerImage.sourceSize.height * 100)))
+    }
 
     //TODO loading spinner
 
     state: "CLOSED"
+    visible: opacity != 0
     states: [
         State {
             name: "OPENED"
@@ -31,8 +35,6 @@ Item {
             easing.type: Easing.InOutQuad
         }
     }
-
-    property url imageSource
 
     onWidthChanged: {
         changeTimer.restart();
