@@ -1,5 +1,8 @@
 #include "avatardownloader.h"
 
+#include <QImage>
+#include <QPainter>
+#include <QBrush>
 #include <QCoreApplication>
 
 AvatarDownloader::AvatarDownloader(QObject *parent)
@@ -49,7 +52,7 @@ void AvatarDownloader::setClient(QObject *client)
 
     if (!_client) return;
 
-    _client->cacheDirectory().mkdir("avatars");
+    _client->sessionDirectory().mkdir("Kutegram_avatars");
 
     connect(_client, SIGNAL(authorized(TgLongVariant)), this, SLOT(authorized(TgLongVariant)));
     connect(_client, SIGNAL(fileDownloaded(TgLongVariant,QString)), this, SLOT(fileDownloaded(TgLongVariant,QString)));
@@ -86,17 +89,17 @@ qint64 AvatarDownloader::downloadAvatar(TgObject peer)
 
     qint64 photoId = photo["photo_id"].toLongLong();
 
-    QString relativePath = "avatars/" + QString::number(photoId) + ".jpg";
-    QString avatarFilePath = _client->cacheDirectory().absoluteFilePath(relativePath);
+    QString relativePath = "Kutegram_avatars/" + QString::number(photoId) + ".jpg";
+    QString avatarFilePath = _client->sessionDirectory().absoluteFilePath(relativePath);
 
     if (!_downloadedAvatars.contains(photoId)) {
         qint64 loadingId = _client->downloadFile(avatarFilePath, peer).toLongLong();
         _requests[loadingId] = photoId;
     } else {
 #if QT_VERSION >= 0x050000
-        emit avatarDownloaded(photoId, "file:///" + avatarFilePath);
+        emit avatarDownloaded(photoId, "file:///" + avatarFilePath + ".png");
 #else
-        emit avatarDownloaded(photoId, avatarFilePath);
+        emit avatarDownloaded(photoId, avatarFilePath + ".png");
 #endif
     }
 
@@ -107,9 +110,27 @@ void AvatarDownloader::fileDownloaded(TgLongVariant fileId, QString filePath)
 {
     QMutexLocker lock(&_mutex);
 
-    TgLongVariant photoId = _requests[fileId.toLongLong()];
+    TgLongVariant photoId = _requests.take(fileId.toLongLong());
 
     if (photoId.isNull()) {
+        return;
+    }
+
+    QFile file(filePath);
+    if (!file.open(QFile::ReadOnly)) {
+        return;
+    }
+
+    QImage roundedImage(160, 160, QImage::Format_ARGB32);
+    roundedImage.fill(Qt::transparent);
+    QPainter painter(&roundedImage);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setBrush(QBrush(QImage::fromData(file.readAll())));
+    painter.setPen(Qt::transparent);
+    file.close();
+    painter.drawRoundedRect(0, 0, 160, 160, 80, 80);
+    filePath += ".png";
+    if (!roundedImage.save(filePath)) {
         return;
     }
 

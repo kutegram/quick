@@ -72,6 +72,7 @@ Item {
         smooth: true
 
         color: thumbnailColor
+        radius: width / 2
 
         Text {
             anchors.fill: parent
@@ -165,41 +166,29 @@ Item {
             }
         }
 
-//        ListView {
-//            anchors.left: parent.left
-//            anchors.right: parent.right
-//            height: 100 * kgScaling
-//            //TODO: think about this value
-//            cacheBuffer: 20000
-//            spacing: 5
-//            orientation: ListView.Horizontal
-//            snapMode: ListView.SnapOneItem
-//            highlightRangeMode: ListView.StrictlyEnforceRange
-//            highlightFollowsCurrentItem: true
-//            highlightMoveDuration: 200
-//            clip: true
+        ListView {
+            id: imagesListView
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 100 * kgScaling
+            //TODO: think about this value
+            cacheBuffer: 20000
+            spacing: 5
+            orientation: ListView.Horizontal
+            snapMode: ListView.SnapOneItem
+            highlightRangeMode: ListView.StrictlyEnforceRange
+            highlightFollowsCurrentItem: true
+            highlightMoveDuration: 200
+            clip: true
 
-//            model: ListModel {
-////                ListElement {
-////                    image: "../../img/test/1.jpg"
-////                }
-////                ListElement {
-////                    image: "../../img/test/2.jpg"
-////                }
-////                ListElement {
-////                    image: "../../img/test/3.jpg"
-////                }
-////                ListElement {
-////                    image: "../../img/test/4.jpg"
-////                }
-////                ListElement {
-////                    image: "../../img/test/5.jpg"
-////                }
-//            }
-//            delegate: MessageImage {
-//                state: currentState
-//            }
-//        }
+            property variant images: ["../../img/beautiful_landscape_4k.jpg"]
+
+            model: imagesListView.images.length
+            delegate: MessageImage {
+                state: currentState
+                image: imagesListView.images[index]
+            }
+        }
 
         Repeater {
             model: hasMedia

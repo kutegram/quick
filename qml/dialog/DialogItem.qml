@@ -42,6 +42,7 @@ Item {
         smooth: true
 
         color: thumbnailColor
+        radius: width / 2
 
         Text {
             anchors.fill: parent

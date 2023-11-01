@@ -144,6 +144,7 @@ Item {
                             smooth: true
 
                             color: peerThumbnailColor
+                            radius: width / 2
 
                             Text {
                                 anchors.fill: parent

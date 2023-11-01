@@ -30,7 +30,7 @@ Item {
         }
     }
 
-    property url imageSource: "../../img/beautiful_landscape_4k.jpg"
+    property url imageSource
 
     onWidthChanged: {
         changeTimer.restart();

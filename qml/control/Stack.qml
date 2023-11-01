@@ -16,6 +16,7 @@ Item {
         highlightRangeMode: ListView.StrictlyEnforceRange
         highlightFollowsCurrentItem: true
         highlightMoveDuration: 200
+        cacheBuffer: parent.width * 3
         model: VisualItemModel {
             id: visualModel
         }

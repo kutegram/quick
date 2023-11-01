@@ -1,6 +1,8 @@
 import QtQuick 1.0
 
 Image {
+    property url image
+
     height: ListView.view.height
     width: height
     source: image
