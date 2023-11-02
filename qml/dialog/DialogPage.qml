@@ -48,6 +48,8 @@ Rectangle {
             cacheBuffer: pageRoot.height / 6
             focus: true
 
+            boundsBehavior: Flickable.StopAtBounds
+
 //            highlight: Rectangle {
 //                width: folderSlide.width
 //                height: 40 * kgScaling

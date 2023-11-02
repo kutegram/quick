@@ -12,6 +12,8 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: messageEdit.top
 
+        boundsBehavior: Flickable.StopAtBounds
+
         //TODO fix Binding loop message
         height: Math.min(parent.height - messageEdit.height, childrenRect.height)
 

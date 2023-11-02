@@ -281,7 +281,7 @@ void MessagesModel::handleHistoryResponse(TgObject data, TgLongVariant messageId
     }
 
     qint32 newOffset = messages.first().toMap()["id"].toInt();
-    if (_downOffset != newOffset) {
+    if (_downOffset != newOffset && messages.size() == 20) {
         _downOffset = newOffset;
     } else {
         _downOffset = -1;
@@ -351,7 +351,7 @@ void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant me
 
     qint32 oldOffset = _upOffset;
     qint32 newOffset = messages.last().toMap()["id"].toInt();
-    if (_upOffset != newOffset) {
+    if (_upOffset != newOffset && messages.size() == 20) {
         _upOffset = newOffset;
     } else {
         _upOffset = -1;
