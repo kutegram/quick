@@ -3,12 +3,11 @@ import QtQuick 1.0
 Image {
     property url image
 
-    //TODO use photo size
-    height: 100 * kgScaling
-    width: 100 * kgScaling
+    height: sourceSize.height * width / sourceSize.width
     source: image
     clip: true
     asynchronous: true
+    smooth: true
     fillMode: Image.PreserveAspectFit
 
     //TODO loading spinner
