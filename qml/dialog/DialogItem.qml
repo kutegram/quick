@@ -6,7 +6,6 @@ Item {
 
     function openDialog() {
         messagePage.messagesModel.peer = peerBytes;
-        messagePage.messageEdit.peer = peerBytes;
         topBar.peerTitle = title;
         topBar.peerThumbnailColor = thumbnailColor;
         topBar.peerThumbnailText = thumbnailText;

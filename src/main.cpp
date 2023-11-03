@@ -9,7 +9,6 @@
 #include "tgclient.h"
 #include "dialogsmodel.h"
 #include "messagesmodel.h"
-#include "messageeditor.h"
 #include "systemname.h"
 #include "avatardownloader.h"
 #include "foldersmodel.h"
@@ -67,7 +66,6 @@ int main(int argc, char *argv[])
     TgClient::registerQML();
     qmlRegisterType<DialogsModel>("Kutegram", 1, 0, "DialogsModel");
     qmlRegisterType<MessagesModel>("Kutegram", 1, 0, "MessagesModel");
-    qmlRegisterType<MessageEditor>("Kutegram", 1, 0, "MessageEditor");
     qmlRegisterType<AvatarDownloader>("Kutegram", 1, 0, "AvatarDownloader");
     qmlRegisterType<FoldersModel>("Kutegram", 1, 0, "FoldersModel");
     qmlRegisterType<CurrentUserInfo>("Kutegram", 1, 0, "CurrentUserInfo");

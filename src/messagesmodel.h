@@ -34,6 +34,10 @@ private:
 
     QHash<qint64, TgVariant> _downloadRequests;
 
+    TgLongVariant _uploadId;
+    QMap<TgLongVariant, QString> _sentMessages;
+    TgObject _media;
+
     enum MessageRoles {
         PeerNameRole = Qt::UserRole + 1,
         MessageTextRole,
@@ -82,6 +86,9 @@ public:
 signals:
     void scrollTo(qint32 index);
     void downloadUpdated(qint32 messageId, qint32 state, QString filePath);
+    void draftChanged(QString draft);
+    void uploadingProgress(qint32 progress);
+    void scrollForNew();
 
 public slots:
     void authorized(TgLongVariant userId);
@@ -91,6 +98,17 @@ public slots:
 
     void fileDownloaded(TgLongVariant fileId, QString filePath);
     void fileDownloadCanceled(TgLongVariant fileId, QString filePath);
+
+    void fileUploading(TgLongVariant fileId, TgLongVariant processedLength, TgLongVariant totalLength, qint32 progressPercentage);
+    void fileUploaded(TgLongVariant fileId, TgObject inputFile);
+    void fileUploadCanceled(TgLongVariant fileId);
+
+    void sendMessage(QString message);
+    void uploadFile();
+    void cancelUpload();
+
+    void gotMessageUpdate(TgObject update, TgLongVariant messageId);
+    void gotUpdate(TgObject update, TgLongVariant messageId, TgList users, TgList chats, qint32 date, qint32 seq, qint32 seqStart);
 
     bool canFetchMoreDownwards() const;
     void fetchMoreDownwards();

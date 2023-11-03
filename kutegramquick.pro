@@ -60,7 +60,6 @@ SOURCES +=  \
 	src/main.cpp \
     src/dialogsmodel.cpp \
     src/messagesmodel.cpp \
-    src/messageeditor.cpp \
     src/avatardownloader.cpp \
     src/foldersmodel.cpp \
     src/currentuserinfo.cpp \
@@ -69,7 +68,6 @@ SOURCES +=  \
 HEADERS += \
     src/dialogsmodel.h \
     src/messagesmodel.h \
-    src/messageeditor.h \
     src/avatardownloader.h \
     src/foldersmodel.h \
     src/currentuserinfo.h \
@@ -108,6 +106,8 @@ RESOURCES += \
     resources.qrc
 
 include(libkg/libkg.pri)
+
+include(pigler/qt-library/library.pri)
 
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
 qtcAddDeployment()

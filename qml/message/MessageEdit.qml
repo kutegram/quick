@@ -8,25 +8,15 @@ Rectangle {
     color: "#FFFFFF"
     id: editRoot
 
-    property alias peer: messageEditor.peer
     property alias messageText: innerEdit.text
 
-    MessageEditor {
-        id: messageEditor
-        client: telegramClient
-
-        onDraftChanged: {
-            messageText = draft;
-        }
-
-        onUploadingProgress: {
-            if (progress != -1 && progress != 100) {
-                attachButton.state = "UPLOADING";
-                uploadBar.width = progress * editRoot.width / 100;
-            } else {
-                attachButton.state = progress != 100 ? "NOT_UPLOADING" : "UPLOADED";
-                uploadBar.width = 0;
-            }
+    function uploadingProgress(progress) {
+        if (progress != -1 && progress != 100) {
+            attachButton.state = "UPLOADING";
+            uploadBar.width = progress * editRoot.width / 100;
+        } else {
+            attachButton.state = progress != 100 ? "NOT_UPLOADING" : "UPLOADED";
+            uploadBar.width = 0;
         }
     }
 
@@ -46,9 +36,9 @@ Rectangle {
             anchors.fill: parent
             onClicked: {
                 if (attachButton.state == "NOT_UPLOADING") {
-                    messageEditor.uploadFile();
+                    messagesModel.uploadFile();
                 } else {
-                    messageEditor.cancelUpload();
+                    messagesModel.cancelUpload();
                 }
             }
         }
@@ -168,7 +158,7 @@ Rectangle {
             anchors.fill: parent
             onClicked: {
                 if (sendButton.state == "NOT_EMPTY") {
-                    messageEditor.sendMessage(messageText);
+                    messagesModel.sendMessage(messageText);
                     messageText = "";
                 }
             }

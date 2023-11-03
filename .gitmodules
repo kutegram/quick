@@ -1,3 +1,6 @@
 [submodule "libkg"]
 	path = libkg
 	url = https://github.com/kutegram/libkg
+[submodule "pigler"]
+	path = pigler
+	url = https://github.com/piglerorg/pigler.git

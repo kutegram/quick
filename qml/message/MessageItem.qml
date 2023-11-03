@@ -6,7 +6,7 @@ Item {
 
     id: messageRoot
     width: ListView.view.width
-    height: textContainer.height
+    height: Math.max(textContainer.height, avatarImage.height) + 6 * kgScaling
     state: "NO_SELECT"
 
     states: [
@@ -54,7 +54,7 @@ Item {
         width: 20 * kgScaling
         height: width
         x: 5 * kgScaling
-        y: 5 * kgScaling
+        y: 3 * kgScaling
         asynchronous: true
     }
 
@@ -63,12 +63,12 @@ Item {
         visible: !mergeMessage && !isChannel && (avatar.length == 0 || avatarImage.status != Image.Ready)
 
         anchors.top: parent.top
-        anchors.topMargin: 5 * kgScaling
+        anchors.topMargin: 3 * kgScaling
         anchors.left: checkbox.right
         anchors.leftMargin: (isChannel ? -35 : 5) * kgScaling
 
         width: 30 * kgScaling
-        height: width
+        height: visible ? width : 0
         smooth: true
 
         color: thumbnailColor
@@ -89,12 +89,12 @@ Item {
         visible: !mergeMessage && !isChannel && avatar.length != 0
 
         anchors.top: parent.top
-        anchors.topMargin: 5 * kgScaling
+        anchors.topMargin: 3 * kgScaling
         anchors.left: checkbox.right
         anchors.leftMargin: (isChannel ? -35 : 5) * kgScaling
 
         width: 30 * kgScaling
-        height: width
+        height: visible ? width : 0
         smooth: true
 
         asynchronous: true
@@ -106,7 +106,7 @@ Item {
         anchors.top: parent.top
         anchors.left: messageAvatar.right
         anchors.right: parent.right
-        anchors.topMargin: 5 * kgScaling
+        anchors.topMargin: 3 * kgScaling
         anchors.leftMargin: 5 * kgScaling
         anchors.rightMargin: 5 * kgScaling
         spacing: 2 * kgScaling
@@ -186,4 +186,10 @@ Item {
             }
         }
     }
+
+//    Rectangle {
+//        id: debugRectangle
+//        anchors.fill: parent
+//        color: Qt.hsla((messageId % 37) / 36, 0.5, 0.5, 0.8)
+//    }
 }

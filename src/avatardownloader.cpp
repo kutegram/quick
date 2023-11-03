@@ -23,7 +23,7 @@ void AvatarDownloader::saveDatabase()
         return;
     }
 
-    QSettings settings(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), QCoreApplication::applicationName() + "_avatars");
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), QCoreApplication::applicationName() + "_cache");
     settings.setValue("DownloadedAvatars", _downloadedAvatars);
     settings.setValue("DownloadedPhotos", _downloadedPhotos);
 }
@@ -34,7 +34,7 @@ void AvatarDownloader::readDatabase()
         return;
     }
 
-    QSettings settings(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), QCoreApplication::applicationName() + "_avatars");
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), QCoreApplication::applicationName() + "_cache");
     _downloadedAvatars = settings.value("DownloadedAvatars").toList();
     _downloadedPhotos = settings.value("DownloadedPhotos").toList();
 }

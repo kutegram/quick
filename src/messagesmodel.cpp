@@ -17,6 +17,10 @@
 
 using namespace TLType;
 
+//TODO use SQLite
+TgList _globalUsers;
+TgList _globalChats;
+
 MessagesModel::MessagesModel(QObject *parent)
     : QAbstractListModel(parent)
     , _mutex(QMutex::Recursive)
@@ -31,6 +35,9 @@ MessagesModel::MessagesModel(QObject *parent)
     , _downOffset(0)
     , _avatarDownloader(0)
     , _downloadRequests()
+    , _uploadId(0)
+    , _sentMessages()
+    , _media()
 {
 #if QT_VERSION < 0x050000
     setRoleNames(roleNames());
@@ -95,6 +102,7 @@ void MessagesModel::setClient(QObject *client)
     _userId = 0;
 
     resetState();
+    cancelUpload();
 
     if (!_client) return;
 
@@ -102,6 +110,11 @@ void MessagesModel::setClient(QObject *client)
     connect(_client, SIGNAL(messagesMessagesResponse(TgObject,TgLongVariant)), this, SLOT(messagesGetHistoryResponse(TgObject,TgLongVariant)));
     connect(_client, SIGNAL(fileDownloaded(TgLongVariant,QString)), this, SLOT(fileDownloaded(TgLongVariant,QString)));
     connect(_client, SIGNAL(fileDownloadCanceled(TgLongVariant,QString)), this, SLOT(fileDownloadCanceled(TgLongVariant,QString)));
+    connect(_client, SIGNAL(gotMessageUpdate(TgObject,TgLongVariant)), this, SLOT(gotMessageUpdate(TgObject,TgLongVariant)));
+    connect(_client, SIGNAL(gotUpdate(TgObject,TgLongVariant,TgList,TgList,qint32,qint32,qint32)), this, SLOT(gotUpdate(TgObject,TgLongVariant,TgList,TgList,qint32,qint32,qint32)));
+    connect(_client, SIGNAL(fileUploading(TgLongVariant,TgLongVariant,TgLongVariant,qint32)), this, SLOT(fileUploading(TgLongVariant,TgLongVariant,TgLongVariant,qint32)));
+    connect(_client, SIGNAL(fileUploaded(TgLongVariant,TgObject)), this, SLOT(fileUploaded(TgLongVariant,TgObject)));
+    connect(_client, SIGNAL(fileUploadCanceled(TgLongVariant)), this, SLOT(fileUploadCanceled(TgLongVariant)));
 }
 
 QObject* MessagesModel::client() const
@@ -139,6 +152,7 @@ void MessagesModel::setPeer(QByteArray bytes)
 
     _peer = qDeserialize(bytes).toMap();
     _inputPeer = TgClient::toInputPeer(_peer);
+    cancelUpload();
 
     _upOffset = _downOffset = qMax(_peer["read_inbox_max_id"].toInt(), _peer["read_outbox_max_id"].toInt());
     fetchMoreUpwards();
@@ -218,6 +232,7 @@ void MessagesModel::authorized(TgLongVariant userId)
 
     if (_userId != userId) {
         resetState();
+        cancelUpload();
         _downloadRequests.clear();
         _userId = userId;
     }
@@ -245,6 +260,9 @@ void MessagesModel::handleHistoryResponse(TgObject data, TgLongVariant messageId
     TgList messages = data["messages"].toList();
     TgList chats = data["chats"].toList();
     TgList users = data["users"].toList();
+
+    _globalUsers.append(users);
+    _globalChats.append(chats);
 
     if (messages.isEmpty()) {
         _downOffset = -1;
@@ -312,6 +330,9 @@ void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant me
     TgList messages = data["messages"].toList();
     TgList chats = data["chats"].toList();
     TgList users = data["users"].toList();
+
+    _globalUsers.append(users);
+    _globalChats.append(chats);
 
     if (messages.isEmpty()) {
         _upOffset = -1;
@@ -747,3 +768,229 @@ void MessagesModel::fileDownloadCanceled(TgLongVariant fileId, QString filePath)
     emit downloadUpdated(messageId.toInt(), -1, "");
 }
 
+void MessagesModel::gotMessageUpdate(TgObject update, TgLongVariant messageId)
+{
+    QMutexLocker lock(&_mutex);
+
+    if (_downOffset != -1) {
+        return;
+    }
+
+    TgObject peerId;
+    TgObject fromId;
+    qint64 fromIdNumeric;
+
+    if (_sentMessages.contains(messageId)) {
+        if (TgClient::isChannel(_peer)) {
+            ID_PROPERTY(peerId) = TLType::PeerChannel;
+            peerId["channel_id"] = TgClient::getPeerId(_peer);
+        } else if (TgClient::isChat(_peer)) {
+            ID_PROPERTY(peerId) = TLType::PeerChat;
+            peerId["chat_id"] = TgClient::getPeerId(_peer);
+        } else {
+            ID_PROPERTY(peerId) = TLType::PeerUser;
+            peerId["user_id"] = TgClient::getPeerId(_peer);
+        }
+
+        update["message"] = _sentMessages.take(messageId);
+
+        fromIdNumeric = _client->getUserId().toLongLong();
+    } else if (update["user_id"].toLongLong() == TgClient::getPeerId(_peer) && TgClient::isUser(_peer)) {
+        ID_PROPERTY(peerId) = TLType::PeerUser;
+        peerId["user_id"] = update["user_id"];
+
+        fromIdNumeric = update["out"].toBool() ? _client->getUserId().toLongLong() : update["user_id"].toLongLong();
+    } else if (update["chat_id"].toLongLong() == TgClient::getPeerId(_peer) && TgClient::isChat(_peer)) {
+        ID_PROPERTY(peerId) = TLType::PeerChat;
+        peerId["chat_id"] = update["chat_id"];
+
+        fromIdNumeric = update["from_id"].toLongLong();
+    } else {
+        return;
+    }
+
+    TgObject sender;
+    for (qint32 j = 0; j < _globalUsers.size(); ++j) {
+        TgObject peer = _globalUsers[j].toMap();
+        if (TgClient::getPeerId(peer) == fromIdNumeric) {
+            sender = peer;
+            break;
+        }
+    }
+    if (ID(sender) == 0) for (qint32 j = 0; j < _globalChats.size(); ++j) {
+        TgObject peer = _globalChats[j].toMap();
+        if (TgClient::getPeerId(peer) == fromIdNumeric) {
+            sender = peer;
+            break;
+        }
+    }
+
+    if (TgClient::isChannel(sender)) {
+        ID_PROPERTY(fromId) = TLType::PeerChannel;
+        fromId["channel_id"] = TgClient::getPeerId(sender);
+    } else if (TgClient::isChat(sender)) {
+        ID_PROPERTY(fromId) = TLType::PeerChat;
+        fromId["chat_id"] = TgClient::getPeerId(sender);
+    } else if (TgClient::isUser(sender)) {
+        ID_PROPERTY(fromId) = TLType::PeerUser;
+        fromId["user_id"] = TgClient::getPeerId(sender);
+    }
+
+    update["peer_id"] = peerId;
+    update["from_id"] = fromId;
+
+    qint32 oldSize = _history.size();
+
+    beginInsertRows(QModelIndex(), _history.size(), _history.size());
+    _history.append(createRow(update, sender, _globalUsers, _globalChats));
+    endInsertRows();
+
+    if (oldSize > 0) {
+        emit dataChanged(index(oldSize - 1), index(oldSize - 1));
+    }
+
+    _avatarDownloader->downloadAvatar(sender);
+
+    emit scrollForNew();
+}
+
+void MessagesModel::gotUpdate(TgObject update, TgLongVariant messageId, TgList users, TgList chats, qint32 date, qint32 seq, qint32 seqStart)
+{
+    QMutexLocker lock(&_mutex);
+
+    _globalUsers.append(users);
+    _globalChats.append(chats);
+
+    switch (ID(update)) {
+    case TLType::UpdateNewMessage:
+    case TLType::UpdateNewChannelMessage:
+    {
+        if (_downOffset != -1) {
+            return;
+        }
+
+        TgObject message = update["message"].toMap();
+
+        if (!TgClient::peersEqual(_peer, message["peer_id"].toMap())) {
+            return;
+        }
+
+        TgObject fromId = message["from_id"].toMap();
+        TgObject sender;
+        if (TgClient::isUser(fromId)) for (qint32 j = 0; j < users.size(); ++j) {
+            TgObject peer = users[j].toMap();
+            if (TgClient::peersEqual(peer, fromId)) {
+                sender = peer;
+                break;
+            }
+        }
+        if (TgClient::isChat(fromId)) for (qint32 j = 0; j < chats.size(); ++j) {
+            TgObject peer = chats[j].toMap();
+            if (TgClient::peersEqual(peer, fromId)) {
+                sender = peer;
+                break;
+            }
+        }
+        if (TgClient::commonPeerType(fromId) == 0) {
+            //This means that it is a channel feed or personal messages.
+            //Authorized user is returned by API, so we don't need to put it manually.
+            sender = _peer;
+        }
+
+        qint32 oldSize = _history.size();
+
+        beginInsertRows(QModelIndex(), _history.size(), _history.size());
+        _history.append(createRow(message, sender, users, chats));
+        endInsertRows();
+
+        if (oldSize > 0) {
+            emit dataChanged(index(oldSize - 1), index(oldSize - 1));
+        }
+
+        _avatarDownloader->downloadAvatar(sender);
+
+        emit scrollForNew();
+        break;
+    }
+    }
+}
+
+void MessagesModel::sendMessage(QString message)
+{
+    if (!_client || !_client->isAuthorized() || TgClient::commonPeerType(_inputPeer) == 0 || _uploadId.toLongLong() || (message.isEmpty() && GETID(_media["file"].toMap()) == 0)) {
+        return;
+    }
+
+    _sentMessages.insert(_client->messagesSendMessage(_inputPeer, message, _media), message);
+    cancelUpload();
+}
+
+void MessagesModel::uploadFile()
+{
+    cancelUpload();
+
+    QString selected = QFileDialog::getOpenFileName();
+
+    if (selected.isEmpty()) {
+        return;
+    }
+
+    if (selected.endsWith(".jpg") || selected.endsWith(".jpeg") || selected.endsWith(".png")) {
+        ID_PROPERTY(_media) = TLType::InputMediaUploadedPhoto;
+    } else {
+        ID_PROPERTY(_media) = TLType::InputMediaUploadedDocument;
+
+        TGOBJECT(TLType::DocumentAttributeFilename, fileName);
+        fileName["file_name"] = selected.split('/').last();
+
+        TgList attributes;
+        attributes << fileName;
+        _media["attributes"] = attributes;
+    }
+
+    _uploadId = _client->uploadFile(selected);
+
+    emit uploadingProgress(0);
+}
+
+void MessagesModel::cancelUpload()
+{
+    _media = TgObject();
+    if (_uploadId.toLongLong()) {
+        _client->cancelUpload(_uploadId);
+    }
+    _uploadId = 0;
+
+    emit uploadingProgress(-1);
+}
+
+void MessagesModel::fileUploadCanceled(TgLongVariant fileId)
+{
+    if (_uploadId != fileId) {
+        return;
+    }
+
+    _uploadId = 0;
+    cancelUpload();
+}
+
+void MessagesModel::fileUploaded(TgLongVariant fileId, TgObject inputFile)
+{
+    if (_uploadId != fileId) {
+        return;
+    }
+
+    _uploadId = 0;
+    _media["file"] = inputFile;
+
+    emit uploadingProgress(100);
+}
+
+void MessagesModel::fileUploading(TgLongVariant fileId, TgLongVariant processedLength, TgLongVariant totalLength, qint32 progressPercentage)
+{
+    if (_uploadId != fileId) {
+        return;
+    }
+
+    emit uploadingProgress(progressPercentage);
+}

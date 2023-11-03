@@ -8,22 +8,16 @@ Rectangle {
 
     ListView {
         id: messagesView
+        anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: messageEdit.top
 
         boundsBehavior: Flickable.StopAtBounds
 
-        //TODO fix Binding loop message
-        height: Math.min(parent.height - messageEdit.height, childrenRect.height)
+        anchors.topMargin: Math.max(0, parent.height - messageEdit.height - childrenRect.height)
 
         cacheBuffer: parent.height / 6
-
-        //TODO remove this hack
-        //I don't know why, but content overlaps MessageEdit at the bottom
-        anchors.bottomMargin: 5 * kgScaling
-
-        spacing: 4 * kgScaling
 
         onMovementEnded: {
             if (atYBeginning && messagesModel.canFetchMoreUpwards()) {
@@ -38,6 +32,20 @@ Rectangle {
 
             onScrollTo: {
                 messagesView.positionViewAtIndex(index, ListView.Beginning);
+            }
+
+            onScrollForNew: {
+                if (messagesView.atYEnd) {
+                    messagesView.positionViewAtIndex(messagesView.count - 1, ListView.Contain);
+                }
+            }
+
+            onDraftChanged: {
+                messageEdit.messageText = draft;
+            }
+
+            onUploadingProgress: {
+                messageEdit.uploadingProgress(progress);
             }
         }
 
