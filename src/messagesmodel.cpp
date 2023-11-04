@@ -211,7 +211,7 @@ void MessagesModel::fetchMoreDownwards()
 {
     QMutexLocker lock(&_mutex);
 
-    _downRequestId = _client->messagesGetHistory(_inputPeer, _downOffset, 0, -21, 20);
+    _downRequestId = _client->messagesGetHistory(_inputPeer, _downOffset, 0, -20, 20);
 }
 
 bool MessagesModel::canFetchMoreUpwards() const
@@ -298,6 +298,7 @@ void MessagesModel::handleHistoryResponse(TgObject data, TgLongVariant messageId
         messagesRows.append(createRow(message, sender, users, chats));
     }
 
+    qint32 oldOffset = _downOffset;
     qint32 newOffset = messages.first().toMap()["id"].toInt();
     if (_downOffset != newOffset && messages.size() == 20) {
         _downOffset = newOffset;
@@ -314,6 +315,12 @@ void MessagesModel::handleHistoryResponse(TgObject data, TgLongVariant messageId
     if (oldSize > 0) {
         emit dataChanged(index(oldSize - 1), index(oldSize - 1));
     }
+
+    // aka it is the first time when history is loaded in chat
+    if (qMax(_peer["read_inbox_max_id"].toInt(), _peer["read_outbox_max_id"].toInt()) == oldOffset) {
+        emit scrollTo(_history.size() - 1);
+    }
+
 
     if (_avatarDownloader) {
         for (qint32 i = 0; i < users.size(); ++i) {
@@ -390,7 +397,7 @@ void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant me
 
     // aka it is the first time when history is loaded in chat
     if (qMax(_peer["read_inbox_max_id"].toInt(), _peer["read_outbox_max_id"].toInt()) == oldOffset) {
-        emit scrollTo(messagesRows.size() - 1);
+        emit scrollTo(_history.size() - 1);
     } else {
         emit scrollTo(messagesRows.size());
     }

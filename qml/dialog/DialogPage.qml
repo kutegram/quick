@@ -50,12 +50,11 @@ Rectangle {
 
             boundsBehavior: Flickable.StopAtBounds
 
-//            highlight: Rectangle {
-//                width: folderSlide.width
-//                height: 40 * kgScaling
-//                opacity: 0.1
-//                color: "#000000"
-//            }
+            onMovementEnded: {
+                if (atYEnd && dialogsModel.canFetchMoreDownwards()) {
+                    dialogsModel.canFetchMoreDownwards();
+                }
+            }
 
             model: dialogsModel
 

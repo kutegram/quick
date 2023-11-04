@@ -3,7 +3,8 @@ import QtQuick 1.0
 Image {
     property url image
 
-    height: sourceSize.height * width / sourceSize.width
+    height: width
+    //height: sourceSize.height * width / sourceSize.width
     source: image
     clip: true
     asynchronous: true

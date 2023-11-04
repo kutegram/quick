@@ -23,6 +23,9 @@ Rectangle {
             if (atYBeginning && messagesModel.canFetchMoreUpwards()) {
                 messagesModel.fetchMoreUpwards();
             }
+            if (atYEnd && messagesModel.canFetchMoreDownwards()) {
+                messagesModel.canFetchMoreDownwards();
+            }
         }
 
         model: MessagesModel {
@@ -31,12 +34,12 @@ Rectangle {
             avatarDownloader: globalAvatarDownloader
 
             onScrollTo: {
-                messagesView.positionViewAtIndex(index, ListView.Beginning);
+                messagesView.positionViewAtIndex(index, ListView.End);
             }
 
             onScrollForNew: {
                 if (messagesView.atYEnd) {
-                    messagesView.positionViewAtIndex(messagesView.count - 1, ListView.Contain);
+                    messagesView.positionViewAtIndex(messagesView.count - 1, ListView.End);
                 }
             }
 

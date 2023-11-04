@@ -189,7 +189,7 @@ void DialogsModel::fetchMoreDownwards()
 {
     QMutexLocker lock(&_mutex);
 
-    _requestId = _client->messagesGetDialogsWithOffsets(_offsets, 50);
+    _requestId = _client->messagesGetDialogsWithOffsets(_offsets, 20);
 }
 
 void DialogsModel::authorized(TgLongVariant userId)
