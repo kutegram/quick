@@ -223,7 +223,7 @@ void MessagesModel::fetchMoreUpwards()
 {
     QMutexLocker lock(&_mutex);
 
-    _upRequestId = _client->messagesGetHistory(_inputPeer, _upOffset, 0, -1, 20);
+    _upRequestId = _client->messagesGetHistory(_inputPeer, _upOffset, 0, 0, 20);
 }
 
 void MessagesModel::authorized(TgLongVariant userId)
