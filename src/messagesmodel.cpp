@@ -912,6 +912,74 @@ void MessagesModel::gotUpdate(TgObject update, TgLongVariant messageId, TgList u
         emit scrollForNew();
         break;
     }
+    case TLType::UpdateEditMessage:
+    case TLType::UpdateEditChannelMessage:
+    {
+        TgObject message = update["message"].toMap();
+
+        if (!TgClient::peersEqual(_peer, message["peer_id"].toMap())) {
+            return;
+        }
+
+        qint32 rowIndex = -1;
+        for (qint32 i = 0; i < _history.size(); ++i) {
+            if (_history[i]["messageId"] == message["id"]) {
+                rowIndex = i;
+                break;
+            }
+        }
+
+        if (rowIndex == -1) {
+            return;
+        }
+
+        TgObject fromId = message["from_id"].toMap();
+        TgObject sender;
+        if (TgClient::isUser(fromId)) for (qint32 j = 0; j < users.size(); ++j) {
+            TgObject peer = users[j].toMap();
+            if (TgClient::peersEqual(peer, fromId)) {
+                sender = peer;
+                break;
+            }
+        }
+        if (TgClient::isChat(fromId)) for (qint32 j = 0; j < chats.size(); ++j) {
+            TgObject peer = chats[j].toMap();
+            if (TgClient::peersEqual(peer, fromId)) {
+                sender = peer;
+                break;
+            }
+        }
+        if (TgClient::commonPeerType(fromId) == 0) {
+            //This means that it is a channel feed or personal messages.
+            //Authorized user is returned by API, so we don't need to put it manually.
+            sender = _peer;
+        }
+
+        _history.replace(rowIndex, createRow(message, sender, users, chats));
+
+        emit dataChanged(index(rowIndex), index(rowIndex));
+
+        _avatarDownloader->downloadAvatar(sender);
+        break;
+    }
+    case TLType::UpdateDeleteChannelMessages:
+        if (!TgClient::isChat(_peer) || TgClient::getPeerId(_peer) != update["channel_id"].toLongLong()) {
+            return;
+        }
+
+        //fallthrough
+    case TLType::UpdateDeleteMessages:
+        TgList ids = update["messages"].toList();
+        for (qint32 i = 0; i < _history.size(); ++i) {
+            if (ids.removeOne(_history[i]["messageId"])) {
+                beginRemoveRows(QModelIndex(), i, i);
+                _history.removeAt(i);
+                endRemoveRows();
+                --i;
+            }
+        }
+
+        break;
     }
 }
 
