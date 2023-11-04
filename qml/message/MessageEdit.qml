@@ -246,19 +246,28 @@ Rectangle {
                 contentY = r.y+r.height-height;
         }
 
-        TextEdit {
-            id: innerEdit
-            anchors.fill: parent
-            focus: true
-            wrapMode: TextEdit.Wrap
-            anchors.topMargin: Math.max((parent.height - paintedHeight) / 2, 0)
-            onCursorRectangleChanged: innerFlick.ensureVisible(cursorRectangle)
+        Item {
+            id: editContainer
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: parent.height
+            anchors.topMargin: Math.max((parent.height - innerEdit.paintedHeight) / 2, 0)
+
+            TextEdit {
+                id: innerEdit
+                anchors.fill: parent
+                focus: true
+                wrapMode: TextEdit.Wrap
+                onCursorRectangleChanged: innerFlick.ensureVisible(cursorRectangle)
+            }
         }
 
         Text {
             id: messageTip
-            anchors.top: innerEdit.top
+            anchors.top: editContainer.top
             anchors.left: parent.left
+            anchors.right: parent.right
             color: "#8D8D8D"
             text: "Write a message..."
             state: messageText.length == 0 ? "EMPTY" : "NOT_EMPTY"

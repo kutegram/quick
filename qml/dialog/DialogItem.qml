@@ -11,7 +11,7 @@ Item {
         topBar.peerThumbnailText = thumbnailText;
         topBar.peerAvatar = avatar;
         topBar.peerTooltip = tooltip;
-        stack.currentIndex = 1;
+        mainScreen.state = "CHAT";
     }
 
     MouseArea {

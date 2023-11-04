@@ -21,7 +21,7 @@ Rectangle {
         State {
             name: "AUTH"
             PropertyChanges {
-                target: mainRect
+                target: mainScreen
                 anchors.leftMargin: root.width
                 opacity: 0
             }
@@ -29,20 +29,12 @@ Rectangle {
         State {
             name: "MAIN"
             PropertyChanges {
-                target: mainRect
+                target: mainScreen
                 anchors.leftMargin: 0
                 opacity: 1
             }
         }
     ]
-
-    onStateChanged: {
-        if (state == "MAIN") {
-            mainRect.forceActiveFocus();
-        } else {
-            authRect.forceActiveFocus();
-        }
-    }
 
     transitions: [
         Transition {
@@ -77,7 +69,7 @@ Rectangle {
             }
 
             setAuthProgress(false);
-            authStack.currentIndex = 1;
+            authScreen.currentIndex = 1;
 
             helpGetCountriesList();
         }
@@ -87,7 +79,7 @@ Rectangle {
 
             if (!hasUserId) {
                 root.state = "AUTH";
-                authStack.currentIndex = 0;
+                authScreen.currentIndex = 0;
             } else {
                 // TODO: show reconnecting
                 // TODO: timer!
@@ -98,7 +90,7 @@ Rectangle {
         onAuthSentCodeResponse: {
             setAuthProgress(false);
 
-            phonePage.phoneCodeHash = data["phone_code_hash"];
+            authScreen.phonePage.phoneCodeHash = data["phone_code_hash"];
             switch (data["type"]["_"]) {
                 //TODO messages
 //            case TLType::AuthSentCodeTypeApp:
@@ -124,7 +116,7 @@ Rectangle {
 //                break;
             }
 
-            authStack.currentIndex = 2;
+            authScreen.currentIndex = 2;
         }
 
         onAuthAuthorizationResponse: {
@@ -212,169 +204,20 @@ Rectangle {
         client: telegramClient
     }
 
-    //TODO: remove stack and rewrite with states
-    Rectangle {
-        id: authRect
+    AuthScreen {
+        id: authScreen
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         width: parent.width
-        focus: true
-
-        Stack {
-            flickableDirection: Flickable.VerticalFlick
-            id: authStack
-            anchors.fill: parent
-
-            IntroPage {
-                width: authStack.width
-                height: authStack.height
-            }
-
-            PhonePage {
-                id: phonePage
-                width: authStack.width
-                height: authStack.height
-            }
-
-            CodePage {
-                id: codePage
-                width: authStack.width
-                height: authStack.height
-            }
-        }
-
-        Item {
-            anchors.top: parent.top
-            anchors.left: parent.left
-            width: 40 * kgScaling
-            height: width
-            state: authStack.currentIndex == 0 ? "NO_BACK" : "BACK"
-            id: authBackRect
-
-            states: [
-                State {
-                    name: "NO_BACK"
-                    PropertyChanges {
-                        target: authBackImage
-                        opacity: 0
-                        rotation: 180
-                    }
-                },
-                State {
-                    name: "BACK"
-                    PropertyChanges {
-                        target: authBackImage
-                        opacity: 1
-                        rotation: 0
-                    }
-                }
-            ]
-
-            transitions: [
-                Transition {
-                    NumberAnimation {
-                        properties: "opacity,rotation"
-                        easing.type: Easing.InOutQuad
-                        duration: 200
-                    }
-                }
-            ]
-
-            Image {
-                id: authBackImage
-                anchors.centerIn: parent
-                source: "../img/arrow-left_black.png"
-                width: 20 * kgScaling
-                height: width
-                smooth: true
-                asynchronous: true
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    setAuthProgress(false);
-                    authStack.currentIndex = Math.max(0, authStack.currentIndex - 1)
-                }
-            }
-        }
-
-        Item {
-            anchors.top: parent.top
-            anchors.right: parent.right
-            width: settingsText.width + 20 * kgScaling
-            height: 40 * kgScaling
-            visible: false
-
-            Text {
-                id: settingsText
-                anchors.centerIn: parent
-                font.bold: true
-                text: "SETTINGS"
-            }
-        }
-
-        Spinner {
-            id: authSpinner
-            visible: root.authProgress
-            anchors.top: parent.top
-            anchors.right: parent.right
-        }
     }
 
-    Rectangle {
-        id: mainRect
+    MainScreen {
+        id: mainScreen
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         width: parent.width
-        focus: true
-
-        Stack {
-            id: stack
-            anchors.top: topBar.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-
-            onCurrentItemChanged: {
-                topBar.currentState = currentIndex == 1 ? "CHAT" : "MENU";
-                messagePage.globalState = "NO_SELECT";
-            }
-
-            DialogPage {
-                id: dialogPage
-                width: stack.width
-                height: stack.height
-            }
-
-            MessagePage {
-                id: messagePage
-                width: stack.width
-                height: stack.height
-            }
-        }
-
-        TopBar {
-            id: topBar
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-        }
-
-        Drawer {
-            id: drawer
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-        }
-    }
-
-    ImageViewer {
-        id: imageViewer
-        anchors.fill: parent
     }
 
     SnackBar {

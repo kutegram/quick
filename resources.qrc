@@ -5,7 +5,6 @@
         <file>qml/control/DrawerButton.qml</file>
         <file>qml/control/LineEdit.qml</file>
         <file>qml/control/Spinner.qml</file>
-        <file>qml/control/Stack.qml</file>
         <file>qml/control/TopBar.qml</file>
         <file>qml/auth/Button.qml</file>
         <file>qml/auth/CodePage.qml</file>
@@ -83,5 +82,7 @@
         <file>img/magnify-minus-outline.png</file>
         <file>img/magnify-plus-outline.png</file>
         <file>img/fullscreen.png</file>
+        <file>qml/control/MainScreen.qml</file>
+        <file>qml/control/AuthScreen.qml</file>
     </qresource>
 </RCC>

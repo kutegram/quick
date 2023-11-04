@@ -79,28 +79,7 @@ OTHER_FILES += \
     qtc_packaging/debian_harmattan/copyright \
     qtc_packaging/debian_harmattan/control \
     qtc_packaging/debian_harmattan/compat \
-    qtc_packaging/debian_harmattan/changelog \
-    qml/main.qml \
-    qml/auth/Button.qml \
-    qml/auth/CodePage.qml \
-    qml/auth/IntroPage.qml \
-    qml/auth/PhonePage.qml \
-    qml/control/Drawer.qml \
-    qml/control/DrawerButton.qml \
-    qml/control/LineEdit.qml \
-    qml/control/Spinner.qml \
-    qml/control/Stack.qml \
-    qml/control/TopBar.qml \
-    qml/dialog/DialogItem.qml \
-    qml/dialog/DialogPage.qml \
-    qml/dialog/FolderItem.qml \
-    qml/message/MessageDocument.qml \
-    qml/message/MessageEdit.qml \
-    qml/message/MessageImage.qml \
-    qml/message/MessageItem.qml \
-    qml/message/MessagePage.qml \
-    qml/control/SnackBar.qml \
-    qml/control/ImageViewer.qml
+    qtc_packaging/debian_harmattan/changelog
 
 RESOURCES += \
     resources.qrc

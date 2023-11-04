@@ -259,12 +259,12 @@ Rectangle {
 
     function menuButtonClicked() {
         if (currentState == "MENU") {
-            currentState = "BACK"
+            currentState = "BACK";
             drawer.opened = true;
         } else {
-            currentState = "MENU"
+            currentState = "MENU";
             drawer.opened = false;
-            stack.currentIndex = 0;
+            mainScreen.state = "MENU";
         }
     }
 
