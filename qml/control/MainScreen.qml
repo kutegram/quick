@@ -8,6 +8,33 @@ Rectangle {
     id: mainScreen
     state: "MENU"
 
+    states: [
+        State {
+            name: "MENU"
+            PropertyChanges {
+                target: messagePage
+                x: width
+            }
+        },
+        State {
+            name: "CHAT"
+            PropertyChanges {
+                target: messagePage
+                x: 0
+            }
+        }
+    ]
+
+    transitions: [
+        Transition {
+            NumberAnimation {
+                properties: "x"
+                easing.type: Easing.InOutQuad
+                duration: 200
+            }
+        }
+    ]
+
     onStateChanged: {
         topBar.currentState = state;
         messagePage.globalState = "NO_SELECT";
@@ -23,13 +50,6 @@ Rectangle {
         id: messagePage
         width: parent.width
         height: parent.height
-
-        x: parent.state == "MENU" ? width : 0
-        Behavior on x {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-            }
-        }
     }
 
     TopBar {

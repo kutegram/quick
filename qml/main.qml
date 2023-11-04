@@ -17,6 +17,7 @@ Rectangle {
     property color globalAccent: "#54759E"
 
     state: "AUTH"
+
     states: [
         State {
             name: "AUTH"

@@ -7,46 +7,93 @@ import "../auth"
 Rectangle {
     id: authScreen
     property int currentIndex: 0
+    state: "INTRO"
+
+    onCurrentIndexChanged: {
+        if (currentIndex == 0)
+            state = "INTRO";
+        if (currentIndex == 1)
+            state = "PHONE";
+        if (currentIndex == 2)
+            state = "CODE";
+    }
 
     property alias phonePage: phonePage
+
+    states: [
+        State {
+            name: "INTRO"
+            PropertyChanges {
+                target: introPage
+                x: 0
+            }
+            PropertyChanges {
+                target: phonePage
+                x: width
+            }
+            PropertyChanges {
+                target: codePage
+                x: width
+            }
+        },
+        State {
+            name: "PHONE"
+            PropertyChanges {
+                target: introPage
+                x: -width
+            }
+            PropertyChanges {
+                target: phonePage
+                x: 0
+            }
+            PropertyChanges {
+                target: codePage
+                x: width
+            }
+        },
+        State {
+            name: "CODE"
+            PropertyChanges {
+                target: introPage
+                x: -width
+            }
+            PropertyChanges {
+                target: phonePage
+                x: -width
+            }
+            PropertyChanges {
+                target: codePage
+                x: 0
+            }
+        }
+    ]
+
+    transitions: [
+        Transition {
+            NumberAnimation {
+                properties: "x"
+                easing.type: Easing.InOutQuad
+                duration: 200
+            }
+        }
+    ]
 
     IntroPage {
         id: introPage
         width: parent.width
         height: parent.height
-
-        x: currentIndex > 0 ? -width : currentIndex < 0 ? width : 0
-        Behavior on x {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-            }
-        }
     }
 
     PhonePage {
         id: phonePage
         width: parent.width
         height: parent.height
-
-        x: currentIndex > 1 ? -width : currentIndex < 1 ? width : 0
-        Behavior on x {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-            }
-        }
     }
 
     CodePage {
         id: codePage
         width: parent.width
         height: parent.height
-
-        x: currentIndex > 2 ? -width : currentIndex < 2 ? width : 0
-        Behavior on x {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-            }
-        }
     }
 
     Item {
