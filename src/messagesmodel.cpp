@@ -687,7 +687,7 @@ void MessagesModel::downloadFile(qint32 index)
 
     QDir::home().mkdir("Kutegram");
 
-    QString fileName =  _history[index]["mediaFileName"].toString();
+    QString fileName = _history[index]["mediaFileName"].toString();
     if (fileName.isEmpty()) fileName = QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch());
 
     QStringList split = fileName.split('.');
@@ -698,7 +698,7 @@ void MessagesModel::downloadFile(qint32 index)
         fileNameBefore = split.first();
     } else {
         fileNameBefore = QStringList(split.mid(0, split.length() - 1)).join(".");
-        fileNameAfter  = split.last();
+        fileNameAfter = split.last();
     }
 
     if (!fileNameAfter.isEmpty()) {
@@ -710,6 +710,7 @@ void MessagesModel::downloadFile(qint32 index)
 #else
     QDir dir(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation));
 #endif
+    dir.mkpath("Kutegram/");
 
     QString indexedFileName = fileName;
     QString indexedFilePath = dir.absoluteFilePath("Kutegram/" + indexedFileName);
