@@ -4,10 +4,7 @@ Item {
     id: imageViewer
 
     property int scaling: Math.min(100, Math.min(Math.floor(imageViewer.width / innerImage.sourceSize.width * 100), Math.floor(imageViewer.height / innerImage.sourceSize.height * 100)))
-    property url imageSource
-    onImageSourceChanged: {
-        scaling = Math.min(100, Math.min(Math.floor(imageViewer.width / innerImage.sourceSize.width * 100), Math.floor(imageViewer.height / innerImage.sourceSize.height * 100)))
-    }
+    property alias imageSource: innerImage.source
 
     //TODO loading spinner
 
@@ -93,8 +90,13 @@ Item {
 
         Image {
             id: innerImage
-            source: imageSource
             smooth: true
+
+            onStatusChanged: {
+                if (innerImage.status == Image.Ready) {
+                    scaling = Math.min(100, Math.min(Math.floor(imageViewer.width / innerImage.sourceSize.width * 100), Math.floor(imageViewer.height / innerImage.sourceSize.height * 100)))
+                }
+            }
 
             width: sourceSize.width * scaling / 100
             height: sourceSize.height * scaling / 100
