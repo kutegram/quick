@@ -421,6 +421,13 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
         row["senderName"] = sender["title"].toString();
     }
 
+    //TODO post author
+
+    row["thumbnailColor"] = AvatarDownloader::userColor(sender["id"].toLongLong());
+    row["thumbnailText"] = AvatarDownloader::getAvatarText(row["senderName"].toString());
+    row["avatar"] = "";
+    row["photoId"] = sender["photo"].toMap()["photo_id"];
+
     row["senderName"] = QString("<html><span style=\"color: "
             + AvatarDownloader::userColor(sender["id"]).name()
             + "\">"
@@ -465,13 +472,6 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
 
         row["forwardedFrom"] = forwardedFrom;
     }
-
-    //TODO post author
-
-    row["thumbnailColor"] = AvatarDownloader::userColor(sender["id"].toLongLong());
-    row["thumbnailText"] = AvatarDownloader::getAvatarText(row["senderName"].toString());
-    row["avatar"] = "";
-    row["photoId"] = sender["photo"].toMap()["photo_id"];
 
     TgObject media = message["media"].toMap();
     row["hasMedia"] = GETID(media) != 0;
