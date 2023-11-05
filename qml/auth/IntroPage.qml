@@ -1,6 +1,8 @@
 import QtQuick 1.0
 
 Rectangle {
+    id: introPageRect
+
     Column {
         anchors.centerIn: parent
         width: parent.width * 2 / 3
@@ -8,7 +10,7 @@ Rectangle {
 
         Image {
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width * 2 / 3
+            width: Math.min(introPageRect.height / 2, parent.width * 2 / 3)
             height: width
             asynchronous: true
             smooth: true

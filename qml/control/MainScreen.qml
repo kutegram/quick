@@ -42,21 +42,24 @@ Rectangle {
 
     DialogPage {
         id: dialogPage
+        anchors.top: topBar.bottom
+        anchors.bottom: parent.bottom
         width: parent.width < 600 * kgScaling ? parent.width : 300 * kgScaling
-        height: parent.height
     }
 
     MessageIntroPage {
         id: messageIntroPage
+        anchors.top: topBar.bottom
+        anchors.bottom: parent.bottom
         width: messagePage.width
-        height: parent.height
         x: dialogPage.width
     }
 
     MessagePage {
         id: messagePage
+        anchors.top: topBar.bottom
+        anchors.bottom: parent.bottom
         width: parent.width < 600 * kgScaling ? parent.width : parent.width - 300 * kgScaling
-        height: parent.height
     }
 
     TopBar {
