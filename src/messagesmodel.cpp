@@ -612,31 +612,38 @@ void MessagesModel::linkActivated(QString link, qint32 listIndex)
 
     QUrl url(link);
 
-    if (url.scheme() == "kutegram") {
-        if (url.host() == "spoiler") {
-            TgObject listItem = _history[listIndex];
-            QDomDocument dom;
+    TgObject listItem = _history[listIndex];
+    QDomDocument dom;
 
-            if (!dom.setContent(listItem["messageText"].toString(), false)) {
+    if (!dom.setContent(listItem["messageText"].toString(), false)) {
+        return;
+    }
+
+    QDomNodeList list = dom.elementsByTagName("a");
+    for (qint32 i = 0; i < list.count(); ++i) {
+        QDomNode parent = list.at(i).toElement();
+
+        if (parent.toElement().attribute("href") != link) {
+            continue;
+        }
+
+        while (!parent.isNull()) {
+            if (parent.toElement().attribute("href").startsWith("kutegram://spoiler/")) {
+                parent.toElement().removeAttribute("href");
+                parent.toElement().removeAttribute("class");
+
+                listItem["messageText"] = dom.toString(-1);
+                _history[listIndex] = listItem;
+
+                emit dataChanged(index(listIndex), index(listIndex));
                 return;
             }
 
-            QDomNodeList list = dom.elementsByTagName("a");
-            for (qint32 i = 0; i < list.count(); ++i) {
-                QDomElement node = list.at(i).toElement();
-                if (node.attribute("href") == link) {
-                    node.removeAttribute("href");
-                    node.removeAttribute("style");
-                    break;
-                }
-            }
-
-            listItem["messageText"] = dom.toString(-1);
-            _history[listIndex] = listItem;
-
-            emit dataChanged(index(listIndex), index(listIndex));
+            parent = parent.parentNode();
         }
-    } else if (url.scheme().isEmpty()) {
+    }
+
+    if (url.scheme().isEmpty()) {
         openUrl("http://" + link);
     } else {
         openUrl(link);

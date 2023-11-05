@@ -10,7 +10,7 @@ bool entitiesSorter(const QVariant &v1, const QVariant &v2)
     TgObject o1 = v1.toMap();
     TgObject o2 = v2.toMap();
 
-    return o1["offset"].toInt() < o2["offset"].toInt() ||
+    return ID(o1) == MessageEntityUrl || o1["offset"].toInt() < o2["offset"].toInt() ||
             (o1["offset"].toInt() == o2["offset"].toInt() && o1["length"].toInt() < o2["length"].toInt());
 }
 
@@ -94,7 +94,7 @@ void getTags(TgObject entity, QString textPart, qint32 i, QString &sTag, QString
         eTag = "</a>";
         break;
     case MessageEntitySpoiler:
-        sTag = "<a href=\"kutegram://spoiler/" + QString::number(i) + "\" style=\"background-color:gray;color:gray;\">";
+        sTag = "<a class=\"spoiler\" href=\"kutegram://spoiler/" + QString::number(i) + "\">";
         eTag = "</a>";
         break;
     case MessageEntityCustomEmoji: //TODO custom emoji
@@ -177,6 +177,7 @@ QString prepareDialogItemMessage(QString text, TgList entities)
 
 QString messageToHtml(QString text, TgList entities)
 {
+    //TODO unite neighbour spoilers
     if (text.isEmpty()) {
         return text;
     }
@@ -240,7 +241,7 @@ QString messageToHtml(QString text, TgList entities)
                 moving["length"] = moving["length"].toInt() + sTag.length() + eTag.length();
             } else if (mOffset > offset && mOffset < offset + entity["length"].toInt()) {
                 moving["offset"] = mOffset + sTag.length();
-            } else {
+            } else if (mOffset > offset) {
                 moving["offset"] = mOffset + sTag.length() + eTag.length();
             }
             entities[j] = moving;
@@ -248,5 +249,5 @@ QString messageToHtml(QString text, TgList entities)
     }
 
     text.replace('\n', "<br />");
-    return "<html>" + text + "</html>";
+    return "<html><style>.spoiler, .spoiler > *, .spoiler > * > a:link { background-color: gray; color: gray; }</style>" + text + "</html>";
 }
