@@ -26,12 +26,9 @@ Item {
         onClicked: {
             switch (index) {
             case 0:
-                dialogPage.refresh();
-                break;
-            case 1:
                 telegramClient.resetSession();
                 break;
-            case 2:
+            case 1:
                 Qt.quit();
                 break;
             }

@@ -218,10 +218,6 @@ Item {
 
                         model: ListModel {
                             ListElement {
-                                icon: "../../img/refresh.png"
-                                name: "Refresh dialogs"
-                            }
-                            ListElement {
                                 icon: "../../img/exit-to-app.png"
                                 name: "Log out"
                             }
