@@ -20,7 +20,7 @@ Rectangle {
             name: "CHAT"
             PropertyChanges {
                 target: messagePage
-                x: mainScreen.width < 600 ? 0 : dialogPage.width
+                x: mainScreen.width < 600 * kgScaling ? 0 : dialogPage.width
             }
         }
     ]
@@ -42,7 +42,7 @@ Rectangle {
 
     DialogPage {
         id: dialogPage
-        width: parent.width < 600 ? parent.width : 300
+        width: parent.width < 600 * kgScaling ? parent.width : 300 * kgScaling
         height: parent.height
     }
 
@@ -55,7 +55,7 @@ Rectangle {
 
     MessagePage {
         id: messagePage
-        width: parent.width < 600 ? parent.width : parent.width - 300
+        width: parent.width < 600 * kgScaling ? parent.width : parent.width - 300 * kgScaling
         height: parent.height
     }
 
