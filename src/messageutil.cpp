@@ -104,12 +104,84 @@ void getTags(TgObject entity, QString textPart, qint32 i, QString &sTag, QString
     }
 }
 
-QString messageToHtml(QString text, TgList entities, bool inlineBreaks, qint32 limitWidth)
+QString prepareDialogItemMessage(QString text, TgList entities)
 {
+    if (text.isEmpty()) {
+        return text;
+    }
+
     qSort(entities.begin(), entities.end(), entitiesSorter);
 
-    if (limitWidth > 0)
-        text = text.mid(0, limitWidth);
+    for (qint32 i = 0; i < text.length(); ++i) {
+        QString replace;
+
+        if (text[i] == '&') {
+            replace = "&amp;";
+        } else if (text[i] == '<') {
+            replace = "&lt;";
+        } else if (text[i] == '>') {
+            replace = "&gt;";
+        } else {
+            continue;
+        }
+
+        text.remove(i, 1);
+        text.insert(i, replace);
+
+        for (qint32 j = 0; j < entities.length(); ++j) {
+            TgObject entity = entities[j].toMap();
+            qint32 offset = entity["offset"].toInt();
+            qint32 length = entity["length"].toInt();
+
+            if (i >= offset && i < offset + length) {
+                entity["length"] = length + replace.length() - 1;
+            } else if (i < offset) {
+                entity["offset"] = offset + replace.length() - 1;
+            }
+
+            entities[j] = entity;
+        }
+
+        i += replace.length() - 1;
+    }
+
+    //Just remove spoilers
+    for (qint32 i = 0; i < entities.length(); ++i) {
+        TgObject entity = entities[i].toMap();
+        qint32 offset = entity["offset"].toInt();
+        qint32 length = entity["length"].toInt();
+
+        if (length == 0 || ID(entity) != MessageEntitySpoiler) {
+            continue;
+        }
+
+        text.remove(offset, length);
+
+        for (qint32 j = i + 1; j < entities.length(); ++j) {
+            TgObject moving = entities[j].toMap();
+            qint32 mOffset = moving["offset"].toInt();
+
+            if (mOffset == offset) {
+                moving["length"] = moving["length"].toInt() - length;
+            }
+            else {
+                moving["offset"] = mOffset - length;
+            }
+            entities[j] = moving;
+        }
+    }
+
+    text.replace('\n', " ");
+    return text;
+}
+
+QString messageToHtml(QString text, TgList entities)
+{
+    if (text.isEmpty()) {
+        return text;
+    }
+
+    qSort(entities.begin(), entities.end(), entitiesSorter);
 
     for (qint32 i = 0; i < text.length(); ++i) {
         QString replace;
@@ -149,14 +221,6 @@ QString messageToHtml(QString text, TgList entities, bool inlineBreaks, qint32 l
         qint32 offset = entity["offset"].toInt();
         qint32 length = entity["length"].toInt();
 
-        if (limitWidth > 0 && offset >= limitWidth) {
-            continue;
-        }
-
-        if (limitWidth > 0 && offset + length > limitWidth) {
-            length = limitWidth - offset;
-        }
-
         if (length == 0) {
             continue;
         }
@@ -183,6 +247,6 @@ QString messageToHtml(QString text, TgList entities, bool inlineBreaks, qint32 l
         }
     }
 
-    text.replace('\n', inlineBreaks ? "&nbsp;" : "<br />");
-    return text;
+    text.replace('\n', "<br />");
+    return "<html>" + text + "</html>";
 }

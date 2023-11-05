@@ -14,7 +14,6 @@ Rectangle {
 
     DialogsModel {
         id: dialogsModel
-        elideLength: globalScreenLength
         folders: foldersModel
         client: telegramClient
         avatarDownloader: globalAvatarDownloader

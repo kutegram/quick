@@ -15,36 +15,11 @@ DialogsModel::DialogsModel(QObject *parent)
     , _requestId(0)
     , _offsets()
     , _avatarDownloader(0)
-    , _elideLength(0)
     , _folders(0)
 {
 #if QT_VERSION < 0x050000
     setRoleNames(roleNames());
 #endif
-}
-
-void DialogsModel::setElideLength(qint32 length)
-{
-    QMutexLocker lock(&_mutex);
-
-    _elideLength = length;
-
-    for (qint32 i = 0; i < _dialogs.size(); ++i) {
-        TgObject row = _dialogs[i];
-        if (row["_message"].toString().isEmpty())
-            continue;
-
-        QString messageText = messageToHtml(row["_message"].toString(), row["_entities"].toList(), true, _elideLength);
-        row["messageText"] = QString("<html>" + row["messageSenderName"].toString() + messageText + row["afterMessageText"].toString() + "</html>");
-        _dialogs[i] = row;
-
-        emit dataChanged(index(i), index(i));
-    }
-}
-
-qint32 DialogsModel::elideLength() const
-{
-    return _elideLength;
 }
 
 void DialogsModel::setFolders(QObject *model)
@@ -119,6 +94,8 @@ QHash<int, QByteArray> DialogsModel::roleNames() const
     roles[MessageTextRole] = "messageText";
     roles[TooltipRole] = "tooltip";
     roles[PeerBytesRole] = "peerBytes";
+    roles[MessageSenderNameRole] = "messageSenderName";
+    roles[MessageSenderColorRole] = "messageSenderColor";
 
     return roles;
 }
@@ -189,7 +166,7 @@ void DialogsModel::fetchMoreDownwards()
 {
     QMutexLocker lock(&_mutex);
 
-    _requestId = _client->messagesGetDialogsWithOffsets(_offsets, 20);
+    _requestId = _client->messagesGetDialogsWithOffsets(_offsets, 40);
 }
 
 void DialogsModel::authorized(TgLongVariant userId)
@@ -360,17 +337,13 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
     }
 
     if (!messageSenderName.isEmpty()) {
-        messageSenderName = "<span style=\"color: "
-                + AvatarDownloader::userColor(messageSender["id"]).name()
-                + "\">"
-                + messageSenderName
-                + ": </span>";
+        messageSenderName += ": ";
     }
 
-    row["_message"] = message["message"];
-    row["_entities"] = message["entities"];
-    QString messageText = messageToHtml(row["_message"].toString(), row["_entities"].toList(), true, _elideLength);
+    row["messageSenderName"] = messageSenderName;
+    row["messageSenderColor"] = AvatarDownloader::userColor(messageSender["id"]);
 
+    QString messageText = prepareDialogItemMessage(message["message"].toString(), message["entities"].toList());
     QString afterMessageText;
     if (GETID(message["media"].toMap()) != 0) {
         if (!messageText.isEmpty()) {
@@ -380,10 +353,8 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
         //TODO attachment type
         afterMessageText += "Attachment";
     }
-
-    row["messageSenderName"] = messageSenderName;
-    row["afterMessageText"] = afterMessageText;
-    row["messageText"] = QString("<html>" + row["messageSenderName"].toString() + messageText + row["afterMessageText"].toString() + "</html>");
+    messageText += afterMessageText;
+    row["messageText"] = messageText;
 
     row["thumbnailColor"] = AvatarDownloader::userColor(peer["id"].toLongLong());
     row["thumbnailText"] = AvatarDownloader::getAvatarText(row["title"].toString());

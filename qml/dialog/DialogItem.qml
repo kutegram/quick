@@ -93,16 +93,32 @@ Item {
             }
         }
 
-        Text {
-            text: messageText
-            color: "#8D8D8D"
+        Item {
             anchors.left: parent.left
             anchors.right: parent.right
-            elide: Text.ElideRight
-            clip: true
+            height: messageSenderLabel.height
 
-            onLinkActivated: {
-                openDialog();
+            Text {
+                id: messageSenderLabel
+                anchors.top: parent.top
+                anchors.left: parent.left
+                text: messageSenderName
+                color: messageSenderColor
+            }
+
+            Text {
+                id: messageTextLabel
+                anchors.top: parent.top
+                anchors.left: messageSenderLabel.right
+                anchors.right: parent.right
+                text: messageText
+                color: "#8D8D8D"
+                elide: Text.ElideRight
+                clip: true
+
+                onLinkActivated: {
+                    openDialog();
+                }
             }
         }
     }

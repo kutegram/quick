@@ -13,7 +13,6 @@ class DialogsModel : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(QObject* client READ client WRITE setClient)
     Q_PROPERTY(QObject* avatarDownloader READ avatarDownloader WRITE setAvatarDownloader)
-    Q_PROPERTY(qint32 elideLength READ elideLength WRITE setElideLength)
     Q_PROPERTY(QObject* folders READ folders WRITE setFolders)
 
 private:
@@ -28,8 +27,6 @@ private:
 
     AvatarDownloader* _avatarDownloader;
 
-    qint32 _elideLength;
-
     FoldersModel* _folders;
 
     enum DialogRoles {
@@ -40,7 +37,9 @@ private:
         MessageTimeRole,
         MessageTextRole,
         TooltipRole,
-        PeerBytesRole
+        PeerBytesRole,
+        MessageSenderNameRole,
+        MessageSenderColorRole
     };
 
 public:
@@ -54,9 +53,6 @@ public:
 
     void setAvatarDownloader(QObject *client);
     QObject* avatarDownloader() const;
-
-    void setElideLength(qint32 length);
-    qint32 elideLength() const;
 
     void setFolders(QObject *model);
     QObject* folders() const;

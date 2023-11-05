@@ -21,6 +21,8 @@ using namespace TLType;
 TgList _globalUsers;
 TgList _globalChats;
 
+#define BATCH_SIZE 40
+
 MessagesModel::MessagesModel(QObject *parent)
     : QAbstractListModel(parent)
     , _mutex(QMutex::Recursive)
@@ -211,7 +213,7 @@ void MessagesModel::fetchMoreDownwards()
 {
     QMutexLocker lock(&_mutex);
 
-    _downRequestId = _client->messagesGetHistory(_inputPeer, _downOffset, 0, -20, 20);
+    _downRequestId = _client->messagesGetHistory(_inputPeer, _downOffset, 0, -BATCH_SIZE, BATCH_SIZE);
 }
 
 bool MessagesModel::canFetchMoreUpwards() const
@@ -223,7 +225,7 @@ void MessagesModel::fetchMoreUpwards()
 {
     QMutexLocker lock(&_mutex);
 
-    _upRequestId = _client->messagesGetHistory(_inputPeer, _upOffset, 0, 0, 20);
+    _upRequestId = _client->messagesGetHistory(_inputPeer, _upOffset, 0, 0, BATCH_SIZE);
 }
 
 void MessagesModel::authorized(TgLongVariant userId)
@@ -300,7 +302,7 @@ void MessagesModel::handleHistoryResponse(TgObject data, TgLongVariant messageId
 
     qint32 oldOffset = _downOffset;
     qint32 newOffset = messages.first().toMap()["id"].toInt();
-    if (_downOffset != newOffset && messages.size() == 20) {
+    if (_downOffset != newOffset && messages.size() == BATCH_SIZE) {
         _downOffset = newOffset;
     } else {
         _downOffset = -1;
@@ -379,7 +381,7 @@ void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant me
 
     qint32 oldOffset = _upOffset;
     qint32 newOffset = messages.last().toMap()["id"].toInt();
-    if (_upOffset != newOffset && messages.size() == 20) {
+    if (_upOffset != newOffset && messages.size() == BATCH_SIZE) {
         _upOffset = newOffset;
     } else {
         _upOffset = -1;
@@ -446,7 +448,7 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
     //TODO 12-hour format
     row["messageTime"] = QDateTime::fromTime_t(qMax(message["date"].toInt(), message["edit_date"].toInt())).toString("hh:mm");
     //TODO replies support
-    row["messageText"] = message["message"].toString().isEmpty() ? "" : QString("<html>" + messageToHtml(message["message"].toString(), message["entities"].toList(), false, 0) + "</html>");
+    row["messageText"] = messageToHtml(message["message"].toString(), message["entities"].toList());
     if (GETID(message) == MessageService) {
         //TODO service messages
         row["messageText"] = "<html><i>service messages are not supported yet</i></html>";

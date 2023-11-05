@@ -3,6 +3,7 @@
 
 #include "tgstream.h"
 
-QString messageToHtml(QString text, TgList entities, bool inlineBreaks, qint32 limitWidth);
+QString prepareDialogItemMessage(QString text, TgList entities);
+QString messageToHtml(QString text, TgList entities);
 
 #endif // MESSAGEUTIL_H
