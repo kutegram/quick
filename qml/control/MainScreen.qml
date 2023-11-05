@@ -13,14 +13,14 @@ Rectangle {
             name: "MENU"
             PropertyChanges {
                 target: messagePage
-                x: width
+                x: mainScreen.width
             }
         },
         State {
             name: "CHAT"
             PropertyChanges {
                 target: messagePage
-                x: 0
+                x: mainScreen.width < 600 ? 0 : dialogPage.width
             }
         }
     ]
@@ -42,13 +42,20 @@ Rectangle {
 
     DialogPage {
         id: dialogPage
-        width: parent.width
+        width: parent.width < 600 ? parent.width : 300
         height: parent.height
+    }
+
+    MessageIntroPage {
+        id: messageIntroPage
+        width: messagePage.width
+        height: parent.height
+        x: dialogPage.width
     }
 
     MessagePage {
         id: messagePage
-        width: parent.width
+        width: parent.width < 600 ? parent.width : parent.width - 300
         height: parent.height
     }
 
