@@ -715,7 +715,7 @@ void MessagesModel::downloadFile(qint32 index)
     }
 
 #if QT_VERSION < 0x050000
-    QDir dir = QDir::home();
+    QDir dir(QDir::homePath() + "/Downloads/");
 #else
     QDir dir(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation));
 #endif
