@@ -788,7 +788,7 @@ void MessagesModel::gotMessageUpdate(TgObject update, TgLongVariant messageId)
     TgObject fromId;
     qint64 fromIdNumeric;
 
-    if (_sentMessages.contains(messageId)) {
+    if (_sentMessages.contains(messageId.toLongLong())) {
         if (TgClient::isChannel(_peer)) {
             ID_PROPERTY(peerId) = TLType::PeerChannel;
             peerId["channel_id"] = TgClient::getPeerId(_peer);
@@ -800,7 +800,7 @@ void MessagesModel::gotMessageUpdate(TgObject update, TgLongVariant messageId)
             peerId["user_id"] = TgClient::getPeerId(_peer);
         }
 
-        update["message"] = _sentMessages.take(messageId);
+        update["message"] = _sentMessages.take(messageId.toLongLong());
 
         fromIdNumeric = _client->getUserId().toLongLong();
     } else if (update["user_id"].toLongLong() == TgClient::getPeerId(_peer) && TgClient::isUser(_peer)) {
@@ -997,7 +997,7 @@ void MessagesModel::sendMessage(QString message)
         return;
     }
 
-    _sentMessages.insert(_client->messagesSendMessage(_inputPeer, message, _media), message);
+    _sentMessages.insert(_client->messagesSendMessage(_inputPeer, message, _media).toLongLong(), message);
     cancelUpload();
 }
 

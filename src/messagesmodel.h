@@ -35,7 +35,7 @@ private:
     QHash<qint64, TgVariant> _downloadRequests;
 
     TgLongVariant _uploadId;
-    QMap<TgLongVariant, QString> _sentMessages;
+    QHash<TgLong, QString> _sentMessages;
     TgObject _media;
 
     enum MessageRoles {
