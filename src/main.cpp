@@ -79,10 +79,7 @@ int main(int argc, char *argv[])
     viewer.rootContext()->setContextProperty("kutegramPlatform", systemName());
     viewer.rootContext()->setContextProperty("platformUtils", new PlatformUtils(&viewer));
     viewer.rootContext()->setContextProperty("kgScaling", ((float) fontMetrics.height()) / 13.0f);
-    viewer.setMainQmlFile(QLatin1String("qrc:///qml/main.qml"));
-    viewer.setAttribute(Qt::WA_TranslucentBackground, true);
-    viewer.setAttribute(Qt::WA_NoSystemBackground, false);
-    viewer.setStyleSheet("background: transparent");
+    viewer.setMainQmlFile(QLatin1String("qrc:///qml/Main.qml"));
     viewer.setWindowTitle("Kutegram");
     viewer.showExpanded();
 
