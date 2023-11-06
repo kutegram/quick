@@ -25,45 +25,54 @@ Rectangle {
             name: "INTRO"
             PropertyChanges {
                 target: introPage
-                x: 0
+                anchors.leftMargin: 0
+                opacity: 1
             }
             PropertyChanges {
                 target: phonePage
-                x: width
+                anchors.leftMargin: width
+                opacity: 0
             }
             PropertyChanges {
                 target: codePage
-                x: width
+                anchors.leftMargin: width
+                opacity: 0
             }
         },
         State {
             name: "PHONE"
             PropertyChanges {
                 target: introPage
-                x: -width
+                anchors.leftMargin: -width
+                opacity: 0
             }
             PropertyChanges {
                 target: phonePage
-                x: 0
+                anchors.leftMargin: 0
+                opacity: 1
             }
             PropertyChanges {
                 target: codePage
-                x: width
+                anchors.leftMargin: width
+                opacity: 0
             }
         },
         State {
             name: "CODE"
             PropertyChanges {
                 target: introPage
-                x: -width
+                anchors.leftMargin: -width
+                opacity: 0
             }
             PropertyChanges {
                 target: phonePage
-                x: -width
+                anchors.leftMargin: -width
+                opacity: 0
             }
             PropertyChanges {
                 target: codePage
-                x: 0
+                anchors.leftMargin: 0
+                opacity: 1
             }
         }
     ]
@@ -71,7 +80,7 @@ Rectangle {
     transitions: [
         Transition {
             NumberAnimation {
-                properties: "x"
+                properties: "anchors.leftMargin,opacity"
                 easing.type: Easing.InOutQuad
                 duration: 200
             }
@@ -80,18 +89,21 @@ Rectangle {
 
     IntroPage {
         id: introPage
+        anchors.left: parent.left
         width: parent.width
         height: parent.height
     }
 
     PhonePage {
         id: phonePage
+        anchors.left: parent.left
         width: parent.width
         height: parent.height
     }
 
     CodePage {
         id: codePage
+        anchors.left: parent.left
         width: parent.width
         height: parent.height
     }

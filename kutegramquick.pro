@@ -9,6 +9,10 @@ DEFINES += VERSION=\"\\\"$$VERSION\\\"\"
 #DEFINES += COMMIT_SHA=\"\\\"$$COMMIT_SHA\\\"\"
 
 QT += core declarative network xml
+greaterThan(QT_MAJOR_VERSION, 4) {
+    win32:QT += winextras
+}
+
 DEFINES += QT_USE_FAST_CONCATENATION QT_USE_FAST_OPERATOR_PLUS
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT KG_NO_DEBUG KG_NO_INFO
 
@@ -57,13 +61,14 @@ symbian {
 INCLUDEPATH += src
 
 SOURCES +=  \
-	src/main.cpp \
+    src/main.cpp \
     src/dialogsmodel.cpp \
     src/messagesmodel.cpp \
     src/avatardownloader.cpp \
     src/foldersmodel.cpp \
     src/currentuserinfo.cpp \
-    src/messageutil.cpp
+    src/messageutil.cpp \
+    src/platformutils.cpp
 
 HEADERS += \
     src/dialogsmodel.h \
@@ -71,7 +76,8 @@ HEADERS += \
     src/avatardownloader.h \
     src/foldersmodel.h \
     src/currentuserinfo.h \
-    src/messageutil.h
+    src/messageutil.h \
+    src/platformutils.h
 
 OTHER_FILES += \
     qtc_packaging/debian_harmattan/rules \

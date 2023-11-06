@@ -5,7 +5,7 @@ import "control"
 import "auth"
 import Kutegram 1.0
 
-Rectangle {
+Item {
     //TODO: remove dynamically unused pages / components from memory
     //TODO: keypad navigation
     id: root
@@ -13,7 +13,7 @@ Rectangle {
     width: 320
     height: 240
 
-    property color globalAccent: "#54759E"
+    property color globalAccent: platformUtils.isWindows() ? platformUtils.windowsRealColorizationColor() : "#54759E"
 
     state: "AUTH"
 
@@ -25,6 +25,10 @@ Rectangle {
                 anchors.leftMargin: root.width
                 opacity: 0
             }
+            PropertyChanges {
+                target: authScreen
+                anchors.leftMargin: 0
+            }
         },
         State {
             name: "MAIN"
@@ -33,13 +37,17 @@ Rectangle {
                 anchors.leftMargin: 0
                 opacity: 1
             }
+            PropertyChanges {
+                target: authScreen
+                anchors.leftMargin: -root.width
+            }
         }
     ]
 
     transitions: [
         Transition {
             NumberAnimation {
-                properties: "opacity,anchors.leftMargin"
+                properties: "anchors.leftMargin,opacity"
                 easing.type: Easing.InOutQuad
                 duration: 200
             }

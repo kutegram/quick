@@ -8,13 +8,19 @@ Rectangle {
         width: parent.width * 2 / 3
         spacing: 5
 
-        Image {
+        Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             width: Math.min(introPageRect.height / 2, parent.width * 2 / 3)
             height: width
-            asynchronous: true
-            smooth: true
-            source: "../../kutegramquick_big.png"
+            color: globalAccent
+            radius: width / 4
+
+            Image {
+                anchors.fill: parent
+                asynchronous: true
+                smooth: true
+                source: "../../kutegramquick_big.png"
+            }
         }
 
         Text {

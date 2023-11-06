@@ -124,7 +124,7 @@ Item {
     }
 
     Rectangle {
-        height: 1
+        height: 1 * kgScaling
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom

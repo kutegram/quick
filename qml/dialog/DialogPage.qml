@@ -24,6 +24,7 @@ Rectangle {
         id: folderSlide
         focus: true
         anchors.fill: parent
+        clip: true
 
         model: foldersModel
         cacheBuffer: width * 5

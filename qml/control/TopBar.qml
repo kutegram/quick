@@ -15,8 +15,12 @@ Rectangle {
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: parent.right
-    color: globalAccent
+    color: platformUtils.windowsIsCompositionEnabled() ? "transparent" : globalAccent
     state: currentState == "CHAT" ? "BACK" : currentState
+
+    Component.onCompleted: {
+        platformUtils.windowsExtendFrameIntoClientArea(0, height, 0, 0);
+    }
 
     Rectangle {
         height: 1 * kgScaling
@@ -58,6 +62,7 @@ Rectangle {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 1 * kgScaling
                     height: 2 * kgScaling
                     color: "#FFFFFF"
                 }

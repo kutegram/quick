@@ -13,6 +13,7 @@
 #include "avatardownloader.h"
 #include "foldersmodel.h"
 #include "currentuserinfo.h"
+#include "platformutils.h"
 
 #if QT_VERSION >= 0x040702
 #include <QNetworkConfigurationManager>
@@ -69,14 +70,19 @@ int main(int argc, char *argv[])
     qmlRegisterType<AvatarDownloader>("Kutegram", 1, 0, "AvatarDownloader");
     qmlRegisterType<FoldersModel>("Kutegram", 1, 0, "FoldersModel");
     qmlRegisterType<CurrentUserInfo>("Kutegram", 1, 0, "CurrentUserInfo");
+    qmlRegisterUncreatableType<PlatformUtils>("Kutegram", 1, 0, "PlatformUtils", "PlatformUtils is uncreatable. Use platformUtils root property.");
 
     //TODO show status pane without button group on Symbian
     QmlApplicationViewer viewer;
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     viewer.rootContext()->setContextProperty("kutegramVersion", QApplication::applicationVersion());
     viewer.rootContext()->setContextProperty("kutegramPlatform", systemName());
+    viewer.rootContext()->setContextProperty("platformUtils", new PlatformUtils(&viewer));
     viewer.rootContext()->setContextProperty("kgScaling", ((float) fontMetrics.height()) / 13.0f);
     viewer.setMainQmlFile(QLatin1String("qrc:///qml/main.qml"));
+    viewer.setAttribute(Qt::WA_TranslucentBackground, true);
+    viewer.setAttribute(Qt::WA_NoSystemBackground, false);
+    viewer.setStyleSheet("background: transparent");
     viewer.setWindowTitle("Kutegram");
     viewer.showExpanded();
 

@@ -12,6 +12,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: messageEdit.top
+        clip: true
 
         boundsBehavior: Flickable.StopAtBounds
 

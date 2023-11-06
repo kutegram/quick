@@ -4,7 +4,7 @@ import "../message"
 import "../control"
 import "../auth"
 
-Rectangle {
+Item {
     id: mainScreen
     state: "MENU"
 
@@ -13,14 +13,14 @@ Rectangle {
             name: "MENU"
             PropertyChanges {
                 target: messagePage
-                x: mainScreen.width
+                anchors.leftMargin: mainScreen.width
             }
         },
         State {
             name: "CHAT"
             PropertyChanges {
                 target: messagePage
-                x: mainScreen.width < 600 * kgScaling ? 0 : dialogPage.width
+                anchors.leftMargin: mainScreen.width < 600 * kgScaling ? 0 : dialogPage.width
             }
         }
     ]
@@ -28,7 +28,7 @@ Rectangle {
     transitions: [
         Transition {
             NumberAnimation {
-                properties: "x"
+                properties: "anchors.leftMargin"
                 easing.type: Easing.InOutQuad
                 duration: 200
             }
@@ -40,10 +40,19 @@ Rectangle {
         messagePage.globalState = "NO_SELECT";
     }
 
+    Rectangle {
+        color: "white"
+        anchors.top: topBar.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+    }
+
     DialogPage {
         id: dialogPage
         anchors.top: topBar.bottom
         anchors.bottom: parent.bottom
+        anchors.left: parent.left
         width: parent.width < 600 * kgScaling ? parent.width : 300 * kgScaling
     }
 
@@ -51,15 +60,26 @@ Rectangle {
         id: messageIntroPage
         anchors.top: topBar.bottom
         anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.leftMargin: dialogPage.width
         width: messagePage.width
-        x: dialogPage.width
     }
 
     MessagePage {
         id: messagePage
         anchors.top: topBar.bottom
         anchors.bottom: parent.bottom
+        anchors.left: parent.left
         width: parent.width < 600 * kgScaling ? parent.width : parent.width - 300 * kgScaling
+    }
+
+    Rectangle {
+        id: sidePanelSeparator
+        anchors.top: topBar.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: messageIntroPage.left
+        width: 1 * kgScaling
+        color: "#EEEEEE"
     }
 
     TopBar {
