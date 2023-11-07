@@ -1,11 +1,9 @@
 import QtQuick 1.0
 
 Image {
-    property url image
-
     height: width
     //height: sourceSize.height * width / sourceSize.width
-    source: image
+    source: photoFile
     clip: true
     asynchronous: true
     smooth: true
@@ -25,10 +23,22 @@ Image {
         asynchronous: true
     }
 
+    Rectangle {
+        id: spoilerRect
+        visible: photoSpoiler
+        anchors.fill: parent
+        color: "gray"
+    }
+
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            imageViewer.imageSource = image;
+            if (spoilerRect.visible) {
+                spoilerRect.visible = false;
+                return;
+            }
+
+            imageViewer.imageSource = photoFile;
             imageViewer.state = "OPENED";
         }
     }

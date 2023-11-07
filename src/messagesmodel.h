@@ -57,7 +57,9 @@ private:
         ForwardedFromRole,
         MediaUrlRole,
         PhotoFileRole,
-        HasPhotoRole
+        HasPhotoRole,
+        PhotoSpoilerRole,
+        MediaSpoilerRole
     };
 
 public:

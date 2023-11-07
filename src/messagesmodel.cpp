@@ -72,6 +72,8 @@ QHash<int, QByteArray> MessagesModel::roleNames() const
     roles[MediaUrlRole] = "mediaUrl";
     roles[PhotoFileRole] = "photoFile";
     roles[HasPhotoRole] = "hasPhoto";
+    roles[MediaSpoilerRole] = "mediaSpoiler";
+    roles[PhotoSpoilerRole] = "photoSpoiler";
 
     return roles;
 }
@@ -494,6 +496,7 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
         row["photoFile"] = "";
         row["photoFileId"] = media["photo"].toMap()["id"].toLongLong();
         row["hasPhoto"] = row["photoFileId"].toLongLong() != 0;
+        row["photoSpoiler"] = media["spoiler"].toBool();
         break;
     }
     case MessageMediaContact:
@@ -552,6 +555,7 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
         row["mediaTitle"] = documentName;
         row["mediaFileName"] = documentName;
         row["mediaText"] = sizeString;
+        row["mediaSpoiler"] = media["spoiler"].toBool();
         break;
     }
     case MessageMediaWebPage:

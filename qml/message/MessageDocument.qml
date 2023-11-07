@@ -8,25 +8,6 @@ Rectangle {
     property int rowIndex: -1
     property string filePath: ""
 
-    MouseArea {
-        anchors.fill: parent
-        enabled: mediaDownloadable || mediaUrl.length != 0
-        onClicked: {
-            if (mediaUrl.length != 0) {
-                messagesModel.openUrl(mediaUrl);
-                return;
-            }
-
-            if (attachButton.state == "NOT_DOWNLOADING") {
-                messagesModel.downloadFile(rowIndex);
-            } else if (attachButton.state == "DOWNLOADED" && filePath.length != 0) {
-                messagesModel.openUrl(filePath);
-            } else {
-                messagesModel.cancelDownload(rowIndex);
-            }
-        }
-    }
-
     Component.onCompleted: {
         messagesModel.downloadUpdated.connect(handleDownload);
     }
@@ -184,6 +165,37 @@ Rectangle {
         Text {
             text: mediaText
             color: "#8D8D8D"
+        }
+    }
+
+    Rectangle {
+        id: spoilerRect
+        visible: mediaSpoiler
+        anchors.fill: parent
+        color: "gray"
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        enabled: spoilerRect.visible || mediaDownloadable || mediaUrl.length != 0
+        onClicked: {
+            if (spoilerRect.visible) {
+                spoilerRect.visible = false;
+                return;
+            }
+
+            if (mediaUrl.length != 0) {
+                messagesModel.openUrl(mediaUrl);
+                return;
+            }
+
+            if (attachButton.state == "NOT_DOWNLOADING") {
+                messagesModel.downloadFile(rowIndex);
+            } else if (attachButton.state == "DOWNLOADED" && filePath.length != 0) {
+                messagesModel.openUrl(filePath);
+            } else {
+                messagesModel.cancelDownload(rowIndex);
+            }
         }
     }
 }
