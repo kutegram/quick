@@ -1,8 +1,7 @@
 import QtQuick 1.0
 import "../dialog"
 
-Rectangle {
-
+Item {
     property string peerTitle: ""
     property color peerThumbnailColor: "#00000000"
     property string peerThumbnailText: ""
@@ -15,11 +14,17 @@ Rectangle {
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: parent.right
-    color: platformUtils.windowsIsCompositionEnabled() ? "transparent" : globalAccent
     state: currentState == "CHAT" ? "BACK" : currentState
 
     Component.onCompleted: {
         platformUtils.windowsExtendFrameIntoClientArea(0, height, 0, 0);
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        color: globalAccent
+        //opacity: platformUtils.windowsIsCompositionEnabled() ? 0.5 : 1;
+        opacity: 0
     }
 
     Rectangle {
