@@ -333,6 +333,10 @@ void MessagesModel::handleHistoryResponse(TgObject data, TgLongVariant messageId
         for (qint32 i = 0; i < chats.size(); ++i) {
             _avatarDownloader->downloadAvatar(chats[i].toMap());
         }
+        for (qint32 i = 0; i < messagesRows.size(); ++i) {
+            TgObject photo = messagesRows[i]["_photoToDownload"].toMap();
+            _avatarDownloader->downloadPhoto(photo);
+        }
     }
 }
 
@@ -413,10 +417,9 @@ void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant me
         for (qint32 i = 0; i < chats.size(); ++i) {
             _avatarDownloader->downloadAvatar(chats[i].toMap());
         }
-        for (qint32 i = 0; i < messages.size(); ++i) {
-            TgObject photo = messages[i].toMap()["media"].toMap()["photo"].toMap();
-            if (photo["id"].toLongLong() != 0)
-                _avatarDownloader->downloadPhoto(photo);
+        for (qint32 i = 0; i < messagesRows.size(); ++i) {
+            TgObject photo = messagesRows[i]["_photoToDownload"].toMap();
+            _avatarDownloader->downloadPhoto(photo);
         }
     }
 }
@@ -451,10 +454,6 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
     row["messageTime"] = QDateTime::fromTime_t(qMax(message["date"].toInt(), message["edit_date"].toInt())).toString("hh:mm");
     //TODO replies support
     row["messageText"] = messageToHtml(message["message"].toString(), message["entities"].toList());
-    if (GETID(message) == MessageService) {
-        //TODO service messages
-        row["messageText"] = "<html><i>service messages are not supported yet</i></html>";
-    }
     row["sender"] = TgClient::toInputPeer(sender);
 
     TgObject fwdFrom = message["fwd_from"].toMap();
@@ -494,6 +493,7 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
     {
         row["hasMedia"] = false;
         row["photoFile"] = "";
+        row["_photoToDownload"] = media["photo"].toMap();
         row["photoFileId"] = media["photo"].toMap()["id"].toLongLong();
         row["hasPhoto"] = row["photoFileId"].toLongLong() != 0;
         row["photoSpoiler"] = media["spoiler"].toBool();
@@ -606,6 +606,9 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
         row["mediaText"] = media["value"].toString();
         break;
     }
+
+    //TODO special bubble for service messages
+    handleMessageAction(row, message, sender, users, chats);
 
     return row;
 }

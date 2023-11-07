@@ -267,7 +267,7 @@ void DialogsModel::messagesGetDialogsResponse(TgObject data, TgLongVariant messa
             }
         }
 
-        dialogsRows.append(createRow(lastDialog, lastPeer, lastMessage, messageSender, folders));
+        dialogsRows.append(createRow(lastDialog, lastPeer, lastMessage, messageSender, folders, usersList, chatsList));
     }
 
     beginInsertRows(QModelIndex(), _dialogs.size(), _dialogs.size() + dialogsRows.size() - 1);
@@ -287,7 +287,7 @@ void DialogsModel::messagesGetDialogsResponse(TgObject data, TgLongVariant messa
         fetchMoreDownwards();
 }
 
-TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject message, TgObject messageSender, QList<TgObject> folders)
+TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject message, TgObject messageSender, QList<TgObject> folders, TgList users, TgList chats)
 {
     TgObject row;
 
@@ -329,7 +329,9 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
     QString messageSenderName;
 
     if (message["out"].toBool()) {
-        //messageSenderName = "You";
+        if (ID(message["action"].toMap()) != 0) {
+            messageSenderName = "You";
+        }
     } else if (TgClient::isUser(messageSender)) {
         messageSenderName = messageSender["first_name"].toString();
     } else {
@@ -337,7 +339,11 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
     }
 
     if (!messageSenderName.isEmpty()) {
-        messageSenderName += ": ";
+        if (ID(message["action"].toMap()) == 0) {
+            messageSenderName += ": ";
+        } else {
+            messageSenderName += " ";
+        }
     }
 
     row["messageSenderName"] = messageSenderName;
@@ -360,6 +366,8 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
     row["thumbnailText"] = AvatarDownloader::getAvatarText(row["title"].toString());
     row["avatar"] = "";
     row["photoId"] = peer["photo"].toMap()["photo_id"];
+
+    handleMessageAction(row, message, messageSender, users, chats);
 
     return row;
 }
