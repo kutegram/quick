@@ -37,6 +37,11 @@ Item {
         changeTimer.restart();
     }
 
+    onVisibleChanged: {
+        if (!visible)
+            imageSource = "";
+    }
+
     Timer {
         id: changeTimer
         interval: 200
