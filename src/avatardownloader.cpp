@@ -176,6 +176,22 @@ void AvatarDownloader::fileDownloaded(TgLongVariant fileId, QString filePath)
 
     photoId = _requestsPhotos.take(fileId.toLongLong());
     if (!photoId.isNull()) {
+        QFile file(filePath);
+        if (!file.open(QFile::ReadOnly)) {
+            return;
+        }
+
+        QImage scaledImage = QImage::fromData(file.readAll());
+        if (scaledImage.height() > scaledImage.width()) {
+            scaledImage = scaledImage.scaledToHeight(280, Qt::SmoothTransformation);
+        } else {
+            scaledImage = scaledImage.scaledToWidth(280, Qt::SmoothTransformation);
+        }
+        file.close();
+        if (!scaledImage.save(filePath + ".thumbnail.jpg")) {
+            return;
+        }
+
         _downloadedPhotos.append(photoId);
         saveDatabase();
     #if QT_VERSION >= 0x050000
