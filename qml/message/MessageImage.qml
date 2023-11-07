@@ -3,7 +3,7 @@ import QtQuick 1.0
 Image {
     height: width
     //height: sourceSize.height * width / sourceSize.width
-    source: photoFile + ".thumbnail.jpg"
+    source: photoFile.length == 0 ? "" : photoFile + ".thumbnail.jpg"
     clip: true
     asynchronous: true
     smooth: true
