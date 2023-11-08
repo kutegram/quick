@@ -41,17 +41,6 @@ int main(int argc, char *argv[])
     QApplication::setAttribute(Qt::AA_UseOpenGLES, true);
 #endif
 
-    QFont font = app.font();
-
-#if defined(Q_OS_SYMBIAN)
-    font.setPixelSize(qFloor(((float) font.pointSize()) * 3.0f));
-#elif defined(Q_OS_WINDOWS)
-    font.setPixelSize(qFloor(((float) font.pixelSize()) * 1.5f));
-#endif
-
-    app.setFont(font);
-    QFontMetrics fontMetrics(font);
-
     QApplication::setApplicationVersion(VERSION);
     QApplication::setApplicationName("Kutegram");
     QApplication::setOrganizationName("Kutegram");
@@ -78,7 +67,7 @@ int main(int argc, char *argv[])
     viewer.rootContext()->setContextProperty("kutegramVersion", QApplication::applicationVersion());
     viewer.rootContext()->setContextProperty("kutegramPlatform", systemName());
     viewer.rootContext()->setContextProperty("platformUtils", new PlatformUtils(&viewer));
-    viewer.rootContext()->setContextProperty("kgScaling", ((float) fontMetrics.height()) / 13.0f);
+    viewer.rootContext()->setContextProperty("kgScaling", QFontMetrics(app.font()).height() / 14.0f);
     viewer.setMainQmlFile(QLatin1String("qrc:///qml/Main.qml"));
     viewer.setWindowTitle("Kutegram");
     viewer.showExpanded();

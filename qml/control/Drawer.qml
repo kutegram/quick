@@ -115,7 +115,7 @@ Item {
                     anchors.top: parent.top
                     anchors.left: parent.left
                     anchors.bottom: parent.bottom
-                    width: Math.min(Math.max(240, parent.width * 2 / 3), 280 * kgScaling)
+                    width: Math.min(Math.max(240, parent.width * 5 / 6), 280 * kgScaling)
                     color: "#FFFFFF"
 
                     Rectangle {

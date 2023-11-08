@@ -17,7 +17,7 @@ Rectangle {
 
             Image {
                 anchors.fill: parent
-                asynchronous: true
+                //asynchronous: true
                 smooth: true
                 source: "../../kutegramquick_big.png"
             }

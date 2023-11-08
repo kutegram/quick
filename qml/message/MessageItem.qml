@@ -171,7 +171,7 @@ Item {
             MessageImage {
                 state: currentState
                 anchors.left: parent.left
-                width: Math.min(280, parent.width / 2)
+                width: Math.min(280, parent.width)
             }
         }
 
