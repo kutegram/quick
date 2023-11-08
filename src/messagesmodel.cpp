@@ -1038,8 +1038,18 @@ void MessagesModel::uploadFile()
 {
     cancelUpload();
 
-    QString selected = QFileDialog::getOpenFileName();
+    QFileDialog fileDialog;
+    fileDialog.setAttribute(Qt::WA_DeleteOnClose, false);
+    fileDialog.setAttribute(Qt::WA_QuitOnClose, false);
+    fileDialog.setFileMode(QFileDialog::ExistingFile);
+    fileDialog.exec();
 
+    QStringList selectedFiles = fileDialog.selectedFiles();
+    if (selectedFiles.isEmpty()) {
+        return;
+    }
+
+    QString selected = selectedFiles.first();
     if (selected.isEmpty()) {
         return;
     }
