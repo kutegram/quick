@@ -418,8 +418,7 @@ void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant me
             _avatarDownloader->downloadAvatar(chats[i].toMap());
         }
         for (qint32 i = 0; i < messagesRows.size(); ++i) {
-            TgObject photo = messagesRows[i]["_photoToDownload"].toMap();
-            _avatarDownloader->downloadPhoto(photo);
+            _avatarDownloader->downloadPhoto(messagesRows[i]["_photoToDownload"].toMap());
         }
     }
 }
@@ -866,14 +865,18 @@ void MessagesModel::gotMessageUpdate(TgObject update, TgLongVariant messageId)
     qint32 oldSize = _history.size();
 
     beginInsertRows(QModelIndex(), _history.size(), _history.size());
-    _history.append(createRow(update, sender, _globalUsers, _globalChats));
+    TgObject messageRow = createRow(update, sender, _globalUsers, _globalChats);
+    _history.append(messageRow);
     endInsertRows();
 
     if (oldSize > 0) {
         emit dataChanged(index(oldSize - 1), index(oldSize - 1));
     }
 
-    _avatarDownloader->downloadAvatar(sender);
+    if (_avatarDownloader) {
+        _avatarDownloader->downloadAvatar(sender);
+        _avatarDownloader->downloadPhoto(messageRow["_photoToDownload"].toMap());
+    }
 
     emit scrollForNew();
 }
@@ -924,14 +927,18 @@ void MessagesModel::gotUpdate(TgObject update, TgLongVariant messageId, TgList u
         qint32 oldSize = _history.size();
 
         beginInsertRows(QModelIndex(), _history.size(), _history.size());
-        _history.append(createRow(message, sender, users, chats));
+        TgObject messageRow = createRow(message, sender, users, chats);
+        _history.append(messageRow);
         endInsertRows();
 
         if (oldSize > 0) {
             emit dataChanged(index(oldSize - 1), index(oldSize - 1));
         }
 
-        _avatarDownloader->downloadAvatar(sender);
+        if (_avatarDownloader) {
+            _avatarDownloader->downloadAvatar(sender);
+            _avatarDownloader->downloadPhoto(messageRow["_photoToDownload"].toMap());
+        }
 
         emit scrollForNew();
         break;
@@ -979,11 +986,15 @@ void MessagesModel::gotUpdate(TgObject update, TgLongVariant messageId, TgList u
             sender = _peer;
         }
 
-        _history.replace(rowIndex, createRow(message, sender, users, chats));
+        TgObject messageRow = createRow(message, sender, users, chats);
+        _history.replace(rowIndex, messageRow);
 
         emit dataChanged(index(rowIndex), index(rowIndex));
 
-        _avatarDownloader->downloadAvatar(sender);
+        if (_avatarDownloader) {
+            _avatarDownloader->downloadAvatar(sender);
+            _avatarDownloader->downloadPhoto(messageRow["_photoToDownload"].toMap());
+        }
         break;
     }
     case TLType::UpdateDeleteChannelMessages:
