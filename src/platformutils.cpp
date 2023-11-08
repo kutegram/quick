@@ -145,7 +145,10 @@ bool PlatformUtils::isWindows()
 
 void PlatformUtils::gotNewMessage(qint64 peerId, QString peerName, QString senderName, QString text, bool silent)
 {
-    //TODO connect slot
+    if (window->hasFocus()) {
+        unread.clear();
+        return;
+    }
 
     QVariantMap info;
     info["id"] = peerId;
