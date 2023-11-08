@@ -58,6 +58,7 @@ PlatformUtils::PlatformUtils(QWidget *parent)
             piglerHandleTap(response);
 
         connect(&pigler, SIGNAL(handleTap(qint32)), this, SLOT(piglerHandleTap(qint32)));
+        pigler.removeAllNotifications();
         piglerId = 0;
     }
 #endif
