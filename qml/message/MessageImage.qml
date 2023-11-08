@@ -11,6 +11,22 @@ Image {
 
     //TODO loading spinner
 
+    Rectangle {
+        id: spoilerRect
+        visible: photoSpoiler
+        anchors.fill: parent
+        color: "gray"
+
+        Text {
+            anchors.fill: parent
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            font.pixelSize: 13 * kgScaling
+            color: "white"
+            text: "Media is hidden.\nClick to reveal."
+        }
+    }
+
     Image {
         id: checkbox
         //TODO: adaptive color
@@ -21,13 +37,6 @@ Image {
         x: 5 * kgScaling
         y: 5 * kgScaling
         asynchronous: true
-    }
-
-    Rectangle {
-        id: spoilerRect
-        visible: photoSpoiler
-        anchors.fill: parent
-        color: "gray"
     }
 
     MouseArea {

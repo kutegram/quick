@@ -173,6 +173,15 @@ Rectangle {
         visible: mediaSpoiler
         anchors.fill: parent
         color: "gray"
+
+        Text {
+            anchors.fill: parent
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            font.pixelSize: 13 * kgScaling
+            color: "white"
+            text: "Media is hidden.\nClick to reveal."
+        }
     }
 
     MouseArea {
