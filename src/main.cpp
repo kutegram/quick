@@ -14,6 +14,8 @@
 #include "foldersmodel.h"
 #include "currentuserinfo.h"
 #include "platformutils.h"
+#include <QSystemSemaphore>
+#include <QSharedMemory>
 
 #if QT_VERSION >= 0x040702
 #include <QNetworkConfigurationManager>
@@ -30,6 +32,32 @@ int main(int argc, char *argv[])
 #endif
 
     QApplication app(argc, argv);
+
+    QSystemSemaphore sema("Kutegram_semaphone", 1);
+    bool isRunning;
+    sema.acquire();
+
+    {
+        QSharedMemory shmem("Kutegram_shared");
+        shmem.attach();
+    }
+
+    QSharedMemory shmem("Kutegram_shared");
+    if (shmem.attach())
+    {
+        isRunning = true;
+    }
+    else
+    {
+        shmem.create(1);
+        isRunning = false;
+    }
+
+    sema.release();
+    if (isRunning) {
+        //TODO raise Kutegram window
+        return 1;
+    }
 
     //TODO: keypad UI navigation
 #ifdef Q_OS_SYMBIAN
