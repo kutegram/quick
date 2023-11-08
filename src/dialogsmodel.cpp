@@ -513,8 +513,6 @@ void DialogsModel::gotMessageUpdate(TgObject update, TgLongVariant messageId)
 
     prepareNotification(_dialogs[rowIndex]);
 
-    //TODO no out flag?
-
     if (_dialogs[rowIndex]["pinned"].toBool()) {
         return;
     }
@@ -577,12 +575,12 @@ void DialogsModel::gotUpdate(TgObject update, TgLongVariant messageId, TgList us
             sender = _dialogs[rowIndex]["peer"].toMap();
         }
 
+        message["out"] = TgClient::getPeerId(sender) == _client->getUserId();
+
         handleDialogMessage(_dialogs[rowIndex], message, sender, users, chats);
         emit dataChanged(index(rowIndex), index(rowIndex));
 
         prepareNotification(_dialogs[rowIndex]);
-
-        //TODO no out flag?
 
         if (_dialogs[rowIndex]["pinned"].toBool()) {
             return;

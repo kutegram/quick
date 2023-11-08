@@ -926,6 +926,8 @@ void MessagesModel::gotUpdate(TgObject update, TgLongVariant messageId, TgList u
             sender = _peer;
         }
 
+        message["out"] = TgClient::getPeerId(sender) == _client->getUserId();
+
         qint32 oldSize = _history.size();
 
         beginInsertRows(QModelIndex(), _history.size(), _history.size());
@@ -987,6 +989,8 @@ void MessagesModel::gotUpdate(TgObject update, TgLongVariant messageId, TgList u
             //Authorized user is returned by API, so we don't need to put it manually.
             sender = _peer;
         }
+
+        message["out"] = TgClient::getPeerId(sender) == _client->getUserId();
 
         TgObject messageRow = createRow(message, sender, users, chats);
         _history.replace(rowIndex, messageRow);
