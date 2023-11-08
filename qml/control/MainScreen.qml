@@ -60,7 +60,10 @@ Item {
         folders: foldersModel
         client: telegramClient
         avatarDownloader: globalAvatarDownloader
-        Component.onCompleted: dialogPage.refresh.connect(refresh)
+        Component.onCompleted: {
+		    dialogPage.refresh.connect(refresh);
+			dialogsModel.sendNotification.connect(platformUtils.gotNewMessage);
+		}
     }
 
     MessagesModel {

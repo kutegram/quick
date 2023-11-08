@@ -22,6 +22,12 @@ win32:RC_FILE = kutegramquick.rc
 macx:ICON = kutegramquick.icns
 
 symbian {
+    contains(SYMBIAN_VERSION, Symbian3) {
+        LIBS += -lavkon -lapgrfx -lcone -leikcore -lapmime
+        DEFINES += SYMBIAN3_READY=1
+        include(pigler/qt-library/pigler.pri)
+    }
+
     ICON = kutegramquick.svg
     TARGET.UID3 = 0xE0713D51
     DEFINES += SYMBIAN_UID=$$TARGET.UID3
@@ -91,8 +97,6 @@ RESOURCES += \
     resources.qrc
 
 include(libkg/libkg.pri)
-
-include(pigler/qt-library/library.pri)
 
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
 qtcAddDeployment()

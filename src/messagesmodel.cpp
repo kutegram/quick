@@ -9,7 +9,7 @@
 #include "avatardownloader.h"
 #include <QFileDialog>
 #include "messageutil.h"
-#include <QDesktopServices>
+#include "platformutils.h"
 
 #if QT_VERSION >= 0x050000
 #include <QStandardPaths>
@@ -646,15 +646,10 @@ void MessagesModel::linkActivated(QString link, qint32 listIndex)
     }
 
     if (url.scheme().isEmpty()) {
-        openUrl("http://" + link);
+        openUrl(QUrl("http://" + link));
     } else {
-        openUrl(link);
+        openUrl(QUrl(link));
     }
-}
-
-void MessagesModel::openUrl(QString url)
-{
-    QDesktopServices::openUrl(QUrl(url));
 }
 
 void MessagesModel::avatarDownloaded(TgLongVariant photoId, QString filePath)

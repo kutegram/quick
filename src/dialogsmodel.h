@@ -63,8 +63,10 @@ public:
 
     TgObject createRow(TgObject dialog, TgObject peer, TgObject message, TgObject messageSender, QList<TgObject> folders, TgList users, TgList chats);
     void handleDialogMessage(TgObject &row, TgObject message, TgObject messageSender, TgList users, TgList chats);
+    void prepareNotification(TgObject row);
 
 signals:
+    void sendNotification(qint64 peerId, QString peerName, QString senderName, QString text, bool silent);
 
 public slots:
     void authorized(TgLongVariant userId);

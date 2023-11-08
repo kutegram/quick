@@ -6,6 +6,8 @@
 #include <QDateTime>
 #include "messageutil.h"
 
+//TODO archived chats
+
 DialogsModel::DialogsModel(QObject *parent)
     : QAbstractListModel(parent)
     , _mutex(QMutex::Recursive)
@@ -305,6 +307,8 @@ void DialogsModel::handleDialogMessage(TgObject &row, TgObject message, TgObject
 
     QString messageSenderName;
 
+    row["messageOut"] = message["out"].toBool();
+
     if (message["out"].toBool()) {
         if (ID(message["action"].toMap()) != 0) {
             messageSenderName = "You";
@@ -348,6 +352,7 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
 
     row["peer"] = peer;
     row["pinned"] = dialog["pinned"].toBool();
+    row["silent"] = dialog["notify_settings"].toMap()["silent"].toBool();
 
     TgObject inputPeer = peer;
     inputPeer.unite(dialog);
@@ -506,6 +511,8 @@ void DialogsModel::gotMessageUpdate(TgObject update, TgLongVariant messageId)
     handleDialogMessage(_dialogs[rowIndex], update, sender, globalUsers(), globalChats());
     emit dataChanged(index(rowIndex), index(rowIndex));
 
+    prepareNotification(_dialogs[rowIndex]);
+
     //TODO no out flag?
 
     if (_dialogs[rowIndex]["pinned"].toBool()) {
@@ -573,6 +580,8 @@ void DialogsModel::gotUpdate(TgObject update, TgLongVariant messageId, TgList us
         handleDialogMessage(_dialogs[rowIndex], message, sender, users, chats);
         emit dataChanged(index(rowIndex), index(rowIndex));
 
+        prepareNotification(_dialogs[rowIndex]);
+
         //TODO no out flag?
 
         if (_dialogs[rowIndex]["pinned"].toBool()) {
@@ -587,4 +596,16 @@ void DialogsModel::gotUpdate(TgObject update, TgLongVariant messageId, TgList us
         break;
     }
     }
+}
+
+void DialogsModel::prepareNotification(TgObject row)
+{
+    if (row["messageOut"].toBool())
+        return;
+
+    emit sendNotification(TgClient::getPeerId(row["peer"].toMap()).toLongLong(),
+                          row["title"].toString(),
+                          row["messageSenderName"].toString(),
+                          row["messageText"].toString(),
+                          row["silent"].toBool());
 }
