@@ -481,8 +481,10 @@ TgObject MessagesModel::createRow(TgObject message, TgObject sender, TgList user
     TgObject media = message["media"].toMap();
     row["hasMedia"] = GETID(media) != 0;
     row["mediaDownloadable"] = false;
-
+    row["mediaSpoiler"] = false;
+    row["photoSpoiler"] = false;
     row["mediaUrl"] = "";
+
     switch (GETID(media)) {
     case MessageMediaPhoto:
     {
