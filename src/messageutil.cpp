@@ -127,39 +127,6 @@ QString prepareDialogItemMessage(QString text, TgList entities)
 
     qSort(entities.begin(), entities.end(), entitiesSorter);
 
-    for (qint32 i = 0; i < text.length(); ++i) {
-        QString replace;
-
-        if (text[i] == '&') {
-            replace = "&amp;";
-        } else if (text[i] == '<') {
-            replace = "&lt;";
-        } else if (text[i] == '>') {
-            replace = "&gt;";
-        } else {
-            continue;
-        }
-
-        text.remove(i, 1);
-        text.insert(i, replace);
-
-        for (qint32 j = 0; j < entities.length(); ++j) {
-            TgObject entity = entities[j].toMap();
-            qint32 offset = entity["offset"].toInt();
-            qint32 length = entity["length"].toInt();
-
-            if (i >= offset && i < offset + length) {
-                entity["length"] = length + replace.length() - 1;
-            } else if (i < offset) {
-                entity["offset"] = offset + replace.length() - 1;
-            }
-
-            entities[j] = entity;
-        }
-
-        i += replace.length() - 1;
-    }
-
     //Just remove spoilers
     for (qint32 i = 0; i < entities.length(); ++i) {
         TgObject entity = entities[i].toMap();
