@@ -79,6 +79,7 @@ Item {
             text: thumbnailText
             color: "#FFFFFF"
             font.bold: true
+            font.pixelSize: 12 * kgScaling
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
@@ -119,6 +120,7 @@ Item {
             Text {
                 text: senderName
                 font.bold: true
+                font.pixelSize: 12 * kgScaling
                 visible: !mergeMessage
             }
 
@@ -127,6 +129,7 @@ Item {
                 text: messageTime
                 color: "#999999"
                 visible: !mergeMessage
+                font.pixelSize: 12 * kgScaling
             }
         }
 
@@ -147,6 +150,7 @@ Item {
             Text {
                 text: forwardedFrom
                 font.bold: true
+                font.pixelSize: 12 * kgScaling
                 color: "#8D8D8D"
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -160,6 +164,7 @@ Item {
             text: messageText
             visible: messageText.length != 0
             color: "#000000"
+            font.pixelSize: 12 * kgScaling
 
             onLinkActivated: {
                 messagesModel.linkActivated(link, index);

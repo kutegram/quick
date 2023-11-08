@@ -16,6 +16,7 @@ Rectangle {
             text: "Your Phone Number"
             font.bold: true
             wrapMode: Text.Wrap
+            font.pixelSize: 12 * kgScaling
         }
 
         Text {
@@ -23,6 +24,7 @@ Rectangle {
             anchors.right: parent.right
             text: "Please, enter your phone number."
             wrapMode: Text.Wrap
+            font.pixelSize: 12 * kgScaling
         }
 
         LineEdit {

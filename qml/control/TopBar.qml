@@ -112,6 +112,7 @@ Item {
                     text: peerThumbnailText
                     color: "#FFFFFF"
                     font.bold: true
+                    font.pixelSize: 12 * kgScaling
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -148,6 +149,7 @@ Item {
                         elide: Text.ElideRight
                         text: peerTitle
                         font.bold: true
+                        font.pixelSize: 12 * kgScaling
                         color: "#FFFFFF"
                     }
                 }
@@ -158,6 +160,7 @@ Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     elide: Text.ElideRight
+                    font.pixelSize: 12 * kgScaling
                 }
             }
 
@@ -188,6 +191,7 @@ Item {
             verticalAlignment: Text.AlignVCenter
             text: "Kutegram"
             font.bold: true
+            font.pixelSize: 12 * kgScaling
             color: "#FFFFFF"
 
             MouseArea {

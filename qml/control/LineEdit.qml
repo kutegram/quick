@@ -49,6 +49,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         anchors.leftMargin: 5 * kgScaling
         anchors.rightMargin: 5 * kgScaling
+        font.pixelSize: 12 * kgScaling
     }
 
     Rectangle {

@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
     viewer.rootContext()->setContextProperty("kutegramVersion", QApplication::applicationVersion());
     viewer.rootContext()->setContextProperty("kutegramPlatform", systemName());
     viewer.rootContext()->setContextProperty("platformUtils", new PlatformUtils(&viewer));
-    viewer.rootContext()->setContextProperty("kgScaling", QFontMetrics(app.font()).height() / 13.0f);
+    viewer.rootContext()->setContextProperty("kgScaling", QFontMetrics(app.font()).height() / 14.0f);
     viewer.setMainQmlFile(QLatin1String("qrc:///qml/Main.qml"));
     viewer.setWindowTitle("Kutegram");
     viewer.showExpanded();

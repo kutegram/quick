@@ -30,6 +30,7 @@ Rectangle {
             font.bold: true
             wrapMode: Text.Wrap
             horizontalAlignment: Text.AlignHCenter
+            font.pixelSize: 12 * kgScaling
         }
 
         Text {
@@ -38,6 +39,7 @@ Rectangle {
             text: "Just another unofficial Telegram client."
             wrapMode: Text.Wrap
             horizontalAlignment: Text.AlignHCenter
+            font.pixelSize: 12 * kgScaling
         }
 
         Button {

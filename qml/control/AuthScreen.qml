@@ -176,6 +176,7 @@ Rectangle {
             anchors.centerIn: parent
             font.bold: true
             text: "SETTINGS"
+            font.pixelSize: 12 * kgScaling
         }
     }
 

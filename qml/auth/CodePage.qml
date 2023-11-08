@@ -14,6 +14,7 @@ Rectangle {
             text: "Confirmation Code"
             font.bold: true
             wrapMode: Text.Wrap
+            font.pixelSize: 12 * kgScaling
         }
 
         Text {
@@ -21,6 +22,7 @@ Rectangle {
             anchors.right: parent.right
             text: "Please, enter your confirmation code."
             wrapMode: Text.Wrap
+            font.pixelSize: 12 * kgScaling
         }
 
         LineEdit {

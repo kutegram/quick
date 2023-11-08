@@ -24,6 +24,7 @@ Item {
             text: title
             visible: title.length != 0
             color: "#FFFFFF"
+            font.pixelSize: 12 * kgScaling
         }
     }
 

@@ -21,7 +21,7 @@ Image {
             anchors.fill: parent
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            font.pixelSize: 13 * kgScaling
+            font.pixelSize: 12 * kgScaling
             color: "white"
             text: "Media is hidden.\nClick to reveal."
         }

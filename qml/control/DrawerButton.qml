@@ -43,5 +43,6 @@ Item {
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
         text: name
+        font.pixelSize: 12 * kgScaling
     }
 }

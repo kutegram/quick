@@ -159,12 +159,14 @@ Rectangle {
             Text {
                 text: mediaTitle
                 font.bold: true
+                font.pixelSize: 12 * kgScaling
             }
         }
 
         Text {
             text: mediaText
             color: "#8D8D8D"
+            font.pixelSize: 12 * kgScaling
         }
     }
 
@@ -178,7 +180,7 @@ Rectangle {
             anchors.fill: parent
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            font.pixelSize: 13 * kgScaling
+            font.pixelSize: 12 * kgScaling
             color: "white"
             text: "Media is hidden.\nClick to reveal."
         }

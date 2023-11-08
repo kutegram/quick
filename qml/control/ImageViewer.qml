@@ -297,7 +297,7 @@ Item {
         anchors.centerIn: bottomCenterRect
         text: scalingAnimated + "%"
         color: "white"
-        font.pixelSize: 13 * kgScaling
+        font.pixelSize: 12 * kgScaling
     }
 }
 

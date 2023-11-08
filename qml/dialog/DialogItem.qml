@@ -48,6 +48,7 @@ Item {
             text: thumbnailText
             color: "#FFFFFF"
             font.bold: true
+            font.pixelSize: 12 * kgScaling
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
@@ -84,12 +85,14 @@ Item {
             Text {
                 elide: Text.ElideRight
                 text: title
+                font.pixelSize: 12 * kgScaling
             }
 
             Text {
                 anchors.bottom: parent.bottom
                 text: messageTime
                 color: "#999999"
+                font.pixelSize: 12 * kgScaling
             }
         }
 
@@ -104,6 +107,7 @@ Item {
                 anchors.left: parent.left
                 text: messageSenderName
                 color: messageSenderColor
+                font.pixelSize: 12 * kgScaling
             }
 
             Text {
@@ -115,6 +119,7 @@ Item {
                 color: "#8D8D8D"
                 elide: Text.ElideRight
                 clip: true
+                font.pixelSize: 12 * kgScaling
 
                 onLinkActivated: {
                     openDialog();

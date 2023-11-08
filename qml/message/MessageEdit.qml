@@ -259,6 +259,7 @@ Rectangle {
                 anchors.fill: parent
                 focus: true
                 wrapMode: TextEdit.Wrap
+                font.pixelSize: 12 * kgScaling
                 onCursorRectangleChanged: innerFlick.ensureVisible(cursorRectangle)
             }
         }
@@ -270,6 +271,7 @@ Rectangle {
             anchors.right: parent.right
             color: "#8D8D8D"
             text: "Write a message..."
+            font.pixelSize: 12 * kgScaling
             state: messageText.length == 0 ? "EMPTY" : "NOT_EMPTY"
 
             states: [

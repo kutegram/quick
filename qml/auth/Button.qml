@@ -21,6 +21,7 @@ Item {
         text: "Next"
         font.bold: true
         color: "#FFFFFF"
+        font.pixelSize: 12 * kgScaling
     }
 
     MouseArea {

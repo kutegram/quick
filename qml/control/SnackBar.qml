@@ -40,6 +40,7 @@ Item {
             anchors.rightMargin: 8 * kgScaling
             color: "#FFFFFF"
             text: ""
+            font.pixelSize: 12 * kgScaling
 
             wrapMode: Text.Wrap
             state: "EMPTY"

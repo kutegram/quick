@@ -151,6 +151,7 @@ Item {
                                 text: peerThumbnailText
                                 color: "#FFFFFF"
                                 font.bold: true
+                                font.pixelSize: 12 * kgScaling
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
                             }
@@ -178,6 +179,7 @@ Item {
                             text: peerName
                             color: "#FFFFFF"
                             font.bold: true
+                            font.pixelSize: 12 * kgScaling
 
                             anchors.left: parent.left
                             anchors.top: avatarImage.bottom
@@ -191,6 +193,7 @@ Item {
                             id: avatarUsername
                             text: peerUsername.length != 0 ? "@" + peerUsername : "no username"
                             color: "#FFFFFF"
+                            font.pixelSize: 12 * kgScaling
 
                             anchors.left: parent.left
                             anchors.top: avatarName.bottom
@@ -257,6 +260,7 @@ Item {
                             text: "Version " + kutegramVersion + " for " + kutegramPlatform
                             elide: Text.ElideRight
                             font.bold: true
+                            font.pixelSize: 12 * kgScaling
                         }
                     }
                 }
