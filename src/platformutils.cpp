@@ -52,7 +52,7 @@ PlatformUtils::PlatformUtils(QWidget *parent)
 #endif
 
 #ifdef SYMBIAN3_READY
-    qint32 response = pigler.init("Kutegram_" + QString::number((quint64) randomLong(), 16));
+    qint32 response = pigler.init("Kutegram"); //TODO think about randomization
     if (response >= 0) {
         if (response > 0)
             piglerHandleTap(response);
@@ -193,14 +193,14 @@ void PlatformUtils::gotNewMessage(qint64 peerId, QString peerName, QString sende
     if (piglerId == 0) {
         piglerId = pigler.createNotification(title, message);
     } else if (piglerId > 0) {
-         piglerId = pigler.updateNotification(piglerId, title, message);
+        pigler.updateNotification(piglerId, title, message);
     } else {
         kgDebug() << "Pigler is not initialized";
     }
 
     if (piglerId > 0) {
         static QImage piglerImage(":/kutegramquick_pigler.png");
-        piglerId = pigler.setNotificationIcon(piglerId, piglerImage);
+        pigler.setNotificationIcon(piglerId, piglerImage);
     }
 #endif
 
