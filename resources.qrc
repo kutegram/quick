@@ -85,5 +85,6 @@
         <file>qml/control/MainScreen.qml</file>
         <file>qml/control/AuthScreen.qml</file>
         <file>qml/control/MessageIntroPage.qml</file>
+        <file>kutegramquick_small.png</file>
     </qresource>
 </RCC>
