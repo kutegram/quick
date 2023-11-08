@@ -28,6 +28,7 @@ private:
     AvatarDownloader* _avatarDownloader;
 
     FoldersModel* _folders;
+    qint32 _lastPinnedIndex;
 
     enum DialogRoles {
         TitleRole = Qt::UserRole + 1,
@@ -61,6 +62,7 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
     TgObject createRow(TgObject dialog, TgObject peer, TgObject message, TgObject messageSender, QList<TgObject> folders, TgList users, TgList chats);
+    void handleDialogMessage(TgObject &row, TgObject message, TgObject messageSender, TgList users, TgList chats);
 
 signals:
 
@@ -76,6 +78,9 @@ public slots:
 
     void foldersChanged(QList<TgObject> folders);
     bool inFolder(qint32 index, qint32 folderIndex);
+
+    void gotUpdate(TgObject update, TgLongVariant messageId, TgList users, TgList chats, qint32 date, qint32 seq, qint32 seqStart);
+    void gotMessageUpdate(TgObject update, TgLongVariant messageId);
 
 };
 

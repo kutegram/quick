@@ -3,22 +3,7 @@ import Kutegram 1.0
 
 Rectangle {
     id: pageRoot
-    property alias foldersModel: foldersModel
     signal refresh()
-
-    FoldersModel {
-        id: foldersModel
-        client: telegramClient
-        Component.onCompleted: pageRoot.refresh.connect(refresh)
-    }
-
-    DialogsModel {
-        id: dialogsModel
-        folders: foldersModel
-        client: telegramClient
-        avatarDownloader: globalAvatarDownloader
-        Component.onCompleted: pageRoot.refresh.connect(refresh)
-    }
 
     ListView {
         id: folderSlide

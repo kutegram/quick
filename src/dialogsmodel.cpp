@@ -16,6 +16,7 @@ DialogsModel::DialogsModel(QObject *parent)
     , _offsets()
     , _avatarDownloader(0)
     , _folders(0)
+    , _lastPinnedIndex(-1)
 {
 #if QT_VERSION < 0x050000
     setRoleNames(roleNames());
@@ -77,6 +78,7 @@ void DialogsModel::resetState()
     _requestId = 0;
     _offsets = TgObject();
     _offsets["_start"] = true;
+    _lastPinnedIndex = -1;
 }
 
 QHash<int, QByteArray> DialogsModel::roleNames() const
@@ -117,6 +119,7 @@ void DialogsModel::setClient(QObject *client)
 
     connect(_client, SIGNAL(authorized(TgLongVariant)), this, SLOT(authorized(TgLongVariant)));
     connect(_client, SIGNAL(messagesDialogsResponse(TgObject,TgLongVariant)), this, SLOT(messagesGetDialogsResponse(TgObject,TgLongVariant)));
+    connect(_client, SIGNAL(gotUpdate(TgObject,TgLongVariant,TgList,TgList,qint32,qint32,qint32)), this, SLOT(gotUpdate(TgObject,TgLongVariant,TgList,TgList,qint32,qint32,qint32)));
 }
 
 QObject* DialogsModel::client() const
@@ -205,6 +208,9 @@ void DialogsModel::messagesGetDialogsResponse(TgObject data, TgLongVariant messa
     TgList usersList = data["users"].toList();
     TgList chatsList = data["chats"].toList();
 
+    globalUsers().append(usersList);
+    globalChats().append(chatsList);
+
     if (dialogsList.isEmpty()) {
         _offsets = TgObject();
         return;
@@ -219,6 +225,11 @@ void DialogsModel::messagesGetDialogsResponse(TgObject data, TgLongVariant messa
 
     for (qint32 i = 0; i < dialogsList.size(); ++i) {
         TgObject lastDialog = dialogsList[i].toMap();
+
+        if (lastDialog["pinned"].toBool()) {
+            _lastPinnedIndex = qMax(_lastPinnedIndex, _dialogs.size() + i);
+        }
+
         TgObject lastDialogPeer = lastDialog["peer"].toMap();
         TgInt lastMessageId = lastDialog["top_message"].toInt();
 
@@ -287,42 +298,8 @@ void DialogsModel::messagesGetDialogsResponse(TgObject data, TgLongVariant messa
         fetchMoreDownwards();
 }
 
-TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject message, TgObject messageSender, QList<TgObject> folders, TgList users, TgList chats)
+void DialogsModel::handleDialogMessage(TgObject &row, TgObject message, TgObject messageSender, TgList users, TgList chats)
 {
-    TgObject row;
-
-    TgObject inputPeer = peer;
-    inputPeer.unite(dialog);
-    ID_PROPERTY(inputPeer) = ID_PROPERTY(peer);
-    row["peerBytes"] = qSerialize(inputPeer);
-
-    TgList dialogFolders;
-
-    for (qint32 j = 0; j < folders.size(); ++j) {
-        if (FoldersModel::matchesFilter(folders[j], inputPeer)) {
-            dialogFolders << j;
-        }
-    }
-
-    row["folders"] = dialogFolders;
-
-    //TODO typing status
-    if (TgClient::isUser(peer)) {
-        row["title"] = QString(peer["first_name"].toString() + " " + peer["last_name"].toString());
-        row["tooltip"] = "user"; //TODO last seen and online
-    } else {
-        row["title"] = peer["title"].toString();
-
-        QString tooltip = TgClient::isChannel(peer) ? "channel" : "chat";
-        if (!peer["participants_count"].isNull()) {
-            tooltip = peer["participants_count"].toString();
-            //TODO localization support
-            tooltip += TgClient::isChannel(peer) ? " subscribers" : " members";
-        }
-
-        row["tooltip"] = tooltip;
-    }
-
     //TODO 12-hour format
     row["messageTime"] = QDateTime::fromTime_t(qMax(message["date"].toInt(), message["edit_date"].toInt())).toString("hh:mm");
 
@@ -362,12 +339,54 @@ TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject messag
     messageText += afterMessageText;
     row["messageText"] = messageText;
 
+    handleMessageAction(row, message, messageSender, users, chats);
+}
+
+TgObject DialogsModel::createRow(TgObject dialog, TgObject peer, TgObject message, TgObject messageSender, QList<TgObject> folders, TgList users, TgList chats)
+{
+    TgObject row;
+
+    row["peer"] = peer;
+    row["pinned"] = dialog["pinned"].toBool();
+
+    TgObject inputPeer = peer;
+    inputPeer.unite(dialog);
+    ID_PROPERTY(inputPeer) = ID_PROPERTY(peer);
+    row["peerBytes"] = qSerialize(inputPeer);
+
+    TgList dialogFolders;
+
+    for (qint32 j = 0; j < folders.size(); ++j) {
+        if (FoldersModel::matchesFilter(folders[j], inputPeer)) {
+            dialogFolders << j;
+        }
+    }
+
+    row["folders"] = dialogFolders;
+
+    //TODO typing status
+    if (TgClient::isUser(peer)) {
+        row["title"] = QString(peer["first_name"].toString() + " " + peer["last_name"].toString());
+        row["tooltip"] = "user"; //TODO last seen and online
+    } else {
+        row["title"] = peer["title"].toString();
+
+        QString tooltip = TgClient::isChannel(peer) ? "channel" : "chat";
+        if (!peer["participants_count"].isNull()) {
+            tooltip = peer["participants_count"].toString();
+            //TODO localization support
+            tooltip += TgClient::isChannel(peer) ? " subscribers" : " members";
+        }
+
+        row["tooltip"] = tooltip;
+    }
+
     row["thumbnailColor"] = AvatarDownloader::userColor(peer["id"].toLongLong());
     row["thumbnailText"] = AvatarDownloader::getAvatarText(row["title"].toString());
     row["avatar"] = "";
     row["photoId"] = peer["photo"].toMap()["photo_id"];
 
-    handleMessageAction(row, message, messageSender, users, chats);
+    handleDialogMessage(row, message, messageSender, users, chats);
 
     return row;
 }
@@ -405,4 +424,167 @@ bool DialogsModel::inFolder(qint32 index, qint32 folderIndex)
         return true;
 
     return _dialogs[index]["folders"].toList().contains(folderIndex);
+}
+
+void DialogsModel::gotMessageUpdate(TgObject update, TgLongVariant messageId)
+{
+    QMutexLocker lock(&_mutex);
+
+    if (!_offsets.isEmpty()) {
+        return;
+    }
+
+    TgObject peerId;
+    TgObject fromId;
+    qint64 fromIdNumeric;
+
+    //TODO this should be handled by singleton object with data from DB
+    if (ID(update) == TLType::UpdateShortSentMessage) { //TODO what if we don't know about message?
+        if (ID(update["peer_id"].toMap()) == 0) {
+            return;
+        }
+
+        peerId = update["peer_id"].toMap();
+
+        fromIdNumeric = _client->getUserId().toLongLong();
+    } else if (update["user_id"].toLongLong()) {
+        ID_PROPERTY(peerId) = TLType::PeerUser;
+        peerId["user_id"] = update["user_id"];
+
+        fromIdNumeric = update["out"].toBool() ? _client->getUserId().toLongLong() : update["user_id"].toLongLong();
+    } else if (update["chat_id"].toLongLong()) {
+        ID_PROPERTY(peerId) = TLType::PeerChat;
+        peerId["chat_id"] = update["chat_id"];
+
+        fromIdNumeric = update["from_id"].toLongLong();
+    } else {
+        return;
+    }
+
+    qint32 rowIndex = -1;
+    for (qint32 i = 0; i < _dialogs.size(); ++i) {
+        if (TgClient::peersEqual(_dialogs[i]["peer"].toMap(), peerId)) {
+            rowIndex = i;
+            break;
+        }
+    }
+
+    if (rowIndex == -1) {
+        return;
+    }
+
+    TgObject sender;
+    for (qint32 j = 0; j < globalUsers().size(); ++j) {
+        TgObject peer = globalUsers()[j].toMap();
+        if (TgClient::getPeerId(peer) == fromIdNumeric) {
+            sender = peer;
+            break;
+        }
+    }
+    if (ID(sender) == 0) for (qint32 j = 0; j < globalChats().size(); ++j) {
+        TgObject peer = globalChats()[j].toMap();
+        if (TgClient::getPeerId(peer) == fromIdNumeric) {
+            sender = peer;
+            break;
+        }
+    }
+
+    if (TgClient::isChannel(sender)) {
+        ID_PROPERTY(fromId) = TLType::PeerChannel;
+        fromId["channel_id"] = TgClient::getPeerId(sender);
+    } else if (TgClient::isChat(sender)) {
+        ID_PROPERTY(fromId) = TLType::PeerChat;
+        fromId["chat_id"] = TgClient::getPeerId(sender);
+    } else if (TgClient::isUser(sender)) {
+        ID_PROPERTY(fromId) = TLType::PeerUser;
+        fromId["user_id"] = TgClient::getPeerId(sender);
+    }
+
+    update["peer_id"] = peerId;
+    update["from_id"] = fromId;
+
+    handleDialogMessage(_dialogs[rowIndex], update, sender, globalUsers(), globalChats());
+    emit dataChanged(index(rowIndex), index(rowIndex));
+
+    //TODO no out flag?
+
+    if (_dialogs[rowIndex]["pinned"].toBool()) {
+        return;
+    }
+
+    if (beginMoveRows(QModelIndex(), rowIndex, rowIndex, QModelIndex(), _lastPinnedIndex + 1)) {
+        _dialogs.insert(_lastPinnedIndex + 1, _dialogs.takeAt(rowIndex));
+        endMoveRows();
+    }
+}
+
+void DialogsModel::gotUpdate(TgObject update, TgLongVariant messageId, TgList users, TgList chats, qint32 date, qint32 seq, qint32 seqStart)
+{
+    QMutexLocker lock(&_mutex);
+
+    //We should avoid duplicates. (implement DB)
+//    _globalUsers.append(users);
+//    _globalChats.append(chats);
+
+    switch (ID(update)) {
+    case TLType::UpdateNewMessage:
+    case TLType::UpdateNewChannelMessage:
+    {
+        if (!_offsets.isEmpty()) {
+            return;
+        }
+
+        TgObject message = update["message"].toMap();
+
+        qint32 rowIndex = -1;
+        for (qint32 i = 0; i < _dialogs.size(); ++i) {
+            if (TgClient::peersEqual(_dialogs[i]["peer"].toMap(), message["peer_id"].toMap())) {
+                rowIndex = i;
+                break;
+            }
+        }
+
+        if (rowIndex == -1) {
+            return;
+        }
+
+        TgObject fromId = message["from_id"].toMap();
+        TgObject sender;
+        if (TgClient::isUser(fromId)) for (qint32 j = 0; j < users.size(); ++j) {
+            TgObject peer = users[j].toMap();
+            if (TgClient::peersEqual(peer, fromId)) {
+                sender = peer;
+                break;
+            }
+        }
+        if (TgClient::isChat(fromId)) for (qint32 j = 0; j < chats.size(); ++j) {
+            TgObject peer = chats[j].toMap();
+            if (TgClient::peersEqual(peer, fromId)) {
+                sender = peer;
+                break;
+            }
+        }
+        if (TgClient::commonPeerType(fromId) == 0) {
+            //This means that it is a channel feed or personal messages.
+            //Authorized user is returned by API, so we don't need to put it manually.
+            sender = _dialogs[rowIndex]["peer"].toMap();
+        }
+
+        handleDialogMessage(_dialogs[rowIndex], message, sender, users, chats);
+        emit dataChanged(index(rowIndex), index(rowIndex));
+
+        //TODO no out flag?
+
+        if (_dialogs[rowIndex]["pinned"].toBool()) {
+            return;
+        }
+
+        if (beginMoveRows(QModelIndex(), rowIndex, rowIndex, QModelIndex(), _lastPinnedIndex + 1)) {
+            _dialogs.insert(_lastPinnedIndex + 1, _dialogs.takeAt(rowIndex));
+            endMoveRows();
+        }
+
+        break;
+    }
+    }
 }

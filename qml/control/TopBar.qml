@@ -56,7 +56,7 @@ Item {
                 currentFolderIndex = currentIndex
             }
 
-            model: dialogPage.foldersModel
+            model: foldersModel
 
             delegate: FolderItem {
 

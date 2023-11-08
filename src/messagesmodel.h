@@ -91,6 +91,7 @@ signals:
     void draftChanged(QString draft);
     void uploadingProgress(qint32 progress);
     void scrollForNew();
+    void sentMessageUpdate(TgObject update, TgLongVariant messageId);
 
 public slots:
     void authorized(TgLongVariant userId);

@@ -17,10 +17,6 @@
 
 using namespace TLType;
 
-//TODO use SQLite
-TgList _globalUsers;
-TgList _globalChats;
-
 #define BATCH_SIZE 40
 
 MessagesModel::MessagesModel(QObject *parent)
@@ -265,8 +261,8 @@ void MessagesModel::handleHistoryResponse(TgObject data, TgLongVariant messageId
     TgList chats = data["chats"].toList();
     TgList users = data["users"].toList();
 
-    _globalUsers.append(users);
-    _globalChats.append(chats);
+    globalUsers().append(users);
+    globalChats().append(chats);
 
     if (messages.isEmpty()) {
         _downOffset = -1;
@@ -346,8 +342,8 @@ void MessagesModel::handleHistoryResponseUpwards(TgObject data, TgLongVariant me
     TgList chats = data["chats"].toList();
     TgList users = data["users"].toList();
 
-    _globalUsers.append(users);
-    _globalChats.append(chats);
+    globalUsers().append(users);
+    globalChats().append(chats);
 
     if (messages.isEmpty()) {
         _upOffset = -1;
@@ -803,7 +799,12 @@ void MessagesModel::gotMessageUpdate(TgObject update, TgLongVariant messageId)
     TgObject fromId;
     qint64 fromIdNumeric;
 
-    if (_sentMessages.contains(messageId.toLongLong())) {
+    //TODO this should be handled by singleton object with data from DB
+    if (ID(update) == TLType::UpdateShortSentMessage) { //TODO what if we don't know about message?
+        if (!_sentMessages.contains(messageId.toLongLong())) {
+            return;
+        }
+
         if (TgClient::isChannel(_peer)) {
             ID_PROPERTY(peerId) = TLType::PeerChannel;
             peerId["channel_id"] = TgClient::getPeerId(_peer);
@@ -815,9 +816,12 @@ void MessagesModel::gotMessageUpdate(TgObject update, TgLongVariant messageId)
             peerId["user_id"] = TgClient::getPeerId(_peer);
         }
 
+        fromIdNumeric = _client->getUserId().toLongLong();
+
         update["message"] = _sentMessages.take(messageId.toLongLong());
 
-        fromIdNumeric = _client->getUserId().toLongLong();
+        update["peer_id"] = peerId;
+        emit sentMessageUpdate(update, messageId);
     } else if (update["user_id"].toLongLong() == TgClient::getPeerId(_peer) && TgClient::isUser(_peer)) {
         ID_PROPERTY(peerId) = TLType::PeerUser;
         peerId["user_id"] = update["user_id"];
@@ -833,15 +837,15 @@ void MessagesModel::gotMessageUpdate(TgObject update, TgLongVariant messageId)
     }
 
     TgObject sender;
-    for (qint32 j = 0; j < _globalUsers.size(); ++j) {
-        TgObject peer = _globalUsers[j].toMap();
+    for (qint32 j = 0; j < globalUsers().size(); ++j) {
+        TgObject peer = globalUsers()[j].toMap();
         if (TgClient::getPeerId(peer) == fromIdNumeric) {
             sender = peer;
             break;
         }
     }
-    if (ID(sender) == 0) for (qint32 j = 0; j < _globalChats.size(); ++j) {
-        TgObject peer = _globalChats[j].toMap();
+    if (ID(sender) == 0) for (qint32 j = 0; j < globalChats().size(); ++j) {
+        TgObject peer = globalChats()[j].toMap();
         if (TgClient::getPeerId(peer) == fromIdNumeric) {
             sender = peer;
             break;
@@ -865,7 +869,7 @@ void MessagesModel::gotMessageUpdate(TgObject update, TgLongVariant messageId)
     qint32 oldSize = _history.size();
 
     beginInsertRows(QModelIndex(), _history.size(), _history.size());
-    TgObject messageRow = createRow(update, sender, _globalUsers, _globalChats);
+    TgObject messageRow = createRow(update, sender, globalUsers(), globalChats());
     _history.append(messageRow);
     endInsertRows();
 
@@ -885,8 +889,9 @@ void MessagesModel::gotUpdate(TgObject update, TgLongVariant messageId, TgList u
 {
     QMutexLocker lock(&_mutex);
 
-    _globalUsers.append(users);
-    _globalChats.append(chats);
+    //We should avoid duplicates. (implement DB)
+//    _globalUsers.append(users);
+//    _globalChats.append(chats);
 
     switch (ID(update)) {
     case TLType::UpdateNewMessage:

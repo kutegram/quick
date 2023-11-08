@@ -3,6 +3,7 @@ import "../dialog"
 import "../message"
 import "../control"
 import "../auth"
+import Kutegram 1.0
 
 Item {
     id: mainScreen
@@ -46,6 +47,48 @@ Item {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
+    }
+
+    FoldersModel {
+        id: foldersModel
+        client: telegramClient
+        Component.onCompleted: dialogPage.refresh.connect(refresh)
+    }
+
+    DialogsModel {
+        id: dialogsModel
+        folders: foldersModel
+        client: telegramClient
+        avatarDownloader: globalAvatarDownloader
+        Component.onCompleted: dialogPage.refresh.connect(refresh)
+    }
+
+    MessagesModel {
+        id: messagesModel
+        client: telegramClient
+        avatarDownloader: globalAvatarDownloader
+
+        onScrollTo: {
+            messagePage.messagesView.positionViewAtIndex(index, ListView.End);
+        }
+
+        onScrollForNew: {
+            if (messagePage.messagesView.atYEnd) {
+                messagePage.messagesView.positionViewAtIndex(messagePage.messagesView.count - 1, ListView.End);
+            }
+        }
+
+        onDraftChanged: {
+            messagePage.messageEdit.messageText = draft;
+        }
+
+        onUploadingProgress: {
+            messagePage.messageEdit.uploadingProgress(progress);
+        }
+
+        Component.onCompleted: {
+            messagesModel.sentMessageUpdate.connect(dialogsModel.gotMessageUpdate);
+        }
     }
 
     DialogPage {

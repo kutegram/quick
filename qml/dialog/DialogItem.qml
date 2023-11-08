@@ -5,7 +5,7 @@ Item {
     height: 40 * kgScaling
 
     function openDialog() {
-        messagePage.messagesModel.peer = peerBytes;
+        messagesModel.peer = peerBytes;
         topBar.peerTitle = title;
         topBar.peerThumbnailColor = thumbnailColor;
         topBar.peerThumbnailText = thumbnailText;
@@ -23,7 +23,7 @@ Item {
 
     property string avatarWatcher: avatar
     onAvatarWatcherChanged: {
-        if (messagePage.messagesModel.peer == peerBytes) {
+        if (messagesModel.peer == peerBytes) {
             topBar.peerAvatar = avatar;
         }
     }

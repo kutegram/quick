@@ -3,8 +3,8 @@ import Kutegram 1.0
 
 Rectangle {
     property string globalState: "NO_SELECT"
-    property alias messagesModel: messagesModel
     property alias messageEdit: messageEdit
+    property alias messagesView: messagesView
 
     ListView {
         id: messagesView
@@ -29,29 +29,7 @@ Rectangle {
             }
         }
 
-        model: MessagesModel {
-            id: messagesModel
-            client: telegramClient
-            avatarDownloader: globalAvatarDownloader
-
-            onScrollTo: {
-                messagesView.positionViewAtIndex(index, ListView.End);
-            }
-
-            onScrollForNew: {
-                if (messagesView.atYEnd) {
-                    messagesView.positionViewAtIndex(messagesView.count - 1, ListView.End);
-                }
-            }
-
-            onDraftChanged: {
-                messageEdit.messageText = draft;
-            }
-
-            onUploadingProgress: {
-                messageEdit.uploadingProgress(progress);
-            }
-        }
+        model: messagesModel
 
         delegate: MessageItem {
             state: globalState

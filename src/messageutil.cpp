@@ -4,6 +4,20 @@
 #include "tgclient.h"
 #include <QDateTime>
 
+//TODO use SQLite
+TgList _globalUsers;
+TgList _globalChats;
+
+TgList& globalUsers()
+{
+    return _globalUsers;
+}
+
+TgList& globalChats()
+{
+    return _globalChats;
+}
+
 using namespace TLType;
 
 bool entitiesSorter(const QVariant &v1, const QVariant &v2)
