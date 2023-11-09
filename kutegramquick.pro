@@ -2,7 +2,8 @@ TARGET = Kutegram
 APPNAME = Kutegram
 VERSION = 1.2.0
 PKG_VERSION = 1,2,0
-DEFINES += VERSION=\"$$VERSION\"
+symbian:DEFINES += VERSION=\"$$VERSION\"
+!symbian:DEFINES += VERSION=\"\\\"$$VERSION\\\"\"
 #DATE = $$system(date /t)
 #DEFINES += BUILDDATE=\"\\\"$$DATE\\\"\"
 #COMMIT_SHA = $$system(git log --pretty=format:%h -n 1);
