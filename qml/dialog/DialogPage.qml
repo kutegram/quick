@@ -32,6 +32,7 @@ Rectangle {
             height: folderSlide.height
             cacheBuffer: pageRoot.height / 6
             focus: true
+            clip: true
 
             boundsBehavior: Flickable.StopAtBounds
 
