@@ -29,9 +29,11 @@ Item {
                 telegramClient.resetSession();
                 break;
             case 1:
-                Qt.quit();
+                platformUtils.quit();
                 break;
             }
+
+            drawerRoot.closeDrawer();
         }
     }
 

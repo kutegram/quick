@@ -95,10 +95,15 @@ void PlatformUtils::messageClicked()
     showAndRaise();
 }
 
+void PlatformUtils::quit()
+{
+    QApplication::exit();
+}
+
 void PlatformUtils::menuTriggered(QAction *action)
 {
     if (action->text() == "Exit") {
-        QApplication::exit();
+        quit();
         return;
     }
 

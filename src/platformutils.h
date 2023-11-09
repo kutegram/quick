@@ -33,6 +33,7 @@ signals:
 
 public slots:
     void showAndRaise();
+    void quit();
 
 #ifndef Q_OS_SYMBIAN
     void trayActivated(QSystemTrayIcon::ActivationReason reason);

@@ -75,6 +75,11 @@ Item {
         color: "#000000"
     }
 
+    function closeDrawer() {
+        topBar.currentState = "MENU"
+        opened = false;
+    }
+
     ListView {
         id: drawerSlide
         anchors.left: parent.left
@@ -90,8 +95,7 @@ Item {
 
         onCurrentItemChanged: {
             if (currentIndex == 1) {
-                topBar.currentState = "MENU"
-                opened = false;
+                closeDrawer();
             }
         }
 
@@ -106,8 +110,7 @@ Item {
                     anchors.fill: parent
 
                     onClicked: {
-                        topBar.currentState = "MENU"
-                        opened = false;
+                        closeDrawer();
                     }
                 }
 
