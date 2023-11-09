@@ -1,6 +1,8 @@
 import QtQuick 1.0
+import "../control"
 
 Image {
+    id: imageRoot
     height: width
     //height: sourceSize.height * width / sourceSize.width
     source: photoFile.length == 0 ? "" : photoFile + ".thumbnail.jpg"
@@ -9,7 +11,13 @@ Image {
     smooth: true
     fillMode: Image.PreserveAspectFit
 
-    //TODO loading spinner
+    Repeater {
+        model: imageRoot.status == Image.Ready ? 0 : 1
+        Spinner {
+            anchors.centerIn: imageRoot
+            white: false
+        }
+    }
 
     Rectangle {
         id: spoilerRect
