@@ -77,22 +77,27 @@ Item {
         anchors.leftMargin: avatarRect.anchors.leftMargin
         anchors.rightMargin: anchors.leftMargin
 
-        Row {
+        Item {
             anchors.left: parent.left
             anchors.right: parent.right
-            spacing: 4 * kgScaling
+            height: messageTimeText.height
 
             Text {
-                elide: Text.ElideRight
                 text: title
+                elide: Text.ElideRight
                 font.pixelSize: 12 * kgScaling
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: messageTimeText.left
             }
 
             Text {
-                anchors.bottom: parent.bottom
+                id: messageTimeText
                 text: messageTime
                 color: "#999999"
                 font.pixelSize: 12 * kgScaling
+                anchors.top: parent.top
+                anchors.right: parent.right
             }
         }
 
@@ -103,23 +108,22 @@ Item {
 
             Text {
                 id: messageSenderLabel
-                anchors.top: parent.top
-                anchors.left: parent.left
                 text: messageSenderName
                 color: messageSenderColor
                 font.pixelSize: 12 * kgScaling
+                anchors.top: parent.top
+                anchors.left: parent.left
             }
 
             Text {
                 id: messageTextLabel
-                anchors.top: parent.top
-                anchors.left: messageSenderLabel.right
-                anchors.right: parent.right
                 text: messageText
                 color: "#8D8D8D"
                 elide: Text.ElideRight
-                clip: true
                 font.pixelSize: 12 * kgScaling
+                anchors.top: parent.top
+                anchors.left: messageSenderLabel.right
+                anchors.right: parent.right
 
                 onLinkActivated: {
                     openDialog();
