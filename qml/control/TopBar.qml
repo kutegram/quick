@@ -23,7 +23,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         color: globalAccent
-        opacity: platformUtils.windowsIsCompositionEnabled() ? 0 : 1
+        //opacity: platformUtils.windowsIsCompositionEnabled() ? 0 : 1
     }
 
     Rectangle {
