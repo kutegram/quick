@@ -2,8 +2,7 @@ TARGET = Kutegram
 APPNAME = Kutegram
 VERSION = 1.2.0
 PKG_VERSION = 1,2,0
-symbian:DEFINES += VERSION=\"$$VERSION\"
-!symbian:DEFINES += VERSION=\"\\\"$$VERSION\\\"\"
+DEFINES += VERSION=\"\\\"$$VERSION\\\"\"
 #DATE = $$system(date /t)
 #DEFINES += BUILDDATE=\"\\\"$$DATE\\\"\"
 #COMMIT_SHA = $$system(git log --pretty=format:%h -n 1);
@@ -23,8 +22,9 @@ win32:RC_FILE = kutegramquick.rc
 macx:ICON = kutegramquick.icns
 
 symbian {
+    LIBS += -lavkon -lapgrfx -lcone -leikcore -lapmime
+
     contains(SYMBIAN_VERSION, Symbian3) {
-        LIBS += -lavkon -lapgrfx -lcone -leikcore -lapmime
         DEFINES += SYMBIAN3_READY=1
         include(pigler/qt-library/pigler.pri)
     }

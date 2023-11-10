@@ -15,6 +15,7 @@
 #ifdef Q_OS_SYMBIAN
 #include <apgcli.h>
 #include <apgtask.h>
+#include <eikenv.h>
 #else
 #include <QDesktopServices>
 #endif
@@ -82,6 +83,11 @@ void PlatformUtils::showAndRaise()
     window->raise();
 }
 
+void PlatformUtils::quit()
+{
+    QApplication::exit();
+}
+
 #ifndef Q_OS_SYMBIAN
 void PlatformUtils::trayActivated(QSystemTrayIcon::ActivationReason reason)
 {
@@ -93,11 +99,6 @@ void PlatformUtils::trayActivated(QSystemTrayIcon::ActivationReason reason)
 void PlatformUtils::messageClicked()
 {
     showAndRaise();
-}
-
-void PlatformUtils::quit()
-{
-    QApplication::exit();
 }
 
 void PlatformUtils::menuTriggered(QAction *action)

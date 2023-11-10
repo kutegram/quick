@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
     QApplication::setAttribute(Qt::AA_UseOpenGLES, true);
 #endif
 
-    QApplication::setApplicationVersion(VERSION);
+    QApplication::setApplicationVersion(QString(VERSION).replace("\"", ""));
     QApplication::setApplicationName("Kutegram");
     QApplication::setOrganizationName("Kutegram");
     QApplication::setOrganizationDomain("kg.crx.moe");
