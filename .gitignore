@@ -14,3 +14,10 @@ ABLD.BAT
 rcc/qrc_resources.cpp
 *.pro.user.*
 *.autosave
+debian
+obj
+build-stamp
+configure-stamp
+Kutegram
+*.deb
+*.changes
