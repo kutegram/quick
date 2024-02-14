@@ -3,7 +3,6 @@
 
 #include <QFontDatabase>
 #include <QTextCodec>
-#include <QtDeclarative>
 #include <QFont>
 #include <QFontMetrics>
 #include "tgclient.h"
@@ -16,6 +15,13 @@
 #include "platformutils.h"
 #include <QSystemSemaphore>
 #include <QSharedMemory>
+
+#if QT_VERSION >= 0x050000
+#include <QQmlContext>
+#include <QQmlEngine>
+#else
+#include <QtDeclarative>
+#endif
 
 #if QT_VERSION >= 0x040702
 #include <QNetworkConfigurationManager>
@@ -97,7 +103,11 @@ int main(int argc, char *argv[])
     viewer.rootContext()->setContextProperty("platformUtils", new PlatformUtils(&viewer));
     viewer.rootContext()->setContextProperty("kgScaling", QFontMetrics(app.font()).height() / 14.0f);
     viewer.setMainQmlFile(QLatin1String("qrc:///qml/Main.qml"));
+#if QT_VERSION >= 0x050000
+    viewer.setTitle("Kutegram");
+#else
     viewer.setWindowTitle("Kutegram");
+#endif
     viewer.showExpanded();
 
 #if QT_VERSION >= 0x040702

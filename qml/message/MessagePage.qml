@@ -18,7 +18,7 @@ Rectangle {
 
         anchors.topMargin: Math.max(0, parent.height - messageEdit.height - childrenRect.height)
 
-        cacheBuffer: parent.height / 6
+        cacheBuffer: Math.max(parent.height / 6, 0)
 
         onMovementEnded: {
             if (atYBeginning && messagesModel.canFetchMoreUpwards()) {

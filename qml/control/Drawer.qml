@@ -227,10 +227,10 @@ Item {
                                 icon: "../../img/exit-to-app.png"
                                 name: "Log out"
                             }
-                            ListElement {
-                                icon: "../../img/close.png"
-                                name: "Close"
-                            }
+//                            ListElement {
+//                                icon: "../../img/close.png"
+//                                name: "Close"
+//                            }
                         }
 
                         delegate: DrawerButton {

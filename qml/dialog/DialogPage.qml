@@ -7,7 +7,7 @@ Rectangle {
 
     ListView {
         id: folderSlide
-        focus: true
+
         anchors.fill: parent
         clip: true
 
@@ -31,7 +31,7 @@ Rectangle {
             width: folderSlide.width
             height: folderSlide.height
             cacheBuffer: pageRoot.height / 6
-            focus: true
+
             clip: true
 
             boundsBehavior: Flickable.StopAtBounds

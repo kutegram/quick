@@ -13,9 +13,14 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
+#if QT_VERSION >= 0x050000
+#include <QQmlEngine>
+#include <QWindow>
+#else
 #include <QtDeclarative/QDeclarativeComponent>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeContext>
+#endif
 
 #include <qplatformdefs.h> // MEEGO_EDITION_HARMATTAN
 
@@ -71,12 +76,21 @@ QString QmlApplicationViewerPrivate::adjustPath(const QString &path)
     return path;
 }
 
-QmlApplicationViewer::QmlApplicationViewer(QWidget *parent) :
+#if QT_VERSION >= 0x050000
+QmlApplicationViewer::QmlApplicationViewer(QObject *parent) :
+    QQuickView(dynamic_cast<QWindow*>(parent)),
+#else
+QmlApplicationViewer::QmlApplicationViewer(QObject *parent) :
     QDeclarativeView(parent),
+#endif
     m_d(new QmlApplicationViewerPrivate)
 {
     connect(engine(), SIGNAL(quit()), SLOT(close()));
+#if QT_VERSION >= 0x050000
+    setResizeMode(QQuickView::SizeRootObjectToView);
+#else
     setResizeMode(QDeclarativeView::SizeRootObjectToView);
+#endif
     // Qt versions prior to 4.8.0 don't have QML/JS debugging services built in
 #if defined(QMLJSDEBUGGER) && QT_VERSION < 0x040800
 #if !defined(NO_JSDEBUGGER)
@@ -115,7 +129,6 @@ void QmlApplicationViewer::setOrientation(ScreenOrientation orientation)
             return;
         }
     }
-#endif // Q_OS_SYMBIAN
 
     Qt::WidgetAttribute attribute;
     switch (orientation) {
@@ -132,6 +145,7 @@ void QmlApplicationViewer::setOrientation(ScreenOrientation orientation)
         break;
     };
     setAttribute(attribute, true);
+#endif // Q_OS_SYMBIAN
 }
 
 void QmlApplicationViewer::showExpanded()

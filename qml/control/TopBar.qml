@@ -41,10 +41,11 @@ Item {
 
         ListView {
             id: folderList
-            focus: true
             clip: true
             boundsBehavior: Flickable.StopAtBounds
-            anchors.fill: parent
+            anchors.left: parent.left
+            width: parent.width
+            height: parent.height
             orientation: ListView.Horizontal
             highlightFollowsCurrentItem: true
             highlightMoveDuration: 200
@@ -86,7 +87,9 @@ Item {
 
         Item {
             id: peerHeader
-            anchors.fill: parent
+            anchors.left: parent.left
+            width: parent.width
+            height: parent.height
 
             MouseArea {
                 anchors.fill: parent
@@ -187,7 +190,9 @@ Item {
 
         Text {
             id: appNameText
-            anchors.fill: parent
+            anchors.left: parent.left
+            width: parent.width
+            height: parent.height
             verticalAlignment: Text.AlignVCenter
             text: "Kutegram"
             font.bold: true
@@ -205,7 +210,7 @@ Item {
                 PropertyChanges {
                     target: folderList
                     opacity: 0
-                    anchors.leftMargin: -20 * kgScaling
+                    anchors.leftMargin: -folderList.width
                 }
                 PropertyChanges {
                     target: peerHeader
@@ -215,7 +220,7 @@ Item {
                 PropertyChanges {
                     target: appNameText
                     opacity: 0
-                    anchors.leftMargin: -20 * kgScaling
+                    anchors.leftMargin: -appNameText.width
                 }
             },
             State {
@@ -223,12 +228,12 @@ Item {
                 PropertyChanges {
                     target: folderList
                     opacity: 0
-                    anchors.leftMargin: -20 * kgScaling
+                    anchors.leftMargin: -folderList.width
                 }
                 PropertyChanges {
                     target: peerHeader
                     opacity: 0
-                    anchors.leftMargin: -20 * kgScaling
+                    anchors.leftMargin: -peerHeader.width
                 }
                 PropertyChanges {
                     target: appNameText
@@ -246,12 +251,12 @@ Item {
                 PropertyChanges {
                     target: peerHeader
                     opacity: 0
-                    anchors.leftMargin: -20 * kgScaling
+                    anchors.leftMargin: -peerHeader.width
                 }
                 PropertyChanges {
                     target: appNameText
                     opacity: 0
-                    anchors.leftMargin: -20 * kgScaling
+                    anchors.leftMargin: -appNameText.width
                 }
             }
 

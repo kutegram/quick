@@ -22,10 +22,10 @@
 
 #include <crypto.h>
 
-PlatformUtils::PlatformUtils(QWidget *parent)
-    : QObject((QObject*) parent)
-    , window(parent)
-#ifndef Q_OS_SYMBIAN
+PlatformUtils::PlatformUtils(QObject *parent)
+    : QObject(parent)
+    , window(dynamic_cast<QWidget*>(parent))
+#if !defined(Q_OS_SYMBIAN) && !defined(Q_OS_WINPHONE)
     , trayIcon(this)
     , trayMenu()
 #endif
@@ -35,10 +35,12 @@ PlatformUtils::PlatformUtils(QWidget *parent)
     , piglerId(-1)
 #endif
 {
-    window->setAttribute(Qt::WA_DeleteOnClose, false);
-    window->setAttribute(Qt::WA_QuitOnClose, false);
+    if (window) {
+        window->setAttribute(Qt::WA_DeleteOnClose, false);
+        window->setAttribute(Qt::WA_QuitOnClose, false);
+    }
 
-#ifndef Q_OS_SYMBIAN
+#if !defined(Q_OS_SYMBIAN) && !defined(Q_OS_WINPHONE)
     connect(&trayIcon, SIGNAL(messageClicked()), this, SLOT(messageClicked()));
     connect(&trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
     connect(&trayMenu, SIGNAL(triggered(QAction*)), this, SLOT(menuTriggered(QAction*)));
@@ -78,9 +80,11 @@ void PlatformUtils::showAndRaise()
     //TODO remove notifications
     unread.clear();
 
-    window->show();
-    window->activateWindow();
-    window->raise();
+    if (window) {
+        window->show();
+        window->activateWindow();
+        window->raise();
+    }
 }
 
 void PlatformUtils::quit()
@@ -88,7 +92,7 @@ void PlatformUtils::quit()
     QApplication::exit();
 }
 
-#ifndef Q_OS_SYMBIAN
+#if !defined(Q_OS_SYMBIAN) && !defined(Q_OS_WINPHONE)
 void PlatformUtils::trayActivated(QSystemTrayIcon::ActivationReason reason)
 {
     if (reason != QSystemTrayIcon::Context) {
@@ -115,10 +119,12 @@ void PlatformUtils::menuTriggered(QAction *action)
 void PlatformUtils::windowsExtendFrameIntoClientArea(int left, int top, int right, int bottom)
 {
 #ifdef DWM_FEATURES
-    window->setAttribute(Qt::WA_TranslucentBackground, true);
-    window->setAttribute(Qt::WA_NoSystemBackground, false);
-    window->setStyleSheet("background: transparent");
-    QtWin::extendFrameIntoClientArea(window, left, top, right, bottom);
+    if (window) {
+        window->setAttribute(Qt::WA_TranslucentBackground, true);
+        window->setAttribute(Qt::WA_NoSystemBackground, false);
+        window->setStyleSheet("background: transparent");
+        QtWin::extendFrameIntoClientArea(window, left, top, right, bottom);
+    }
 #endif
 }
 
@@ -151,7 +157,7 @@ bool PlatformUtils::isWindows()
 
 void PlatformUtils::gotNewMessage(qint64 peerId, QString peerName, QString senderName, QString text, bool silent)
 {
-    if (window->hasFocus()) {
+    if (window && window->hasFocus()) {
         unread.clear();
         return;
     }
@@ -171,7 +177,7 @@ void PlatformUtils::gotNewMessage(qint64 peerId, QString peerName, QString sende
     message = senderName;
     message += text;
 
-#ifndef Q_OS_SYMBIAN
+#if !defined(Q_OS_SYMBIAN) && !defined(Q_OS_WINPHONE)
     if (!silent) {
         kgDebug() << "Sending Windows notification";
         trayIcon.showMessage(title, message);

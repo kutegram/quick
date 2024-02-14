@@ -257,7 +257,7 @@ Rectangle {
             TextEdit {
                 id: innerEdit
                 anchors.fill: parent
-                focus: true
+
                 wrapMode: TextEdit.Wrap
                 font.pixelSize: 12 * kgScaling
                 onCursorRectangleChanged: innerFlick.ensureVisible(cursorRectangle)

@@ -8,9 +8,26 @@ DEFINES += VERSION=\"\\\"$$VERSION\\\"\"
 #COMMIT_SHA = $$system(git log --pretty=format:%h -n 1);
 #DEFINES += COMMIT_SHA=\"\\\"$$COMMIT_SHA\\\"\"
 
-QT += core declarative network xml
 greaterThan(QT_MAJOR_VERSION, 4) {
-    win32:QT += winextras
+    QT += core widgets qml quick network xml
+    win32:!winrt:QT += winextras
+}
+!greaterThan(QT_MAJOR_VERSION, 4) {
+    QT += core declarative gui network xml
+}
+
+winrt {
+    WINRT_MANIFEST.background = lightSkyBlue
+    WINRT_MANIFEST.description = "An unofficial Telegram client, written in Qt Quick and C++."
+    WINRT_MANIFEST.logo_large = wpassets/logo_150x150.png
+    WINRT_MANIFEST.logo_medium = wpassets/logo_71x71.png
+    WINRT_MANIFEST.logo_small = wpassets/logo_44x44.png
+    WINRT_MANIFEST.logo_splash = wpassets/logo_480x800.png
+    WINRT_MANIFEST.logo_store = wpassets/logo_store.png
+    WINRT_MANIFEST.logo_wide = wpassets/logo_310x150.png
+    WINRT_MANIFEST.publisherid = "CN=curoviyxru"
+    WINRT_MANIFEST.identity = "1dcfeda8-9772-4658-8c54-853732753c6f"
+    WINRT_MANIFEST.publisher = "curoviyxru"
 }
 
 DEFINES += QT_USE_FAST_CONCATENATION QT_USE_FAST_OPERATOR_PLUS

@@ -22,7 +22,7 @@ Item {
             name: "AUTH"
             PropertyChanges {
                 target: mainScreen
-                anchors.leftMargin: root.width
+                anchors.leftMargin: -root.width
                 opacity: 0
             }
             PropertyChanges {

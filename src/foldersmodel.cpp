@@ -194,7 +194,7 @@ TgObject FoldersModel::createRow(TgObject filter)
 
     quint32 flags = filter["flags"].toUInt();
 
-    const quint32 allFlags = 0b11111;
+    const quint32 allFlags = 31;
 
     icon = "custom.png";
 

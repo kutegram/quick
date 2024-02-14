@@ -3,9 +3,13 @@
 
 #include <QObject>
 #include <QColor>
+#if !defined(Q_OS_SYMBIAN) && !defined(Q_OS_WINPHONE)
 #include <QSystemTrayIcon>
 #include <QMenu>
+#endif
 #include <QUrl>
+#include <QHash>
+#include <QWidget>
 
 #ifdef SYMBIAN3_READY
 #include "QPiglerAPI.h"
@@ -16,7 +20,7 @@ class PlatformUtils : public QObject
     Q_OBJECT
 private:
     QWidget* window;
-#ifndef Q_OS_SYMBIAN
+#if !defined(Q_OS_SYMBIAN) && !defined(Q_OS_WINPHONE)
     QSystemTrayIcon trayIcon;
     QMenu trayMenu;
 #endif
@@ -27,7 +31,7 @@ private:
 #endif
 
 public:
-    explicit PlatformUtils(QWidget *parent = 0);
+    explicit PlatformUtils(QObject *parent = 0);
 
 signals:
 
@@ -35,7 +39,7 @@ public slots:
     void showAndRaise();
     void quit();
 
-#ifndef Q_OS_SYMBIAN
+#if !defined(Q_OS_SYMBIAN) && !defined(Q_OS_WINPHONE)
     void trayActivated(QSystemTrayIcon::ActivationReason reason);
     void messageClicked();
     void menuTriggered(QAction* action);
