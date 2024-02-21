@@ -109,8 +109,8 @@ void getTags(TgObject entity, QString textPart, qint32 i, QString &sTag, QString
         eTag = "</a>";
         break;
     case MessageEntitySpoiler:
-        sTag = "<a class=\"spoiler\" href=\"kutegram://spoiler/" + QString::number(i) + "\">";
-        eTag = "</a>";
+        sTag = "<a class=\"spoiler\" href=\"kutegram://spoiler/" + QString::number(i) + "\"><font color=\"white\">";
+        eTag = "</font></a>";
         break;
     case MessageEntityCustomEmoji: //TODO custom emoji
         sTag = "";
@@ -231,7 +231,7 @@ QString messageToHtml(QString text, TgList entities)
     }
 
     text.replace('\n', "<br />");
-    return "<html><style>.spoiler, .spoiler > *, .spoiler > * > a:link { background-color: gray; color: gray; }</style>" + text + "</html>";
+    return "<html>" + text + "</html>";
 }
 
 //TODO move message row generation methods to separate file

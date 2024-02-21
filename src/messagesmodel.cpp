@@ -634,7 +634,16 @@ void MessagesModel::linkActivated(QString link, qint32 listIndex)
         while (!parent.isNull()) {
             if (parent.toElement().attribute("href").startsWith("kutegram://spoiler/")) {
                 parent.toElement().removeAttribute("href");
-                parent.toElement().removeAttribute("class");
+
+                QList<QDomNode> list;
+                list << parent;
+                while (!list.isEmpty()) {
+                    QDomNode parent = list.takeLast();
+                    QDomNodeList nodeList = parent.childNodes();
+                    for (qint32 j = 0; j < nodeList.count(); ++j)
+                        list << nodeList.at(j);
+                    parent.toElement().removeAttribute("color");
+                }
 
                 listItem["messageText"] = dom.toString(-1);
                 _history[listIndex] = listItem;
