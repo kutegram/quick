@@ -28,6 +28,7 @@ winrt {
     WINRT_MANIFEST.publisherid = "CN=curoviyxru"
     WINRT_MANIFEST.identity = "1dcfeda8-9772-4658-8c54-853732753c6f"
     WINRT_MANIFEST.publisher = "curoviyxru"
+    WINRT_MANIFEST.version = $$VERSION".0"
 }
 
 DEFINES += QT_USE_FAST_CONCATENATION QT_USE_FAST_OPERATOR_PLUS
